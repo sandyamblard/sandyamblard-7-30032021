@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const Sequelize = require('sequelize');
 const express = require('express');
 const app = express();
 require('dotenv').config();
@@ -7,8 +7,10 @@ const path = require('path');
 const session = require('cookie-session');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const mysql = require('mysql2');
 
 
+const userRoutes = require('./routes/user');
 
 //connection à la base de données et test
 const sequelize = new Sequelize('mysql://' + process.env.DB_INFOS_SQL);
@@ -21,6 +23,8 @@ const sequelize = new Sequelize('mysql://' + process.env.DB_INFOS_SQL);
     console.error('Unable to connect to the database:', error);
   }})();
 
+  //ne crée pas de table si existe déjà
+  sequelize.sync({logging: console.log});
 
 
 //configuration du CORS pour autoriser requetes exterieures : 
@@ -45,6 +49,7 @@ app.use((req, res, next) => {
 })); 
 
 
+
 app.use(bodyParser.json());  //transforme corps des requetes en objet js utilisable
 
 //app.use(helmet()); // sécurisation de l'application grâce au pulg-in helmet
@@ -52,8 +57,8 @@ app.use(bodyParser.json());  //transforme corps des requetes en objet js utilisa
 //on fait en sorte de pouvoir accéder au dossier images en rendant le dossier images statique :
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-/*app.use('/api/articles', articleRoutes);
+//app.use('/api/articles', articleRoutes);
 app.use('/api/auth', userRoutes);
-app.use('/api/likes', likeRoutes);*/
+/*app.use('/api/likes', likeRoutes);*/
 
-module.exports = app;
+module.exports = app; 
