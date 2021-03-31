@@ -64,7 +64,8 @@ exports.login = (req, res, next) => {
        }).catch(err => {return res.status(500).json({error: 'erreur serveur pour verif user'})})
     
 };
-    
+
+//supprimer un profil (réservé a l'admin et au user concerné : ajouter condition)
 exports.deleteUser = (req, res, next) => {
     models.User.destroy({where: {id: req.params.id}})
     .then (user => res.status(200).json('utilisateur supprimé'))

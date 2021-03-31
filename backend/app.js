@@ -11,6 +11,7 @@ const mysql = require('mysql2');
 
 
 const userRoutes = require('./routes/user');
+const articleRoutes = require('./routes/article');
 
 //connection à la base de données et test
 const sequelize = new Sequelize('mysql://' + process.env.DB_INFOS_SQL);
@@ -57,7 +58,7 @@ app.use(bodyParser.json());  //transforme corps des requetes en objet js utilisa
 //on fait en sorte de pouvoir accéder au dossier images en rendant le dossier images statique :
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-//app.use('/api/articles', articleRoutes);
+app.use('/api/articles', articleRoutes);
 app.use('/api/auth', userRoutes);
 /*app.use('/api/likes', likeRoutes);*/
 

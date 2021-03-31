@@ -12,7 +12,7 @@ router.post('/login', checkInput, userCtrl.login); //rajouter nocache et brute f
 router.get('/users', userCtrl.getAllUsers);
 router.get('/users/:id', userCtrl.getOneUser);
 router.delete('/users/:id', userCtrl.deleteUser);//possible par user ou admin seulement ? à décider
-router.put('/users/:id', userCtrl.modifyUser);
+router.put('/users/:id', checkInput, userCtrl.modifyUser);
 
 
 module.exports = router; 
