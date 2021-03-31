@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cryptojs = require("crypto-js");
 const sequelize = require('sequelize');
-const { validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 
 /*const Sequelize = require('sequelize');
@@ -14,12 +14,12 @@ const models = require('../models/index');
 //const User = require('../models/user');
 
  ///CREATION D'UN UTILISATEUR :
-exports.signup = (req, res, next) => {
-    //gestion des erreurs : pas besoin a priori ?????????????????? utile si express validator
-  /*  const errors = validationResult(req);
+exports.signup =  (req, res, next) => {
+    //gestion des erreurs d'express validator (cf router)
+   const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
-    }*/
+    }
     const cryptedMail = cryptojs.HmacSHA512(req.body.email, process.env.DB_KEY_FOR_MAIL).toString(); //cryptage du mail avant stockage ds BDD
     bcrypt.hash(req.body.password, 10) // hashage du mot de passage avec salage avec stockage ds BDD
         .then(hash => {
@@ -45,12 +45,13 @@ exports.login = (req, res, next) => {
                console.log(userfound.password)
                 bcrypt.compare(req.body.password, userfound.password, function(err,result){
                     if(result === false){ //si password pas bon : 
-                        return res.status(400).json({error: "password invalide"})
+                        return res.status(400).json({error, message: "password invalide"})
                     }else { //si password ok : création du token
                         res.status(200).json({
                             userId: userfound.id,
                             token: jwt.sign(
-                                { userId: userfound.id },
+                                { userId: userfound.id,
+                                isAdmin: userfound.isAdmin },
                                 process.env.DB_KEY_FOR_TOKEN,
                                 {expiresIn: '24h'}
                             )
@@ -59,9 +60,9 @@ exports.login = (req, res, next) => {
                 })  
                  
            }else{ //si utilisateur non trouvé
-               return res.status(404).json({error: 'utilisateur inexistant'})
+               return res.status(404).json({error, message: 'utilisateur inexistant'})
            }
-       }).catch(err => {return res.status(500).json({error: 'erreur serveur pour verif user'})})
+       }).catch(err => {return res.status(500).json({error, message: 'erreur serveur pour verif user'})})
     
 };
 
@@ -69,31 +70,54 @@ exports.login = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     models.User.destroy({where: {id: req.params.id}})
     .then (user => res.status(200).json('utilisateur supprimé'))
-    .catch(error => res.status(404).json({error: "erreur supprim user"}))
+    .catch(error => res.status(404).json({error, message: "erreur supprim user"}))
 };    
 
 //get all profils :
 exports.getAllUsers = (req, res, next) => {
-    models.User.findAll()
+    models.User.findAll({attributes: ['id', 'firstname', 'lastname', 'birthdate', 'imageUrl', 'description', 'isAdmin']})
     .then (users => res.status(200).json(users))
-    .catch(error => res.status(404).json({error: "erreur récup users"}))
+    .catch(error => res.status(404).json({error, message: "erreur récup users"}))
 };
 
     
 
 //get one profil : 
 exports.getOneUser = (req, res, next) => {
-    models.User.findOne({where: {id: req.params.id}})
+    models.User.findOne({attributes: ['id', 'firstname', 'lastname', 'birthdate', 'imageUrl', 'description', 'isAdmin'], where: {id: req.params.id}})
     .then (user => res.status(200).json(user))
-    .catch(error => res.status(404).json({error: "erreur récup user"}))
+    .catch(error => res.status(404).json({error, message: "erreur récup user"}))
 };
 
 //update profil :
 exports.modifyUser = (req, res, next) =>{
-    models.User.update({...req.body}, {where: {id: req.params.id}})
-    .then (user => res.status(200).json("modification effectuée"))
-    .catch(error => res.status(404).json({error: "erreur update user"}))
-}; //rajouer condition req.file quand possibilité d'envoyer fichier via front (avec multer)
+    //gestion des erreurs d'express validator (cf router)
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+   }
+
+    if(req.file){ //si présence d'un fichier image : 
+        //trouver l'url de l'image ancienne
+        models.User.findOne({where: {id: req.params.id}})
+            .then (userFound => {
+                const oldImageFilename = userFound.imageUrl.split('/images')[1];
+                //la retirer
+                fs.unlink(`images/${oldImageFilename}`, () =>{console.log('photo retirée')}); //on retire l'ancienne image de la BDD
+                //update le profil avec la nouvelle url calculée
+                models.User.update({...req.body, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
+                    .then (() => res.status(200).json({message: "Profil utilisateur mis à jour"}))
+                    .catch(error => res.status(404).json({error, message: "erreur update user"}));
+                })
+            .catch(err => res.status(404).json({err, message: "erreur récup user"}))
+    }else { //si absence de fichier image : modification directement
+        models.User.update({...req.body}, {where: {id: req.params.id}})
+            .then (user => res.status(200).json("Profil utilisateur mis à jour"))
+            .catch(error => res.status(404).json({error, message: "erreur update user"}))
+}}
+   ; 
+
+//pb : si update l'eamil n'est pas crypté, voir comment faire : tjs possible utiliser req.body ?
 
 //edit password :
  

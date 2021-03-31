@@ -10,7 +10,12 @@ const models = require('../models/index');
 
 
 ///création article : voir comment arrive l'userId (via front end ou récup via token ?) 
-exports.readArticle = (req, res, next) => {
+exports.createArticle = (req, res, next) => {
+    //gestion des erreurs d'express validator (cf router)
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+   }
     models.Article.create({UserId:req.body.userId, title: req.body.title, content: req.body.content, url: req.body.url, likes:0 })
         .then( (article)=>res.status(201).json({message : 'article créé'}))
         .catch((error) => res.status(400).json({ error, message : "L'article n'a pas pu être créé !" }))
@@ -32,6 +37,11 @@ exports.getOneArticle = (req, res, next) => {
 
 //update one article :
 exports.modifyArticle = (req, res, next) =>{
+    //gestion des erreurs d'express validator (cf router)
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
+     return res.status(400).json({ errors: errors.array() });
+   }
     models.Article.update({...req.body}, {where: {id: req.params.id}})
     .then (user => res.status(200).json("article modifié !"))
     .catch(error => res.status(404).json({error, message: "L'article n'a pas pu être modifié"}))
