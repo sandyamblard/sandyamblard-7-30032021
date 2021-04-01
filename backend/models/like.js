@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.Like.belongsTo(models.User,{
+      models.Like.belongsTo(models.User,{ 
         foreignKey:'userId',
         as: 'user',
       });
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     articleId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Message',
+        model: 'Article',/// corection erreur : noté Message au lieu Article
         key: 'id'
       }
     },

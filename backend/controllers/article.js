@@ -23,14 +23,14 @@ exports.createArticle = (req, res, next) => {
 
 //get all articles :
 exports.getAllArticles = (req, res, next) => {
-    models.Article.findAll()
+    models.Article.findAll({include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}]})
     .then (articles => res.status(200).json(articles))
     .catch(error => res.status(404).json({error, message: "Erreur lors de la récupération des articles"}))
 };
 
 //get one article : 
 exports.getOneArticle = (req, res, next) => {
-    models.Article.findOne({where: {id: req.params.id}})
+    models.Article.findOne({include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}]}, {where: {id: req.params.id}})
     .then (article => res.status(200).json(article))
     .catch(error => res.status(404).json({error, message: "Erreur lors de la récupération de l'article"}))
 };

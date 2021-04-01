@@ -41,7 +41,11 @@ exports.login = (req, res, next) => {
     const cryptedMail = cryptojs.HmacSHA512(req.body.email, process.env.DB_KEY_FOR_MAIL).toString();//cryptage du mail pour comparaison avec mail stocké ds BDD
     models.User.findOne({where: {email: cryptedMail}})
        .then(userfound => {
-           if(userfound){ //si un utilisateur est trouvé : passer à vérif password
+        if (userfound == null) { //si utilisateur non trouvé
+            return res.status(404).json({ error: 'utilisateur inexistant'})
+        }
+
+        else if(userfound != null){ //si un utilisateur est trouvé : passer à vérif password
                console.log(userfound.password)
                 bcrypt.compare(req.body.password, userfound.password, function(err,result){
                     if(result === false){ //si password pas bon : 
@@ -59,10 +63,8 @@ exports.login = (req, res, next) => {
                     }
                 })  
                  
-           }else{ //si utilisateur non trouvé
-               return res.status(404).json({error, message: 'utilisateur inexistant'})
            }
-       }).catch(err => {return res.status(500).json({error, message: 'erreur serveur pour verif user'})})
+       }).catch(err => res.status(500).json({error, message: 'erreur serveur pour verif user'}))
     
 };
 

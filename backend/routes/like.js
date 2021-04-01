@@ -11,6 +11,7 @@ const { body, validationResult } = require('express-validator');
 
 router.post('/articles/:articleId/vote/like', /*auth, */likeCtrl.addLike); 
 //router.post('/articles/:messageId/vote', /*auth, */likeCtrl.addDisike); 
+router.get('/articles/:articleId/likes', likeCtrl.getLikes)
 
 
 module.exports = router; 
