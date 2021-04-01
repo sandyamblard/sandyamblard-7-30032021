@@ -36,12 +36,50 @@ exports.addLike = (req, res, next) =>{
                 res.status(409).json({ message: "Like déjà compatibilisé auparavant" })
             }
         })
-        .catch (()=> console.log('pas trouvé'));
+        .catch(error => res.status(500).json({error, message : "erreur récup like ds bdd"}));
 };
 
-// recup des likes d'un article :
+
+exports.cancelLike = (req, res, next) =>{
+    //annule le like si déjà existant, sinon erreur
+    //1- pour le moment userId donné dans la requete, plus tard récup via le token
+    
+    //2- Vérif si existe déjà un like pour cet article et ce user
+    models.Like.findOne({where: {userId:req.body.userId, articleId: req.params.articleId}})
+        .then (likefound => { 
+            if(likefound === null) {
+                res.status(404).json({error : "like inexistant, impossible d'annuler le like"})
+            }else{ //3- si like existe déjà on modifie le compteur de l'article :
+                const likefoundId = likefound.id;
+                models.Article.findOne({where: {id: likefound.articleId }})
+                    .then( articlefound => { recupArticleId = articlefound.id;
+                        models.Article.update({likes: articlefound.likes-1}, {where: {id: articlefound.id}}) //ok fonctionne bien mais renvoie erreur ???
+                        .then( () => { //req.body.userId ok et articlefound.id ok (vérifié via console.log) mais console donne undefined
+                            console.log(req.body.userId, articlefound.id, likefoundId); //ok bonnes valeurs
+                            models.Like.destroy({where: {id: likefoundId}})
+                            .then(()=> res.status(200).json({message: "like annulé et compteur mis à jour"}))
+                            .catch (error => res.status(500).json({error, message: "erreur lors destruction like"}))
+                        })   
+                        .catch (error => res.status(500).json({error, message: 'pb pour enregistrer dislike'})) 
+                    })
+                    .catch ( console.log ('erreur recup article'))
+            }
+        })
+        .catch (error => res.status(500).json({error, message : "erreur récup like ds bdd"}));
+
+};
+
+
+
+
+
+// recup des likes d'un article (juste les noms des users):
 exports.getLikes = (req, res, next)=>{ 
-   models.Like.findAll({ attributes: [/*'id', 'userId', 'articleId'*/] , where: {articleId: req.params.articleId}, include:[{model: models.User, as: "user", required: true,  attributes: ["firstname", "lastname"]}]})
+   models.Like.findAll({ attributes: ['id', 'userId', 'articleId'] , 
+                         where: {articleId: req.params.articleId}, 
+                         include:[{model: models.User, as: "user", 
+                         required: true,  
+                         attributes: ["firstname", "lastname"]}]})
     .then( listLikes => res.status(200).json(listLikes))
     .catch (error => res.status(500).json({ error, message: "erreur lors d la recup des likes" }))
 };

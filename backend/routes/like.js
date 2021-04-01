@@ -10,7 +10,7 @@ const multer = require('../middlewares/multer-config');
 const { body, validationResult } = require('express-validator');
 
 router.post('/articles/:articleId/vote/like', /*auth, */likeCtrl.addLike); 
-//router.post('/articles/:messageId/vote', /*auth, */likeCtrl.addDisike); 
+router.post('/articles/:articleId/vote/cancelLike', /*auth, */likeCtrl.cancelLike); 
 router.get('/articles/:articleId/likes', likeCtrl.getLikes)
 
 
