@@ -13,6 +13,8 @@ const mysql = require('mysql2');
 const userRoutes = require('./routes/user');
 const articleRoutes = require('./routes/article');
 const likeRoutes = require('./routes/like');
+const commentRoutes = require('./routes/comment');
+
 
 //connection à la base de données et test
 const sequelize = new Sequelize('mysql://' + process.env.DB_INFOS_SQL);
@@ -61,6 +63,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/articles', articleRoutes);
 app.use('/api/auth', userRoutes);
-app.use('/api', likeRoutes);
+app.use('/api/', likeRoutes);
+app.use('/api/', commentRoutes);
 
 module.exports = app; 

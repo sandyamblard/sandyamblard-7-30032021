@@ -16,9 +16,13 @@ exports.createArticle = (req, res, next) => {
    if (!errors.isEmpty()) {
      return res.status(400).json({ errors: errors.array() });
    }
-    models.Article.create({UserId:req.body.userId, title: req.body.title, content: req.body.content, url: req.body.url, likes:0 })
-        .then( (article)=>res.status(201).json({message : 'article créé'}))
-        .catch((error) => res.status(400).json({ error, message : "L'article n'a pas pu être créé !" }))
+    models.Article.create({
+        UserId:req.body.userId, 
+        title: req.body.title, 
+        content: req.body.content, 
+        url: req.body.url, likes:0 })
+    .then( (article)=>res.status(201).json({message : 'article créé'}))
+    .catch((error) => res.status(400).json({ error, message : "L'article n'a pas pu être créé !" }))
 };
 
 //get all articles :
@@ -30,10 +34,12 @@ exports.getAllArticles = (req, res, next) => {
 
 //get one article : 
 exports.getOneArticle = (req, res, next) => {
-    models.Article.findOne({include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}]}, {where: {id: req.params.id}})
+    models.Article.findOne(
+        { where: {id: req.params.id}, 
+        include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}, {model: models.Comment, required: true}    ]})
     .then (article => res.status(200).json(article))
     .catch(error => res.status(404).json({error, message: "Erreur lors de la récupération de l'article"}))
-};
+}; 
 
 //update one article :
 exports.modifyArticle = (req, res, next) =>{
@@ -50,7 +56,10 @@ exports.modifyArticle = (req, res, next) =>{
 
 //supprimer un article (réservé a l'admin et au user concerné : ajouter condition)
 exports.deleteArticle = (req, res, next) => {
-    models.Article.destroy({where: {id: req.params.id}})
+    models.Article.destroy({ where: {id: req.params.id}/*, 
+    include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}, {model: models.Comment, required: true}    ]*/})
     .then (user => res.status(200).json('article supprimé'))
     .catch(error => res.status(404).json({error, message : "erreur supprim article"}))
 };   
+
+//voir pour supprimer aussi ses commentaires et ses likes qd suppression article : conditions ? jointures ?

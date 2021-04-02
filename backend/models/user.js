@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.User.hasMany(models.Article);
       models.User.hasMany(models.Like);
+      models.User.hasMany(models.Comment);
     }
   };
   User.init({
