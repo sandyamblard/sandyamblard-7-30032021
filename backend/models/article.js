@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         }
       })
-     models.Article.hasMany(models.Like);
-     models.Article.hasMany(models.Comment);
+    models.Article.hasMany(models.Like, { onDelete: 'CASCADE', hook:true });
+    models.Article.hasMany(models.Comment, { onDelete: 'CASCADE', hook:true });
 
     }
   };

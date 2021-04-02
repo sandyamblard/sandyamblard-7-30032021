@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       // Relation entre les clés étrangères et la table de référence
       models.Comment.belongsTo(models.Article,{
         foreignKey:'articleId',
-        as: 'article'
+        as: 'article' ////? ajouter qqch pour qd suppresion ? ondelete cascade ?
         
       });
     };
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: 'Article',
-        key: 'id'
+        key: 'id',onDelete: 'CASCADE',
       }
     },
 
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: 'User',
-        key: 'id'
+        key: 'id', 
       }
     },
     commContent: DataTypes.TEXT

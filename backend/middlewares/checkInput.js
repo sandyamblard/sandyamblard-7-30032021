@@ -1,7 +1,7 @@
 //middleware pour validation des entrées des utilisateurs :
 // ne doit pas contenir de caractères dangereux, pour éviter unjection SQL ou JS ou CSS :
 
-const pattern =  /[<>$"=#:{}()?%]/
+const pattern =  /[<>$=#{}()?%]/
 
 const isInvalid = (string) =>{
     return pattern.test(string);
@@ -9,8 +9,9 @@ const isInvalid = (string) =>{
 
 module.exports = (req, res, next) =>{
     if(isInvalid(req.body.email) || isInvalid(req.body.password) || isInvalid(req.body.firstname) || isInvalid(req.body.lastname) || isInvalid(req.body.tile) || isInvalid(req.body.description) || isInvalid(req.body.content)){
-        throw res.status(404).json({error:'Format de donées incorrectes'});
+        throw res.status(404).json({error:'Format de donées incorrectes, Caractères <>$=#{}()?% non autorisés '});
     }else{ 
         next();
     }
 };
+

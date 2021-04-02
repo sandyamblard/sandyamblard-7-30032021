@@ -8,23 +8,18 @@ const articleCtrl = require('../controllers/article');
 const checkInput = require('../middlewares/checkInput');
 const checkPassword = require('../middlewares/checkPassword');
 const multer = require('../middlewares/multer-config');
+const checkInputArticle = require('../middlewares/checkInputArticle');
 
 
-router.post('', 
-    body('title').isLength({ min: 2, max: 255}).withMessage('Le titre doit avoir entre 2 et 255 caractères. '),
-    body('content').isLength({ min: 2}).withMessage('Votre article doit avoir au moins 2 caractères. '),
-    /*checkInput,*/ multer, articleCtrl.createArticle);
+router.post('', /*auth,*/ checkInputArticle, checkInput, multer, articleCtrl.createArticle);
 
-router.get('', articleCtrl.getAllArticles);
+router.get('', /*auth,*/articleCtrl.getAllArticles);
 
-router.get('/:id', articleCtrl.getOneArticle);
+router.get('/:id', /*auth,*/ articleCtrl.getOneArticle);
 
-router.put('/:id', 
-    body('title').isLength({ min: 2, max: 255}).withMessage('Le titre doit avoir entre 2 et 255 caractères. '),
-    body('content').isLength({ min: 2}).withMessage('Votre article doit avoir au moins 2 caractères. '),
-    /*checkInput, */multer, articleCtrl.modifyArticle);
+router.put('/:id', /*auth,*/checkInput, checkInputArticle, multer, articleCtrl.modifyArticle);
 
-router.delete('/:id', articleCtrl.deleteArticle);
+router.delete('/:id', /*auth,*/ articleCtrl.deleteArticle);
 
 
 module.exports = router; 

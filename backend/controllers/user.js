@@ -15,11 +15,6 @@ const models = require('../models/index');
 
  ///CREATION D'UN UTILISATEUR :
 exports.signup =  (req, res, next) => {
-    //gestion des erreurs d'express validator (cf router)
-   const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const cryptedMail = cryptojs.HmacSHA512(req.body.email, process.env.DB_KEY_FOR_MAIL).toString(); //cryptage du mail avant stockage ds BDD
     bcrypt.hash(req.body.password, 10) // hashage du mot de passage avec salage avec stockage ds BDD
         .then(hash => {
@@ -70,9 +65,19 @@ exports.login = (req, res, next) => {
 
 //supprimer un profil (réservé a l'admin et au user concerné : ajouter condition)
 exports.deleteUser = (req, res, next) => {
-    models.User.destroy({where: {id: req.params.id}})
-    .then (user => res.status(200).json('utilisateur supprimé'))
-    .catch(error => res.status(404).json({error, message: "erreur supprim user"}))
+    models.User.findOne({where: {id: req.params.id}})
+    .then (user => {
+        const filename = user.imageUrl.split('/images')[1];
+        fs.unlink(`images/${filename}`, () =>{
+            models.User.destroy({where: {id: req.params.id}})
+            .then (user => res.status(200).json('utilisateur supprimé'))
+            .catch(error => res.status(404).json({error, message: "erreur supprim user"}))
+        });
+    })
+    .catch(error => res.status(404).json({error, message: "erreur récup user"}))
+
+
+    
 };    
 
 //get all profils :
@@ -92,15 +97,9 @@ exports.getOneUser = (req, res, next) => {
     .catch(error => res.status(404).json({error, message: "erreur récup user"}))
 };
 
-//update profil :
+//update profil (sauf email et password):
 exports.modifyUser = (req, res, next) =>{
-    //gestion des erreurs d'express validator (cf router)
-   const errors = validationResult(req);
-   if (!errors.isEmpty()) {
-     return res.status(400).json({ errors: errors.array() });
-   }
-
-    if(req.file){ //si présence d'un fichier image : 
+      if(req.file){ //si présence d'un fichier image : 
         //trouver l'url de l'image ancienne
         models.User.findOne({where: {id: req.params.id}})
             .then (userFound => {
@@ -117,10 +116,16 @@ exports.modifyUser = (req, res, next) =>{
         models.User.update({...req.body}, {where: {id: req.params.id}})
             .then (user => res.status(200).json("Profil utilisateur mis à jour"))
             .catch(error => res.status(404).json({error, message: "erreur update user"}))
-}}
-   ; 
+}}; 
 
-//pb : si update l'eamil n'est pas crypté, voir comment faire : tjs possible utiliser req.body ?
-
-//edit password :
- 
+//update email et password:
+exports.modifyMailPassword = (req, res, next) =>{
+    const cryptedMail = cryptojs.HmacSHA512(req.body.email, process.env.DB_KEY_FOR_MAIL).toString();//cryptage du mail pour comparaison avec mail stocké ds BDD
+    bcrypt.hash(req.body.password, 10) // hashage du mot de passage avec salage avec stockage ds BDD
+        .then(hash => {
+             models.User.update({email: cryptedMail,password: hash}, {where: {id: req.params.id}} )
+             .then( ()=>res.status(201).json({message : 'email et password modifiés'}))
+             .catch(error => res.status(400).json({ error, message: 'erreur lors de la modification du compte' }))
+        })
+       .catch(error => res.status(500).json({ error, message : "erreur lors bcrypt" }));
+};

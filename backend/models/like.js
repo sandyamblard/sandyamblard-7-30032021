@@ -13,14 +13,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Like.belongsTo(models.User,{ 
         foreignKey:'userId',
-        as: 'user',
+        as: 'user',     
       });
       
       // Relation entre les clés étrangères et la table de référence
       models.Like.belongsTo(models.Article,{
         foreignKey:'articleId',
-        as: 'article'
-        
+        as: 'article',
+        //essai pour pouvoir supprimer un article si il a des commentaires ou des likes
+           // foreignKeyConstraint: true, onDelete: 'cascade'
       });
     };
   };
@@ -28,8 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     articleId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Article',/// corection erreur : noté Message au lieu Article
-        key: 'id'
+        model: 'Article',
+        key: 'id', onDelete: 'CASCADE'
       }
     },
 
