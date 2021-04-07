@@ -37,14 +37,14 @@ exports.login = (req, res, next) => {
     models.User.findOne({where: {email: cryptedMail}})
        .then(userfound => {
         if (userfound == null) { //si utilisateur non trouvé
-            return res.status(404).json({ error: 'utilisateur inexistant'})
+            throw res.status(404).json({ error,message: 'utilisateur inexistant'})
         }
 
         else if(userfound != null){ //si un utilisateur est trouvé : passer à vérif password
                console.log(userfound.password)
                 bcrypt.compare(req.body.password, userfound.password, function(err,result){
                     if(result === false){ //si password pas bon : 
-                        return res.status(400).json({error, message: "password invalide"})
+                        throw res.status(400).json({error, message: "password invalide"})
                     }else { //si password ok : création du token
                         res.status(200).json({
                             userId: userfound.id,

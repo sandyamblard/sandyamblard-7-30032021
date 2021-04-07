@@ -12,7 +12,7 @@ export default {
   name: 'App',
   components: {
    'topbar' : header,
-    'welcome': Welcome
+    'welcome' : Welcome
   }
 }
 </script>
