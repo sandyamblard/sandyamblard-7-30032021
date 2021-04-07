@@ -13,7 +13,7 @@ const mysql = require('mysql2');
 const userRoutes = require('./routes/user');
 const articleRoutes = require('./routes/article');
 const likeRoutes = require('./routes/like');
-const commentRoutes = require('./routes/comment');
+const commentRoutes = require('./routes/comment'); 
 
 
 //connection à la base de données et test
