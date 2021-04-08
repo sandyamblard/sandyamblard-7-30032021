@@ -11,7 +11,7 @@ const multer = require('../middlewares/multer-config');
 const checkInputArticle = require('../middlewares/checkInputArticle');
 
 
-router.post('', /*auth,*/ checkInputArticle, checkInput, multer, articleCtrl.createArticle);
+router.post('', /*auth,*/ checkInputArticle, /*checkInput,*/ multer, articleCtrl.createArticle);
 
 router.get('', /*auth,*/articleCtrl.getAllArticles);
 

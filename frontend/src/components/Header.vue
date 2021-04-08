@@ -1,7 +1,7 @@
 <template>
     <header class="topbar">
         <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
-        <p>{{ entetetitre }}</p>
+        <p>{{ entetetitre }}<i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil"></i></p>
     </header>
 </template>
 
@@ -9,11 +9,17 @@
 
 <script>
 
+
 export default{
     data(){
         return {
-            entetetitre: 'Réseau social d\'entreprise'
+            entetetitre: 'Réseau social d\'entreprise',
+            userConnected: ''
+            
         }
+    }, created(){
+        this.userConnected = this.$store.userId;
+        
     }
 }
 
@@ -32,6 +38,12 @@ export default{
      display: flex;
      align-items: center;
      justify-content: space-between;
+     & .fas{
+         color: white;
+         font-size: 35px;
+         margin-left: 5rem ;
+        
+     }
  }
 
  .topbar img{
@@ -42,6 +54,7 @@ export default{
 
  .topbar p{
 margin-right: 2vw;
-
+display: flex;
+align-items: center;
  }
 </style>

@@ -1,7 +1,8 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link>|
+    <router-link to="/dashboard">Dashboard</router-link>
   </div>
   <router-view/>
 </template>
@@ -59,7 +60,7 @@ export default {
 label {
     flex: none;
 }      
-input{
+input, textarea{
     flex: auto;
     margin: 0.5rem;
     padding: 0.5rem;
