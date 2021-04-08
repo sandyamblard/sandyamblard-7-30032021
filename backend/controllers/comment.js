@@ -34,9 +34,15 @@ exports.getOneComment = (req, res, next) =>{
 
 //get tous les commentaires d'un article :
 exports.getSeveralComments = (req, res, next) =>{
-    models.Comment.findAll(
-        {include:[{model: models.User, as: 'user', required: true, attributes: ["firstname", "lastname"]}]},
-        {where: {articleId: req.params.articleId}})
+    console.log(req.params.articleId)
+    models.Comment.findAll({ attributes: ['id', 'userId', 'articleId', "commContent", "createdAt", "updatedAt"] , 
+                            where: {articleId: req.params.articleId}, 
+                            include:[{model: models.User, as: "user", 
+                            required: true,  
+                            attributes: ["firstname", "lastname", 'imageUrl']}]}
+        /*{include:[{model: models.User, as: 'user', required: true, attributes: ["firstname", "lastname", "imageUrl"]}]},
+         {where: {articleId: req.params.articleId}}*/
+        )
     .then (comments => res.status(200).json(comments))
     .catch(error => res.status(404).json({error, message: "Les commentaires n'ont pas pu être trouvé"}))
 }; 

@@ -85,6 +85,9 @@ export default {
             this.login= true;
             this.signup = false;
         },
+        goDashboard(){
+            this.$router.push('dashboard');
+        },
         sendUser: function(){
             const envoi = { firstname:this.firstname, 
                 lastname: this.lastname, 
@@ -112,7 +115,8 @@ export default {
                     this.envoibis="",
                     this.$store.userId= resp.data.userId,
                     this.$store.token= resp.data.token,
-                    console.log(this.$store.userId, this.$store.token)})
+                    console.log(this.$store.userId, this.$store.token),
+                    this.goDashboard()})
                 .catch (err => console.log(err))
             })
             .catch (err => console.log(err))
@@ -129,7 +133,8 @@ export default {
                     this.envoi="",
                     this.$store.userId= resp.data.userId,
                     this.$store.token= resp.data.token,
-                    console.log(this.$store.userId, this.$store.token)
+                    console.log(this.$store.userId, this.$store.token),
+                    this.goDashboard()
                 })
                 .catch (err => console.log(err))
         }

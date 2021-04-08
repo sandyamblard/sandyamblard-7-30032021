@@ -78,7 +78,7 @@ exports.getLikes = (req, res, next)=>{
                          where: {articleId: req.params.articleId}, 
                          include:[{model: models.User, as: "user", 
                          required: true,  
-                         attributes: ["firstname", "lastname"]}]})
+                         attributes: ["firstname", "lastname", 'imageUrl']}]})
     .then( listLikes => res.status(200).json(listLikes))
     .catch (error => res.status(500).json({ error, message: "erreur lors d la recup des likes" }))
 };

@@ -31,7 +31,7 @@ exports.getAllArticles = (req, res, next) => {
 exports.getOneArticle = (req, res, next) => {
     models.Article.findOne(
         { where: {id: req.params.id}
-        , include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}, {model: models.Comment}]})
+        , include:[{model: models.User, required: true, attributes: ["firstname", "lastname", "imageUrl"]}, {model: models.Comment}]})
     .then (article => res.status(200).json(article))
     .catch(error => res.status(404).json({error, message: "Erreur lors de la récupération de l'article"}))
 }; 

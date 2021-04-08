@@ -1,7 +1,7 @@
 <template>
 <section>
     
-    <article class='article-one dash--item' v-for="(article,index) in allArticles" :key=index> 
+    <article class='article-one dash--item' v-for="(article,index) in allArticles" :key=index @click='goArticle(article.id)'>
         <h3>{{ article.title }}</h3>
         <img :src="article.url">
         <p>{{article.content}}</p>
@@ -27,6 +27,12 @@ export default {
         .then((resp)=> {console.log(resp.data);
             this.allArticles = resp.data})
         .catch(err => console.log(err))
+    },
+    methods:{
+        goArticle(identif){
+            console.log(identif)
+            this.$router.push(`/article/${identif}`);
+        }
     }
 
 }
@@ -39,5 +45,13 @@ export default {
         max-width: 80%;
         border-radius: 10px;
     }
+}
+
+.article-one{
+    cursor: pointer;
+}
+.article-one a{
+    text-decoration: none;
+    color: inherit;
 }
 </style>
