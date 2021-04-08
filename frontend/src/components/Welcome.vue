@@ -61,6 +61,7 @@
 import axios from 'axios'
 
 export default {
+    name: "Welcome",
     data() {
         return {
             signup: false,
@@ -108,7 +109,10 @@ export default {
                     this.email="",
                     this.birthdate="",
                     this.envoi="",
-                    this.envoibis=""})
+                    this.envoibis="",
+                    this.$store.userId= resp.data.userId,
+                    this.$store.token= resp.data.token,
+                    console.log(this.$store.userId, this.$store.token)})
                 .catch (err => console.log(err))
             })
             .catch (err => console.log(err))
@@ -118,21 +122,19 @@ export default {
                 password: this.password, 
                 email: this.email, 
                 }
-                console.log(envoi);
             axios.post('http://localhost:3000/api/auth/login', envoi)
-                .then(resp => {console.log(resp);
+                .then(resp => {
                     this.password="",
                     this.email="",
-                    this.envoi=""
+                    this.envoi="",
+                    this.$store.userId= resp.data.userId,
+                    this.$store.token= resp.data.token,
+                    console.log(this.$store.userId, this.$store.token)
                 })
                 .catch (err => console.log(err))
         }
-    },
-    created(){
-        axios.get('http://localhost:3000/api/auth/users')
-        .then((resp)=> console.log(resp.data))
-        .catch(err => console.log(err))
     }
+    
 
 }
 </script>

@@ -1,10 +1,15 @@
 <template>
-  <topbar></topbar>
-  <welcome></welcome>
+  <div id="nav">
+    <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link>
+  </div>
+  <router-view/>
 </template>
 
-<script>
 
+
+<script>
+/*
 import header from './components/Header.vue'
 import Welcome from './components/Welcome.vue'
 
@@ -14,7 +19,7 @@ export default {
    'topbar' : header,
     'welcome' : Welcome
   }
-}
+}*/
 </script>
 
 <style lang="scss">
@@ -71,3 +76,4 @@ button{
   font-size: inherit;
 }
 </style>
+
