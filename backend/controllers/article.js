@@ -19,7 +19,7 @@ exports.createArticle = (req, res, next) => {
     .then( (article)=>res.status(201).json({message : 'article créé'}))
     .catch((error) => res.status(500).json({ error, message : "L'article n'a pas pu être créé !" }))
 };
-
+ 
 //get all articles :
 exports.getAllArticles = (req, res, next) => {
     models.Article.findAll({include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}]})

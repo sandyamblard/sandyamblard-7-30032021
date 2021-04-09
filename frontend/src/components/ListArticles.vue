@@ -30,7 +30,6 @@ export default {
     },
     methods:{
         goArticle(identif){
-            console.log(identif)
             this.$router.push(`/article/${identif}`);
         }
     }

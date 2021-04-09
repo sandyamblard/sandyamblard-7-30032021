@@ -91,7 +91,7 @@ exports.getAllUsers = (req, res, next) => {
 
 //get one profil : 
 exports.getOneUser = (req, res, next) => {
-    models.User.findOne({attributes: ['id', 'firstname', 'lastname', 'birthdate', 'imageUrl', 'description', 'isAdmin'], 
+    models.User.findOne({attributes: ['id', 'firstname', 'lastname', 'birthdate', 'imageUrl', 'description', 'isAdmin', 'createdAt'], 
                         where: {id: req.params.id}})
     .then (user => res.status(200).json(user))
     .catch(error => res.status(404).json({error, message: "erreur récup user"}))

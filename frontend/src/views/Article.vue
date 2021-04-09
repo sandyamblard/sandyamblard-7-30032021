@@ -20,7 +20,7 @@
            
            <div class='commentslist'>
                 <h2>Commentaires :</h2>
-                                
+
                 <!-- Ne donne rien à l'utlisation et fait bugguer.....-->
                 <!--div v-for="(comment, index) in articleData.Comments" :key=index class='comment-item'>
                    <div class="comment-item">
@@ -62,9 +62,9 @@ export default {
             articleData: '',
             allComments:'',
             likeShowed: false,
-            listLikes: 'essaipropos',
+            /*listLikes: 'essaipropos',*/
             commContent:'',
-            envoi: ''
+            
         }
     },
     created(){
@@ -96,12 +96,14 @@ export default {
             }    
         },
         sendComment(){
-            this.envoi = {
-                userId: this.store.userId,
+            const envoi = {
+                userId: this.$store.userId,
                 commContent: this.commContent
             };
-            console.log(this.envoi);
-            //axios.post(`http://localhost:3000/api/articles/${this.id}/likes`, envoi)
+            console.log(envoi);
+            axios.post(`http://localhost:3000/api/articles/${this.id}/comment`, envoi)
+            .then( resp => console.log(resp))
+            .catch(err => console.log(err))  
         }
     }
 }

@@ -1,9 +1,9 @@
 <template>
 <aside class='users-list dash--item'>   
     <h2>Membres inscrits </h2>
-    <div v-for="(user,index) in allUsers" :key=index class="user-item">
-        <img :src="user.imageUrl" alt="" class="img-avatar">
-        <p>{{ user.firstname }} {{ user.lastname }}</p>
+    <div v-for="(user,index) in allUsers" :key=index class="user-item" >
+        <img :src="user.imageUrl" alt="" class="img-avatar" @click='goUser(user.id)'>
+        <p @click='goUser(user.id)'>{{ user.firstname }} {{ user.lastname }} </p>
     </div>
 
     
@@ -24,6 +24,11 @@ export default {
         .then((resp)=> {console.log(resp.data);
             this.allUsers = resp.data})
         .catch(err => console.log(err))
+    },
+    methods:{
+        goUser(identif){
+            this.$router.push(`/user/${identif}`);
+        }
     }
 
 }
@@ -43,5 +48,13 @@ export default {
 
 .user-item{
     display: flex;
+    
+    & p,
+    & img{
+        cursor: pointer;
+    }
+    & p:hover{
+        text-decoration: underline;
+    }
 }
 </style>

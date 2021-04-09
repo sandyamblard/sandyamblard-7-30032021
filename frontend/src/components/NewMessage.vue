@@ -27,7 +27,7 @@ export default {
         return{
             title:'',
             content:'',
-            url:'http://localhost:3000/images/photo-1565369330537-78657c7ad44f.jpg'
+            url:''
         }
     },
     methods: {

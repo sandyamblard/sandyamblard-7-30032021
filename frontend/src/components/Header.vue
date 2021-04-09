@@ -1,7 +1,11 @@
 <template>
     <header class="topbar">
         <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
-        <p>{{ entetetitre }}<i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil"></i></p>
+        <p>{{ entetetitre }}
+            <i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil" @click='goMyProfil'></i>
+            <i v-if="$store.userId" class="fas fa-home" title="Revenir au mur" @click="goDashboard"></i>
+            <i v-if="$store.userId" class="fas fa-power-off" title="Se déconnecter" @click="goHome"></i>
+        </p>
     </header>
 </template>
 
@@ -20,6 +24,18 @@ export default{
     }, created(){
         this.userConnected = this.$store.userId;
         
+    }, methods: {
+        goDashboard(){
+            this.$router.push('/dashboard');
+        },
+        goHome(){
+            this.$router.push('/');
+        },
+        goMyProfil(){
+            this.$router.push(`/user/${this.$store.userId}`);
+            
+             
+        }
     }
 }
 
@@ -41,7 +57,8 @@ export default{
      & .fas{
          color: white;
          font-size: 35px;
-         margin-left: 5rem ;
+         margin-left: 1rem ;
+         cursor: pointer;
         
      }
  }
@@ -57,4 +74,7 @@ margin-right: 2vw;
 display: flex;
 align-items: center;
  }
+
+
+
 </style>
