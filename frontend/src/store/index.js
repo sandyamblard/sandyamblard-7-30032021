@@ -3,7 +3,8 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     userId :"",
-    token: ""
+    token: "",
+    isAdmin: false
   },
   mutations: {
   },

@@ -48,6 +48,7 @@ exports.login = (req, res, next) => {
                     }else { //si password ok : création du token
                         res.status(200).json({
                             userId: userfound.id,
+                            isAdmin: userfound.isAdmin,
                             token: jwt.sign(
                                 { userId: userfound.id,
                                 isAdmin: userfound.isAdmin },
@@ -67,14 +68,21 @@ exports.login = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     models.User.findOne({where: {id: req.params.id}})
     .then (user => {
-        const filename = user.imageUrl.split('/images')[1];
-        fs.unlink(`images/${filename}`, () =>{
+        if(!user.imageUrl){ //cas où il n'y a pas d'images de profil
             models.User.destroy({where: {id: req.params.id}})
             .then (user => res.status(200).json('utilisateur supprimé'))
             .catch(error => res.status(404).json({error, message: "erreur supprim user"}))
-        });
+        }else{
+            //si il y a une image de profil
+            const filename = user.imageUrl.split('/images')[1];
+            fs.unlink(`images/${filename}`, () =>{
+                models.User.destroy({where: {id: req.params.id}})
+                .then (user => res.status(200).json('utilisateur supprimé'))
+                .catch(error => res.status(404).json({error, message: "erreur supprim user"}))
+            });
+        }
     })
-    .catch(error => res.status(404).json({error, message: "erreur récup user"}))
+    .catch(error => res.status(500).json({error, message: "erreur récup user"}))
 
 
     

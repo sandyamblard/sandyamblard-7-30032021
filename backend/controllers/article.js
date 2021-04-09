@@ -31,7 +31,7 @@ exports.getAllArticles = (req, res, next) => {
 exports.getOneArticle = (req, res, next) => {
     models.Article.findOne(
         { where: {id: req.params.id}
-        , include:[{model: models.User, required: true, attributes: ["firstname", "lastname", "imageUrl"]}, {model: models.Comment}]})
+        , include:[{model: models.User, required: true, attributes: ["id", "firstname", "lastname", "imageUrl"]}, {model: models.Comment}]})
     .then (article => res.status(200).json(article))
     .catch(error => res.status(404).json({error, message: "Erreur lors de la récupération de l'article"}))
 }; 
@@ -48,12 +48,20 @@ exports.modifyArticle = (req, res, next) =>{
 exports.deleteArticle = (req, res, next) => {
     models.Article.findOne({where: {id: req.params.id}})
     .then (article => {
-        const filename = article.url.split('/images')[1];
-        fs.unlink(`images/${filename}`, () =>{
+        if(article.url){ //si image associée :
+            const filename = article.url.split('/images')[1];
+            fs.unlink(`images/${filename}`, () =>{
             models.Article.destroy({where: {id: req.params.id}})
             .then (user => res.status(200).json('article supprimé'))
             .catch(error => res.status(500).json({error, message: "erreur supprission article"}))
         });
+        }else{
+                //si pas d'image associée :
+                models.Article.destroy({where: {id: req.params.id}})
+                .then (user => res.status(200).json('article supprimé'))
+                .catch(error => res.status(500).json({error, message: "erreur supprission article"}))    
+        }
+        
     })
     .catch(error => res.status(404).json({error, message: "erreur récup article"}))
 };   
