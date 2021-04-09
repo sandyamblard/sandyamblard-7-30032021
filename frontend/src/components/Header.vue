@@ -29,7 +29,11 @@ export default{
             this.$router.push('/dashboard');
         },
         goHome(){
+            this.$store.userId = "";
+            this.$store.token = "";
+            this.$store.isAdmin = false;
             this.$router.push('/');
+
         },
         goMyProfil(){
             this.$router.push(`/user/${this.$store.userId}`);

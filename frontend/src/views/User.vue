@@ -3,7 +3,7 @@
 <main>
     <h1>{{userData.firstname}} {{userData.lastname}}</h1>
     <section>
-        <img :src="userData.imageUrl" alt="">
+        <img :src="userData.imageUrl" alt="" class="avatar">
         <p>Biographie : {{userData.description}}</p>
         <p>Anniversaire : {{userData.birthdate}}</p>
         <p>Membre inscrit depuis le :{{userData.createdAt}}</p>

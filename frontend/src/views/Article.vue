@@ -4,9 +4,9 @@
        <h1>{{ articleData.title }}</h1>
        <section >
            <div class="article-item">
-                <img :src="articleData.url" alt="">
+                <img :src="articleData.url" alt="" class="img-article">
                 <p> {{ articleData.content }}</p>
-                <p>Auteur :<img :src="imageUrl" alt=""> {{prenom}} {{nom}}</p>
+                <p>Auteur :<img :src="imageUrl" alt="" class='img-avatar'> {{prenom}} {{nom}}</p>
                 <!--p>Auteur :  {{articleData.User}}</p-->
                 <!--p> Auteur : <img :src="articleData.User.imageUrl" alt="">{{articleData.User.firstname}} {{articleData.User.lastname}}</p-->
                 <p>Ecrit le : {{ articleData.createdAt }}</p>
@@ -17,6 +17,8 @@
                 <div v-if="likeShowed"> 
                    <p v-for="(like, index) in listLikes" :key=index>{{like.user.firstname}} {{like.user.lastname}}</p>
                 </div>
+                <div v-if="userConnectedLiked" title="Cliquer pour changer d'avis" @click='voteDislike'>J'aime cet article ! <i class="fas fa-thumbs-up"></i></div>
+                <div v-else title="Cliquer pour liker" @click='voteLike'>Aimer cet article<i class="far fa-thumbs-up"></i> </div>
                 <!--div v-if="adminConnected"-->
                 <div v-if="$store.isAdmin" class='admin-area'>
                      <i class="fas fa-exclamation-triangle"></i><p>ACCES ADMIN</p>
@@ -95,7 +97,8 @@ export default {
             articleData: '',
             allComments:'',
             likeShowed: false,
-            listLikes: '',
+            listLikes: [],
+            listUserIdLikes: [], userConnectedLiked : false,//essai pour récup les id des users qui like et voir si user connecté like l'article
             commContent:'',
             idAuthor:'',     
             modifyOpen: false,
@@ -124,22 +127,29 @@ export default {
             .then((resp)=> {
             console.log(resp.data);
            this.allComments = resp.data})
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
         
+        axios.get(`http://localhost:3000/api/articles/${this.id}/likes`)
+                .then ( (resp) => {
+                    console.log(resp.data);
+                    this.listLikes= resp.data;
+                    //console.log(this.listLikes)
+                    for(let i in resp.data){                      //on enregistre les userId qui aiment l'article
+                        this.listUserIdLikes.push(resp.data[i].user.id)
+                    }
+                    //console.log(this.listUserIdLikes)
+                    if(this.listUserIdLikes.includes(this.$store.userId)){ //on compare les id présent ds le tableau à notre utilisateur connecté
+                        this.userConnectedLiked = true
+                    }
+                    console.log(this.userConnectedLiked)
+                })
+                .catch(err => console.log(err));
+       
         
     },
     methods: {
         showLikes: function(){
             this.likeShowed= !this.likeShowed;
-            if (this.likeShowed == true){
-              axios.get(`http://localhost:3000/api/articles/${this.id}/likes`)
-                .then ( (resp) => {
-                    //console.log(resp.data);
-                    this.listLikes= resp.data;
-                    //console.log(this.listLikes)
-                })
-                .catch(err => console.log(err))  
-            }    
         },
         sendComment: function(){
             const envoi = {
@@ -171,6 +181,18 @@ export default {
             axios.put(`http://localhost:3000/api/articles/${this.id}`, envoi)
             .then( resp => console.log(resp))
             .catch(err => console.log(err))  
+        },
+        voteLike: function(){
+            console.log("vote like");
+            axios.post(`http://localhost:3000/api/articles/${this.id}/vote/like`, {userId: this.$store.userId})
+            .then( resp => console.log(resp))
+            .catch(err => console.log(err))
+        },
+        voteDislike: function(){
+            console.log("vote DISlike");
+            axios.post(`http://localhost:3000/api/articles/${this.id}/vote/cancellike`, {userId: this.$store.userId})
+            .then( resp => console.log(resp))
+            .catch(err => console.log(err))
         }
     }
 }
@@ -182,15 +204,21 @@ export default {
      border-radius: 15px;
     background-color: white;
     margin: 2vw;
-    & img{
+    
+}
+.img-article{
         max-width: 95%;
         border-radius: 10px;
         margin: 1vw;
     }
-}
-
 .comment-item{
     width: 80%;
+    & .img-avatar{
+         max-width: 50px;
+    border-radius: 50%;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    }
 }
 
 .showlikes:hover{
@@ -217,5 +245,7 @@ form{
     border-radius: 10px;
     width: 15rem;
 }
+
+
 
 </style>

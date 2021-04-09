@@ -18,7 +18,7 @@ exports.addLike = (req, res, next) =>{
                     userId: req.body.userId,
                     articleId: req.params.articleId,
                     isLike:1
-                }).then( (likeCreated)=>{console.log(likeCreated);
+                }).then( (likeCreated)=>{
                     //on incrémente le compteur de likes de l'article concerné et on l'update
                     models.Article.findOne({where: {id: likeCreated.articleId}}) 
                         .then( (articlefound) => { 
@@ -50,13 +50,16 @@ exports.cancelLike = (req, res, next) =>{
             if(likefound === null) {
                 res.status(404).json({error : "like inexistant, impossible d'annuler le like"})
             }else{ //3- si like existe déjà on modifie le compteur de l'article :
+                console.log('like retrouvé ds bdd likes')
                 const likefoundId = likefound.id;
                 models.Article.findOne({where: {id: likefound.articleId }})
                     .then( articlefound => { recupArticleId = articlefound.id;
+                        console.log('article retrouvé ds bdd')
                         models.Article.update({likes: articlefound.likes-1}, {where: {id: articlefound.id}}) //ok fonctionne bien mais renvoie erreur ???
                         .then( () => { 
+                            console.log('article modifié')
                             models.Like.destroy({where: {id: likefoundId}})
-                            .then(()=> res.status(200).json({message: "like annulé et compteur mis à jour"}))
+                            .then(()=> {console.log('like supprimé'); res.status(200).json({message: "like annulé et compteur mis à jour"})})
                             .catch (error => res.status(500).json({error, message: "erreur lors destruction like"}))
                         })   
                         .catch (error => res.status(500).json({error, message: 'pb pour enregistrer dislike'})) 
@@ -78,7 +81,7 @@ exports.getLikes = (req, res, next)=>{
                          where: {articleId: req.params.articleId}, 
                          include:[{model: models.User, as: "user", 
                          required: true,  
-                         attributes: ["firstname", "lastname", 'imageUrl']}]})
+                         attributes: ["id","firstname", "lastname", 'imageUrl']}]})
     .then( listLikes => res.status(200).json(listLikes))
     .catch (error => res.status(500).json({ error, message: "erreur lors d la recup des likes" }))
 };

@@ -76,5 +76,12 @@ button{
   font-family: inherit;
   font-size: inherit;
 }
+
+.img-avatar{
+    max-width: 50px;
+    border-radius: 50%;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
 </style>
 
