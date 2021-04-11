@@ -58,17 +58,18 @@
                 </div-->
 
                 <div v-for="(comment, index) in allComments" :key=index class='comment-item'>
-                   <div class="comment-item">
+                    <!--div class="comment-item"-->
                         <p>{{comment.commContent}}</p>
                         <p>Par : {{comment.user.firstname}} {{comment.user.lastname}}</p>
-                        <!--div v-if="adminConnected"-->
-                        <div v-if="$store.isAdmin" class='admin-area'>
-                     <i class="fas fa-exclamation-triangle"></i><p>ACCES ADMIN</p>
-                        <div>Modifier <i class="fas fa-user-edit" ></i></div>
-                        <div>Supprimer<i class="fas fa-trash-alt"></i></div>    
-                </div>
                         
-                    </div>
+                        <div @click="goToComment(comment.id)" title="Détails, Modifier ou supprimer">
+                            
+                                <i class="fas fa-plus-circle"></i>
+
+                        </div>
+                        
+                        
+                    <!--/div-->
                 </div>
                 <form @submit.prevent="sendComment">
                     <label for="comment">Ecrire un commentaire :</label>
@@ -98,7 +99,8 @@ export default {
             allComments:'',
             likeShowed: false,
             listLikes: [],
-            listUserIdLikes: [], userConnectedLiked : false,//essai pour récup les id des users qui like et voir si user connecté like l'article
+            listUserIdLikes: [], 
+            userConnectedLiked : false,//essai pour récup les id des users qui like et voir si user connecté like l'article
             commContent:'',
             idAuthor:'',     
             modifyOpen: false,
@@ -158,14 +160,28 @@ export default {
             };
             console.log(envoi);
             axios.post(`http://localhost:3000/api/articles/${this.id}/comment`, envoi)
-            .then( resp => console.log(resp))
+            .then( resp => {
+                console.log(resp);
+                //nvlle requete pour retrouver tous les comments avec leur id
+                axios.get(`http://localhost:3000/api/articles/${this.id}/comments`)
+                    .then((resp)=> {
+                        console.log(resp.data);
+                        this.allComments = resp.data})
+                        .catch(err => console.log(err));
+            })
             .catch(err => console.log(err))  
+        },
+        goToComment : function(identif){
+            this.$router.push(`/comment/${identif}`)
         }, 
         deleteArticle : function(){
             console.log("delete article")
             if(confirm('Etes-vous sûr de vouloir supprimer cet article ?')){
                 axios.delete(`http://localhost:3000/api/articles/${this.id}`)
-                .then( resp => console.log(resp))
+                .then( resp => {console.log(resp);
+                    //// prévoir animation pop up qq secondes pour annonce article supprimé avant redirection
+                    this.$router.push('/dashboard');
+                })
                 .catch(err => console.log(err))
             }
         }, 
@@ -179,19 +195,38 @@ export default {
                 url: this.url
             };
             axios.put(`http://localhost:3000/api/articles/${this.id}`, envoi)
-            .then( resp => console.log(resp))
+            .then( resp => {
+                console.log(resp);
+                this.articleData.title = this.title;
+                this.articleData.content = this.content;
+                this.modifyOpen= false;
+
+                })
             .catch(err => console.log(err))  
         },
         voteLike: function(){
             console.log("vote like");
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/like`, {userId: this.$store.userId})
-            .then( resp => console.log(resp))
+            .then( resp => {
+                console.log(resp);
+                this.listUserIdLikes.push(this.$store.userId);
+                this.userConnectedLiked = true;
+                this.articleData.likes++;
+            })
             .catch(err => console.log(err))
         },
         voteDislike: function(){
             console.log("vote DISlike");
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/cancellike`, {userId: this.$store.userId})
-            .then( resp => console.log(resp))
+            .then( resp => {
+                console.log(resp);
+                this.userConnectedLiked = false;
+                //ajouter trouver userId et le retirer du array
+                const index = this.listUserIdLikes.indexOf(this.$store.userId);
+                this.listUserIdLikes.splice(index,1)  
+                //              
+                this.articleData.likes-- //mise à jour du compteur de likes
+            })
             .catch(err => console.log(err))
         }
     }

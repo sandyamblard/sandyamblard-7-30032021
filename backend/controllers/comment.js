@@ -25,9 +25,16 @@ exports.modifyComment = (req, res, next) =>{
 
 //get un commentaire à partir de son id
 exports.getOneComment = (req, res, next) =>{
-    models.Comment.findOne(
+    models.Comment.findOne(/*
         {where: {id: req.params.id}}, 
-        {include:[{model: models.User, as: 'user', required: true, attributes: ["firstname", "lastname"]}]})
+        {include:[{model: models.User, as: 'user', required: true, attributes: ["firstname", "lastname"]}]}*/
+        { attributes: ['id', 'userId', 'articleId', "commContent", "createdAt", "updatedAt"] , 
+                            where: {id: req.params.id}, 
+                            include:[{model: models.User, as: "user", required: true, attributes: ['id',"firstname", "lastname", 'imageUrl']},
+                            {model: models.Article, as: "article", 
+                            required: true,  
+                            attributes: ["title", "url", "userId", 'id']}]}
+        )
     .then (comment => res.status(200).json(comment))
     .catch(error => res.status(404).json({error, message: "Le commentaire n'a pas pu être trouvé"}))
 }; 

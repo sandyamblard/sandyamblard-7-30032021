@@ -97,7 +97,14 @@ export default {
                 description: this.description
             }
             axios.put(`http://localhost:3000/api/auth/users/${this.id}`, envoi)
-            .then( resp => console.log(resp))
+            .then( resp => {
+                console.log(resp);
+                this.userData.firstname = this.firstname;
+                this.userData.lastname = this.lastname;
+                this.userData.birthdate = this.birthdate ;
+                this.userData.description = this.description;
+                this.modifyProfil= false;
+            })
             .catch(err => console.log(err))
         }, 
         editPass: function(){
@@ -106,7 +113,9 @@ export default {
                 email: this.email
             }
             axios.put(`http://localhost:3000/api/auth/users/${this.id}/pass`, envoi)
-            .then( resp => console.log(resp))
+            .then( resp => {console.log(resp);
+                        this.modifyPass= false;
+            })
             .catch(err => console.log(err))
         }, 
         deleteUser : function(){

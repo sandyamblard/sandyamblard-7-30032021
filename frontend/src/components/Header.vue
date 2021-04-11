@@ -1,7 +1,8 @@
 <template>
     <header class="topbar">
         <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
-        <p>{{ entetetitre }}
+        <p><span v-if='$store.firstname'>Bienvenue {{$store.firstname}} !</span>
+            <span v-else>Réseau social d'entreprise</span> 
             <i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil" @click='goMyProfil'></i>
             <i v-if="$store.userId" class="fas fa-home" title="Revenir au mur" @click="goDashboard"></i>
             <i v-if="$store.userId" class="fas fa-power-off" title="Se déconnecter" @click="goHome"></i>
@@ -17,7 +18,7 @@
 export default{
     data(){
         return {
-            entetetitre: 'Réseau social d\'entreprise',
+            
             userConnected: ''
             
         }

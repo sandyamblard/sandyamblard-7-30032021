@@ -3,6 +3,8 @@ import Home from '../views/Home.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Article from '../views/Article.vue'
 import User from '../views/User.vue'
+import Comment from '../views/Comment.vue'
+
 
 const routes = [
   {
@@ -24,6 +26,11 @@ const routes = [
     path: '/user/:id',
     name: 'User',
     component: User
+  },
+  {
+    path: '/comment/:id',
+    name: 'Comment',
+    component: Comment
   },
   {
     path: '/about',

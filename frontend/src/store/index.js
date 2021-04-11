@@ -4,6 +4,7 @@ export default createStore({
   state: {
     userId :"",
     token: "",
+    firstname:'',
     isAdmin: false
   },
   mutations: {

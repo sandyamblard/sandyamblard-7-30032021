@@ -115,6 +115,7 @@ export default {
                     this.envoibis="",
                     this.$store.userId= resp.data.userId,
                     this.$store.token= resp.data.token,
+                    this.$store.firstname= resp.data.firstname,
                     this.$store.isAdmin= resp.data.isAdmin
                     console.log(this.$store.userId, this.$store.token, this.$store.isAdmin),
                     this.goDashboard()})
@@ -134,6 +135,7 @@ export default {
                     this.envoi="",
                     this.$store.userId= resp.data.userId,
                     this.$store.token= resp.data.token,
+                    this.$store.firstname= resp.data.firstname,
                     this.$store.isAdmin= resp.data.isAdmin
                     console.log(this.$store.userId, this.$store.token, this.$store.isAdmin),
                     this.goDashboard()

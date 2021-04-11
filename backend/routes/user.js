@@ -27,4 +27,4 @@ router.put('/users/:id', /*auth, */ checkInputUser, checkInput, multer, userCtrl
 router.put('/users/:id/pass', /*auth, */ /*checkInputUser,*/ checkInput, multer, userCtrl.modifyMailPassword);
 
 
-module.exports = router; 
+module.exports = router;  
