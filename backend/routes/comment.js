@@ -13,7 +13,7 @@ router.post('/articles/:articleId/comment', /*auth, */commentCtrl.createComment)
 router.get('/articles/comment/:id', commentCtrl.getOneComment);
 router.get('/articles/:articleId/comments', commentCtrl.getSeveralComments);
 router.put('/articles/comment/:id', /*auth, */commentCtrl.modifyComment); //ajouter check Input ?
-router.delete('/articles/:articleId/comment/:id', commentCtrl.deleteComment);
+router.delete('/articles/comment/:id', commentCtrl.deleteComment);
 
 
 

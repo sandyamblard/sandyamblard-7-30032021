@@ -13,9 +13,13 @@
                 <p>Dernière modification le : {{ articleData.updatedAt }}</p>
                 <p class="showlikes" role="button" @click="showLikes" title="cliquer pour voir">
                {{ articleData.likes }} personnes aiment cet article</p>
+              
                <!--likes  v-bind:listLikes="listLikes"></likes-->
                 <div v-if="likeShowed"> 
-                   <p v-for="(like, index) in listLikes" :key=index>{{like.user.firstname}} {{like.user.lastname}}</p>
+                   <p v-for="(like, index) in listLikes" :key=index>
+                       <img :src="like.user.imageUrl" class="img-avatar">
+                       {{like.user.firstname}} {{like.user.lastname}}
+                    </p>
                 </div>
                 <div v-if="userConnectedLiked" title="Cliquer pour changer d'avis" @click='voteDislike'>J'aime cet article ! <i class="fas fa-thumbs-up"></i></div>
                 <div v-else title="Cliquer pour liker" @click='voteLike'>Aimer cet article<i class="far fa-thumbs-up"></i> </div>
@@ -175,7 +179,6 @@ export default {
             this.$router.push(`/comment/${identif}`)
         }, 
         deleteArticle : function(){
-            console.log("delete article")
             if(confirm('Etes-vous sûr de vouloir supprimer cet article ?')){
                 axios.delete(`http://localhost:3000/api/articles/${this.id}`)
                 .then( resp => {console.log(resp);
@@ -205,18 +208,19 @@ export default {
             .catch(err => console.log(err))  
         },
         voteLike: function(){
-            console.log("vote like");
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/like`, {userId: this.$store.userId})
             .then( resp => {
                 console.log(resp);
                 this.listUserIdLikes.push(this.$store.userId);
                 this.userConnectedLiked = true;
                 this.articleData.likes++;
+                axios.get(`http://localhost:3000/api/articles/${this.id}/likes`) //recup de la liste des likes mise à jour (pour affichage des noms des users)
+                .then ( (resp) => {this.listLikes= resp.data;})
+                .catch(err => console.log(err));
             })
             .catch(err => console.log(err))
         },
         voteDislike: function(){
-            console.log("vote DISlike");
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/cancellike`, {userId: this.$store.userId})
             .then( resp => {
                 console.log(resp);
@@ -226,6 +230,10 @@ export default {
                 this.listUserIdLikes.splice(index,1)  
                 //              
                 this.articleData.likes-- //mise à jour du compteur de likes
+                //recup de la liste des likes mise à jour (pour affichage des noms des users)
+                axios.get(`http://localhost:3000/api/articles/${this.id}/likes`) 
+                .then ( (resp) => {this.listLikes= resp.data;})
+                .catch(err => console.log(err));
             })
             .catch(err => console.log(err))
         }

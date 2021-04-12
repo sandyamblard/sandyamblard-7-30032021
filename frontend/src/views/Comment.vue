@@ -1,24 +1,24 @@
 <template>
 <div>
     <topbar></topbar>
-    <p>STORE :{{$store.userId}}</p>
     <h1>COMMENTAIRE {{id}}</h1>
     <p> pour l'article :  numéro {{article.id}} : {{article.title}}</p>
-    <img :src="article.url" alt="" class="img-mini">
-    <p>écrit par : {{authorArticle.firstname}} {{authorArticle.lastname}}</p>
+    <img :src="article.url" class="img-mini">
+    <p>écrit par : <img :src="authorArticle.imageUrl" class="img-avatar">{{authorArticle.firstname}} {{authorArticle.lastname}}</p>
     <p>Commentaire : {{commentData.commContent}}</p>
     
-    <p>auteur commentaire : {{authorComment.firstname}} {{authorComment.lastname}}</p>
-    
+    <p>auteur commentaire : <img :src="authorComment.imageUrl" class="img-avatar">{{authorComment.firstname}} {{authorComment.lastname}}</p>
+    <p>Ecrit le : {{commentData.createdAt}}</p>
+
     <div v-if="$store.isAdmin" class='admin-area'>
         <i class="fas fa-exclamation-triangle"></i><p>ACCES ADMIN</p>
         <div @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
-        <div>Supprimer<i class="fas fa-trash-alt"></i></div>    
+        <div @click="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
     </div>
     
     <div v-if="$store.userId === authorComment.id" class='author-area'>
         <div @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
-        <div>Supprimer<i class="fas fa-trash-alt"></i></div>    
+        <div @click="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
     </div>
     
     <form v-if="openForm" @submit.prevent='modifyComment'>
@@ -57,14 +57,14 @@ export default {
         console.log('store :' , this.$store.userId)
         axios.get(`http://localhost:3000/api/articles/comment/${this.id}`)
             .then((resp)=> {
-                console.log(resp.data);
+                //console.log(resp.data);
                 this.commentData = resp.data;
                 this.commContent = resp.data.commContent;
                 this.article = resp.data.article;
                 this.authorComment = resp.data.user;
                 console.log(resp.data);
                 //verif si auteur du commentaire (user) est le mm que celui connecté
-                console.log('user =', this.user.id)
+                console.log('auteur de article =', this.article.userId)
             //recherche des infos de l'auteur de l'article :
             axios.get(`http://localhost:3000/api/auth/users/${this.article.userId}`)
                 .then((resp)=> {
@@ -90,6 +90,16 @@ export default {
                 this.openForm = false
                 })
             .catch (err => console.log(err))
+        },
+        deleteComment : function(){
+            if(confirm("Etes-vous sûr de vouloir supprimer ce commentaire ?")){
+                axios.delete(`http://localhost:3000/api/articles/comment/${this.id}`)
+                .then(resp => {console.log(resp);
+                this.$router.push(`/article/${this.article.id}`)
+                })
+                .catch(err => console.log(err))  
+            }
+
         }
     }
 
@@ -97,9 +107,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.img-mini{
-    width: 150px;
-}
+/*.img-mini{
+    width: 100px;
+}*/
 .admin-area{
     border: 2px red solid;
     border-radius: 10px;
