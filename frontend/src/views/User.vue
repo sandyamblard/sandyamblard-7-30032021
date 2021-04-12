@@ -100,6 +100,7 @@ export default {
             .then( resp => {
                 console.log(resp);
                 this.userData.firstname = this.firstname;
+                this.$store.firstname = this.firstname;
                 this.userData.lastname = this.lastname;
                 this.userData.birthdate = this.birthdate ;
                 this.userData.description = this.description;

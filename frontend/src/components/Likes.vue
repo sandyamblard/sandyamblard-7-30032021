@@ -1,6 +1,7 @@
+<!--INUTILISE------------------->
 <template>
     <div>
-        essai likes ouvert
+        essai likes ouvert 
     </div>
 </template>
 

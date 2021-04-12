@@ -6,9 +6,8 @@
            <div class="article-item">
                 <img :src="articleData.url" alt="" class="img-article">
                 <p> {{ articleData.content }}</p>
-                <p>Auteur :<img :src="imageUrl" alt="" class='img-avatar'> {{prenom}} {{nom}}</p>
-                <!--p>Auteur :  {{articleData.User}}</p-->
-                <!--p> Auteur : <img :src="articleData.User.imageUrl" alt="">{{articleData.User.firstname}} {{articleData.User.lastname}}</p-->
+                <!--p>Auteur :<img :src="imageUrl" alt="" class='img-avatar'> {{prenom}} {{nom}}</p-->
+                <p>Auteur : <useritem v-bind:user="{id: idAuthor,firstname: prenom, lastname: nom, imageUrl: imageUrl}"> </useritem></p>
                 <p>Ecrit le : {{ articleData.createdAt }}</p>
                 <p>Dernière modification le : {{ articleData.updatedAt }}</p>
                 <p class="showlikes" role="button" @click="showLikes" title="cliquer pour voir">
@@ -64,7 +63,7 @@
                 <div v-for="(comment, index) in allComments" :key=index class='comment-item'>
                     <!--div class="comment-item"-->
                         <p>{{comment.commContent}}</p>
-                        <p>Par : {{comment.user.firstname}} {{comment.user.lastname}}</p>
+                        <p>Par : <useritem v-bind:user="comment.user"></useritem></p>
                         
                         <div @click="goToComment(comment.id)" title="Détails, Modifier ou supprimer">
                             
@@ -88,12 +87,15 @@
 <script>
 import axios from 'axios';
 import Header from '../components/Header.vue'
+import UserItem from '@/components/UserItem.vue'
+
 //import Likes from '../components/Likes.vue'
 
 export default {
     name: 'Article',
     components:{
-        'topbar': Header
+        'topbar': Header,
+        'useritem' : UserItem
         /*'likes' : Likes*/
     },
      data() {
@@ -247,10 +249,9 @@ export default {
      border-radius: 15px;
     background-color: white;
     margin: 2vw;
-    
 }
 .img-article{
-        max-width: 95%;
+        max-width: 80%;
         border-radius: 10px;
         margin: 1vw;
     }

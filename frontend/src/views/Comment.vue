@@ -5,11 +5,14 @@
     <p> pour l'article :  numéro {{article.id}} : {{article.title}}</p>
     <img :src="article.url" class="img-mini">
     <p>écrit par : <img :src="authorArticle.imageUrl" class="img-avatar">{{authorArticle.firstname}} {{authorArticle.lastname}}</p>
+    <p>écrit par : <useritem v-bind:user="authorArticle"></useritem></p>
+
     <p>Commentaire : {{commentData.commContent}}</p>
     
-    <p>auteur commentaire : <img :src="authorComment.imageUrl" class="img-avatar">{{authorComment.firstname}} {{authorComment.lastname}}</p>
     <p>Ecrit le : {{commentData.createdAt}}</p>
 
+<p> Commentaire de : <useritem v-bind:user="authorComment"></useritem>
+</p>
     <div v-if="$store.isAdmin" class='admin-area'>
         <i class="fas fa-exclamation-triangle"></i><p>ACCES ADMIN</p>
         <div @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
@@ -33,11 +36,13 @@
 <script>
 import axios from 'axios';
 import Header from '../components/Header.vue'
+import UserItem from '@/components/UserItem.vue'
 
 export default {
     name: 'Comment',
     components:{
-        'topbar': Header
+        'topbar': Header,
+        'useritem': UserItem
     }, 
     data(){
         return{

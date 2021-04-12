@@ -22,7 +22,7 @@ exports.createArticle = (req, res, next) => {
  
 //get all articles :
 exports.getAllArticles = (req, res, next) => {
-    models.Article.findAll({include:[{model: models.User, required: true, attributes: ["firstname", "lastname"]}]})
+    models.Article.findAll({include:[{model: models.User, required: true, attributes: ["firstname", "lastname", "id", "imageUrl"]}]})
     .then (articles => res.status(200).json(articles))
     .catch(error => res.status(404).json({error, message: "Erreur lors de la récupération des articles"}))
 };

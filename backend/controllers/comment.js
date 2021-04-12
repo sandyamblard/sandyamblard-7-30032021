@@ -46,7 +46,7 @@ exports.getSeveralComments = (req, res, next) =>{
                             where: {articleId: req.params.articleId}, 
                             include:[{model: models.User, as: "user", 
                             required: true,  
-                            attributes: ["firstname", "lastname", 'imageUrl']}]}
+                            attributes: ["firstname", "lastname", 'imageUrl', 'id']}]}
         /*{include:[{model: models.User, as: 'user', required: true, attributes: ["firstname", "lastname", "imageUrl"]}]},
          {where: {articleId: req.params.articleId}}*/
         )
