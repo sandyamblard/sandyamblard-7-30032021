@@ -18,17 +18,16 @@
         </section>
     </main>
     
-    <div v-if="$store.isAdmin" class='admin-area'>
-        <i class="fas fa-exclamation-triangle"></i><p>ACCES ADMIN</p>
-        <div @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
-        <div @click="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
-    </div>
-    
     <div v-if="$store.userId === authorComment.id" class='author-area'>
         <div class='btn' @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
         <div class='btn' @click="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
     </div>
     
+
+        <div v-if="$store.isAdmin" class='admin-area'>
+        <div class='btn btn-admin' @click="openModif">Modifier <br> - ACCES ADMIN -<i class="fas fa-user-edit" ></i></div>
+        <div class='btn btn-admin' @click="deleteComment">Supprimer <br> - ACCES ADMIN -<i class="fas fa-trash-alt"></i></div>    
+    </div>
     <form v-if="openForm" @submit.prevent='modifyComment'>
         <div><i @click='openModif' class="fas fa-caret-up"></i></div>
         <label for="content">Modifier ce commentaire</label>
@@ -122,6 +121,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+main{
+    @media all and (min-width: 767px){
+    padding-top: 50px;
+    }
+}
 .img-mini{
     border-radius: 10px;
     margin-left: 0.8em;
@@ -135,11 +139,15 @@ main{
 }
 .recap-article{
     border-radius: 10px;
-    background-color: white;
+    background-color:rgba(255,255,255, 0.7);
+    padding: 0.5em;
+    width: 80%;
+    @media all and (min-width: 1024px){
     width: 70%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    }
     &--title{
         font-weight: bold;
         line-height: 3em;
@@ -158,10 +166,13 @@ main{
     margin-top: 2vw;
     border-radius: 10px;
     background-color: white;
-    width: 85%;
+    width: 95%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    @media all and (min-width: 767px){
+        width: 85%;
+    }
 }/*
 .admin-area{
     border: 2px red solid;
@@ -174,7 +185,10 @@ main{
     width: 15rem;
 }*/
 input{
+    width: 95%;
+    @media all and (min-width: 767px){
     width: 60%;
+    }
 }
 
 .border-top{

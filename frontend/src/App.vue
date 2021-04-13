@@ -28,6 +28,9 @@ export default {
 
 $color-primary : rgb(11, 11, 119);
 
+#nav{display: none;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -81,21 +84,30 @@ h1{
     
 }
 
-.from-group {
-    display: flex;
+.from-group {      
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  @media all and (min-width: 767px){
+    flex-direction: row;
     align-items: center;
+  }
+
     } 
 
 label {
     flex: none;
 }      
 input, textarea{
-    flex: auto;
-    margin: 0.5rem;
     padding: 0.5rem;
     border-radius: 10px;
     border: 1px solid rgb(21, 21, 83);
     outline: none;
+    width: 95%;
+    margin: 0.5rem;
+    @media all and (min-width: 767px){
+    flex: auto;
+    }
     &:focus{
         border-color: rgb(52, 13, 61) ;
     }
@@ -119,8 +131,10 @@ button{
 .admin-area,
 .author-area{
     border-radius: 10px;
+    @media all and (min-width: 767px){
     display: flex;
     justify-content: space-around;
+    }
 }
 
 .fa-user-edit,
@@ -129,5 +143,18 @@ button{
     margin-left: 0.5em;
 }
 
+.mob-only{
+    font-size: 2em;
+    @media all and (min-width: 1024px){
+        display: none;
+    }    
+}
+
+.desk-only{
+    display: none;
+    @media all and (min-width: 1024px){
+        display: inline;
+    }    
+}
 </style>
 

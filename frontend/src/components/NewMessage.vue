@@ -5,15 +5,15 @@
         <i v-else class="fas fa-caret-up"  @click='closeWrite'></i>
     </h2>
     <form v-if="writeMessage" class="newmessage--form" @submit.prevent="sendMessage">
-        <div>
+        <div class="from-group">
             <label for="title">Titre :</label>
             <input type="text" id="title"  placeholder="*" required v-model='title'>
         </div>
-        <div>
+        <div class="from-group">
             <label for="content">Message :</label>
             <textarea id="content" cols="40" rows="6" placeholder="*" required v-model='content'></textarea>
         </div>
-        <div>
+        <div class="from-group">
             <label for="file">Photo : </label>
             <input type="file" id="file" @change="showFile" accept="image/*">
         </div>
@@ -76,8 +76,12 @@ export default {
             envoi.append('file', this.file)*/
             console.log(envoi)
             axios.post('http://localhost:3000/api/articles', envoi/*, {headers: {'Content-Type': 'multipart/form-data'}}*/)
-            .then(resp=> console.log(resp))
+            .then(resp=> {
+                console.log(resp);
+                    //rajouter nvelle requête get pour récup tous les articles et mettre a jour la page
+                })
             .catch(err => console.log(err))
+            
         }
        
     }
@@ -86,22 +90,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.newmessage{
+     @media all and (min-width: 767px){
+    margin-top: 55px;
+    }
+}
+
 h2{
     padding-bottom: 1em;
 }
 .newmessage--form div{
-    display: flex;
-    align-items: center;
-    margin-right: 8vw;
-   margin-left: 8vw;
-
+margin-left: 1vw;
+    @media all and (min-width: 767px){
+        display: flex;
+        align-items: center;
+        margin-right: 8vw;
+        margin-left: 8vw;
+    }
 }
 
 .fa-caret-down,
 .fa-caret-up{
     font-size: 3rem;
     color : rgb(11,11,119);
-    padding: 0.2em 0.5em 0em 0.5em;
+    padding: 0.2em 0.3em 0em 0.5em;
     cursor: pointer;
     //vertical-align : middle;
 }

@@ -1,6 +1,7 @@
 <template>
     <div>
         <topbar></topbar> 
+        <main>
        <h1>{{ articleData.title }}</h1>
        <section >
            <div class="article-item">
@@ -54,7 +55,7 @@
                     </div>
                     <div class="from-group">
                         <label for="file">Photo : </label>
-                        <input type="file" id="file">
+                        <input type="file" id="file" accept='image/*'>
                     </div>
                     <button class="btn" >Modifier l'article</button>
                 </form>
@@ -89,7 +90,8 @@
                 </form>
             </div>
        </section>
-    </div>
+    </main></div>
+    
 </template>
 
 <script>
@@ -254,6 +256,12 @@ export default {
 
 <style lang="scss" scoped>
 
+main{
+        @media all and (min-width: 767px){
+    padding-top: 50px;
+    }
+}
+
 .article-item{
     padding: 1em;
     
@@ -273,16 +281,24 @@ export default {
 
 
 .img-article{
+    max-width: 98%;
+    border-radius: 10px;
+    margin: 1vw;
+    border: 5px ridge grey;
+    @media all and (min-width: 767px){
         max-width: 80%;
-        border-radius: 10px;
-        margin: 1vw;
-        border: 5px ridge grey;
     }
-.comment-item{
-    width: 80%;
+        
+
+    }
+.comment-item{ 
+    width: 95%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @media all and (min-width: 767px){
+        width: 80%;
+    }    
    /* & .img-avatar{
          max-width: 50px;
     border-radius: 50%;
@@ -300,8 +316,12 @@ export default {
 
 .fa-plus-circle{
     font-size: 2em;
+    margin-right:0.2em;
     color: rgb(139, 137, 137);
-    margin-right:1em ;
+    @media all and (min-width: 767px){
+         margin-right:1em;
+    }
+   
 }
 
 .showlikes span:hover{
@@ -317,7 +337,9 @@ export default {
 
 .modif-article{
     flex-direction: column;
+    @media all and (min-width: 767px){
     padding: 2em;
+    }
 }
 
     
@@ -330,17 +352,20 @@ h2::after{
 }
 
 .article-infos{
+    border-top: dashed 1px grey ;
+    @media all and (min-width: 767px){
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: dashed 1px grey ;
+    }
     //border-bottom: dashed 1px grey ;
 }
 .article-likes{
+    @media all and (min-width: 767px){
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    }
 }
 
 .showlikes{

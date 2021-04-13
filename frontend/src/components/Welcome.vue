@@ -31,7 +31,7 @@
             </div>
             <div class="from-group">
                 <label for="file">Photo de profil :</label>
-                <input type="file" id="file">
+                <input type="file" id="file" accept="image/*">
             </div>
             <div class="from-group">
                 <label for="description">Biographie :</label>
@@ -59,7 +59,7 @@
             Inscrivez-vous en quelques secondes et discuter avec vos collègues de l'entreprise, en toute convivialité !
             <div><i class="fas fa-comments"></i></div>
         </div>
-        <img src="../../public/img/logoabove.png" alt="logo Groupomania" >
+        <img class='logo-big' src="../../public/img/logoabove.png" alt="logo Groupomania" >
     </div>
 </template>
 
@@ -181,10 +181,11 @@ h1{
     & img{
         width: 60vw;
     }
+        @media all and (min-width: 767px){
+    padding-top: 50px;
+    }
 }
 .form-welcome{
-    width: 60%;
-    //margin-top: 4vw;
     border-radius: 10px;
     background-color: rgb(238, 237, 237);
     border : rgb(11, 11, 119) 1px solid;
@@ -192,6 +193,17 @@ h1{
     color : rgb(11, 11, 119);
     font-weight: normal; 
     font-size: 1.2rem;
+    width: 95%;
+    @media all and (min-width: 767px){
+        width: 80%;
+     }
+    @media all and (min-width: 1024px) {
+        width: 60%;
+    }
+    
+    //margin-top: 4vw;
+    
+    
 }
 
 
@@ -231,6 +243,7 @@ h1{
     text-decoration: underline;
   }
 }
+
 
 </style>
 

@@ -63,13 +63,15 @@ h3{
 
 }
 .dashboard{
+    @media all and (min-width: 1024px){
     display: flex;
-   
+    }
 }
 
 .dash--item{
     border-radius: 15px;
     background-color: white;
     margin: 1rem;
+    margin-bottom: 4vw;
 }
 </style>

@@ -56,7 +56,6 @@ export default {
     flex : 70%;
 }
 .article-one{
-    
     padding: 0.5em;
 }
 .article-content{
@@ -74,10 +73,14 @@ export default {
     }
 }
 .img-one-article{
-        max-width: 70%;
+        border : ridge 5px grey;
         border-radius: 10px;
         margin: 1vw;
-        border : ridge 5px grey;
+        max-width: 95%;
+    @media all and (min-width: 767px){    
+        max-width: 70%;
+    }  
+        
     }
 
 .article-one:hover{

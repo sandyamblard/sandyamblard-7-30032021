@@ -2,7 +2,7 @@
     <header class="topbar">
         <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
         <p>
-            <span v-if='$store.firstname&&$store.isAdmin'>- Accès ADMINISTRATEUR -</span>
+            <span v-if='$store.firstname&&$store.isAdmin'>- <span class="desk-only" >Accès</span> ADMINISTRATEUR -</span>
             <span v-else-if='$store.firstname'>Bienvenue {{$store.firstname}} !</span>
             <span v-else>Réseau social d'entreprise</span> 
             <i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil" @click='goMyProfil'></i>
@@ -55,36 +55,52 @@ export default{
 $color-primary : rgb(11, 11, 119);
 
  .topbar{
-     width:100%;
-     background-color: $color-primary;
-     //background-color: rgb(11, 11, 119);
-     color: white;
-     font-weight: bold;
-     height: 50px;
-     margin-top: 0;
-     display: flex;
-     align-items: center;
-     justify-content: space-between;
-     //position: fixed;
-     & .fas{
+    width:100%;
+    background-color: $color-primary;
+    color: white;
+    font-weight: bold;
+    margin-top: -8px;
+      & .fas{
          color: white;
          font-size: 35px;
          margin-left: 1rem ;
          cursor: pointer;
         
      }
+    @media all and (min-width: 767px){
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+    }
+    @media all and (min-width: 768px) and (max-width: 1023px){
+        
+    }
+    
+    
  }
 
  .topbar img{
-     height: 80%;
-     width: auto;
-     margin-left: 2vw;
+     width:60% ;
+     margin-top: 0.7em;
+     @media all and (min-width: 767px){
+         height: 80%;
+         width: auto;
+         margin-top: 0.1em;
+        margin-left: 2vw;
+     }
+     
  }
 
  .topbar p{
-margin-right: 2vw;
+margin-right: 1.5vw;
+margin-left: 1.5vw;
 display: flex;
 align-items: center;
+justify-content: space-between;
+
+padding-bottom: 0.2em;
  }
 
 

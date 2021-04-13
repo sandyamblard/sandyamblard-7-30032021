@@ -1,6 +1,8 @@
 <template>
 <aside class='users-list dash--item'>   
-    <h2>Membres inscrits </h2>
+    <h2>Membres inscrits 
+        <i class="fas fa-caret-down mob-only" ></i>
+    </h2>
     <div v-for="(user,index) in allUsers" :key=index class="user-item" >
         <div class="img-user">
             <i v-if="!user.imageUrl" class="far fa-user" @click='goUser(user.id)'></i>
@@ -8,8 +10,9 @@
             
         </div>
         <p @click='goUser(user.id)'>{{ user.firstname }} {{ user.lastname }} </p>
+        
     </div>
-
+    <i class="fas fa-caret-up mob-only"></i>
     
 </aside>     
 </template>
@@ -39,6 +42,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 
 .fa-user{
     color: gray;

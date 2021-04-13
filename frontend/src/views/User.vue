@@ -11,6 +11,7 @@
     </section>    
     <section class="editprofil">    
         <div v-if="userConnected">
+            <div class="author-area">
             <div @click="modifProfil" class='btn'> Editer mon profil<i class="fas fa-user-edit" ></i> </div>
             <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify">
                 <div><i class="fas fa-caret-up"  @click="closeFormEdit" role=button></i></div>
@@ -29,7 +30,7 @@
                 </div>
                 <div class="from-group">
                     <label for="file">Photo de profil :</label>
-                    <input type="file" id="file">
+                    <input type="file" id="file" accept="image/*">
                 </div>
                 <div class="from-group">
                     <label for="description">Biographie :</label>
@@ -50,6 +51,7 @@
                 </div>
                 <button class="btn" >Modifier</button>
             </form>
+        </div>    
             <div class='btn' @click="deleteUser">Supprimer mon profil <i class="fas fa-trash-alt"></i></div>
         </div>
         <div class='btn btn-admin' @click="deleteUser" v-if='$store.isAdmin'>Supprimer ce membre <br>
@@ -186,6 +188,9 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    @media all and (min-width: 767px){
+    padding-top: 45px;
+    }
 }
 .user-card{
     display: flex;
@@ -195,7 +200,10 @@ main{
     padding: 1em;
     border-radius: 15px;
     background-color: white;
+    width: 95%;
+    @media all and (min-width: 767px){
     width: 70%;
+    }
 }
 
 span{
@@ -209,11 +217,14 @@ span{
 }
 
 .editprofil{
-    width: 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 95%;
+    @media all and (min-width: 767px){
+    width: 70%;
+    }
 }
 .fas{
     font-size: 1.6em;
