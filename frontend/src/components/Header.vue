@@ -1,7 +1,9 @@
 <template>
     <header class="topbar">
         <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
-        <p><span v-if='$store.firstname'>Bienvenue {{$store.firstname}} !</span>
+        <p>
+            <span v-if='$store.firstname&&$store.isAdmin'>- Accès ADMINISTRATEUR -</span>
+            <span v-else-if='$store.firstname'>Bienvenue {{$store.firstname}} !</span>
             <span v-else>Réseau social d'entreprise</span> 
             <i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil" @click='goMyProfil'></i>
             <i v-if="$store.userId" class="fas fa-home" title="Revenir au mur" @click="goDashboard"></i>
@@ -49,9 +51,13 @@ export default{
 
 
 <style lang="scss">
+
+$color-primary : rgb(11, 11, 119);
+
  .topbar{
      width:100%;
-     background-color: rgb(11, 11, 119);
+     background-color: $color-primary;
+     //background-color: rgb(11, 11, 119);
      color: white;
      font-weight: bold;
      height: 50px;
@@ -59,6 +65,7 @@ export default{
      display: flex;
      align-items: center;
      justify-content: space-between;
+     //position: fixed;
      & .fas{
          color: white;
          font-size: 35px;

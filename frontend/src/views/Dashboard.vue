@@ -1,6 +1,7 @@
 <template>
     <div>
-        <topbar></topbar>   
+        <topbar></topbar> 
+        <h1 class="hidden">Tableau de bord</h1>  
         <newmessage></newmessage>
         <div class="dashboard">
             <listusers></listusers>
@@ -33,7 +34,34 @@ export default {
 </script>
 
 <style lang="scss" >
+.hidden{
+    font-size: 0.01px;
+    &::after{
+        content:'';
+        display: inline;
+        background-color: transparent;
+        margin-top: 0.4em;
+    }
+}
 
+
+h2 {
+    text-align: left;
+    margin-left: 1rem;
+     margin-top: 1rem;
+    color: rgb(11, 11, 119);
+    &::after{
+        content:'';
+        display: block;
+        height: 4px;
+        width: 6rem;
+        background-color: rgb(202, 61, 61);
+    }
+}
+h3{
+    color: rgb(11,11,119);
+
+}
 .dashboard{
     display: flex;
    

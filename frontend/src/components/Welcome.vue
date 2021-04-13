@@ -2,8 +2,8 @@
     <div class="welcome">
         <h1>Bienvenue sur le réseau social de Groupomania !</h1>
         <div class="group-btn">
-            <div class="btn" role="button" @click="toggleSignup">S'inscrire</div>
-            <div class="btn" role="button" @click="toggleLogin">Se connecter</div>
+            <div class="btn-empty" role="button" @click="toggleSignup">S'inscrire</div>
+            <div class="btn-empty-left" role="button" @click="toggleLogin">Se connecter</div>
         </div>
         
         <!--si s'inscrire choisi : -->
@@ -53,6 +53,12 @@
             </div>
             <button class="btn" >Connection</button>
         </form>
+
+        <div class="form-welcome" v-if="!login&&!signup">
+            <div><i class="fas fa-comments"></i></div>
+            Inscrivez-vous en quelques secondes et discuter avec vos collègues de l'entreprise, en toute convivialité !
+            <div><i class="fas fa-comments"></i></div>
+        </div>
         <img src="../../public/img/logoabove.png" alt="logo Groupomania" >
     </div>
 </template>
@@ -80,10 +86,18 @@ export default {
         toggleSignup : function(){
             this.signup = true;
             this.login = false;
+            document.querySelector('.btn-empty').style.backgroundColor = 'rgb(11, 11, 119)';
+            document.querySelector('.btn-empty').style.color = 'white';
+            document.querySelector('.btn-empty-left').style.backgroundColor = 'white';
+            document.querySelector('.btn-empty-left').style.color = 'rgb(11, 11, 119)';
         },
         toggleLogin: function(){
             this.login= true;
             this.signup = false;
+            document.querySelector('.btn-empty').style.backgroundColor = 'white';
+            document.querySelector('.btn-empty').style.color = 'rgb(11, 11, 119)';
+            document.querySelector('.btn-empty-left').style.backgroundColor = 'rgb(11, 11, 119)';
+            document.querySelector('.btn-empty-left').style.color = 'white';
         },
         goDashboard(){
             this.$router.push('dashboard');
@@ -149,9 +163,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$color-primary : rgb(11, 11, 119);
+
 h1{
     
     margin-top: 4vw;
+}
+.fa-comments{
+    font-size: 2em;
+    color: $color-primary;margin: 0.5em;
 }
 .welcome{
     display: flex;
@@ -164,7 +184,52 @@ h1{
 }
 .form-welcome{
     width: 60%;
-    margin-top: 4vw;
+    //margin-top: 4vw;
+    border-radius: 10px;
+    background-color: rgb(238, 237, 237);
+    border : rgb(11, 11, 119) 1px solid;
+    padding: 1vw;
+    color : rgb(11, 11, 119);
+    font-weight: normal; 
+    font-size: 1.2rem;
+}
+
+
+.btn-empty{
+  padding: 1.5rem;
+  background-color: white;
+  border : 2px $color-primary solid;
+  border-radius:  15px 0px 0 0;
+  margin-bottom: -0.5em;
+  color: $color-primary;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 4vw;
+  &:hover{
+    background-color: $color-primary;
+    transition : 0.3s;
+    color : white;
+    text-decoration: underline;
+  }
+}
+
+.btn-empty-left{
+  padding: 1.5rem;
+  background-color: white;
+  border : 2px $color-primary solid;
+  border-radius:  0 15px 0 0;
+  margin-bottom: -0.5em;
+  margin-left: -0.2em;
+  color: $color-primary;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 4vw;
+  &:hover{
+    background-color: $color-primary;
+    transition : 0.3s;
+    color : white;
+    text-decoration: underline;
+  }
 }
 
 </style>

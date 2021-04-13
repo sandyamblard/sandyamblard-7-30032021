@@ -2,15 +2,19 @@
 <topbar></topbar> 
 <main>
     <h1>{{userData.firstname}} {{userData.lastname}}</h1>
-    <section>
-        <img :src="userData.imageUrl" alt="" class="avatar">
-        <p>Biographie : {{userData.description}}</p>
-        <p>Anniversaire : {{userData.birthdate}}</p>
-        <p>Membre inscrit depuis le :{{userData.createdAt}}</p>
-        <p v-if="userData.isAdmin">ADMIN DU RESEAU</p>
+    <section class="user-card">
+        <span v-if="userData.imageUrl"><img :src="userData.imageUrl" alt="" class="avatar"></span>
+        <p>Biographie : <span>{{userData.description}}</span></p>
+        <p>Anniversaire : <span>{{userData.birthdate}}</span></p>
+        <p>Membre inscrit depuis le :<span>{{userData.createdAt}}</span></p>
+        <p class='admin' v-if="userData.isAdmin">Administrateur du réseau</p>
+    </section>    
+    <section class="editprofil">    
         <div v-if="userConnected">
             <div @click="modifProfil" class='btn'> Editer mon profil<i class="fas fa-user-edit" ></i> </div>
-            <form v-if="modifyProfil" @submit.prevent="editProfil">
+            <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify">
+                <div><i class="fas fa-caret-up"  @click="closeFormEdit" role=button></i></div>
+                <!--div @click="closeFormEdit" class="close" role=button>X</div-->
                 <div class="from-group">
                     <label for="prenom">Prénom :</label>
                     <input type="text" id="prenom" placeholder="*" required v-model="firstname">
@@ -34,7 +38,8 @@
                 <button class="btn" >Modifier</button>
             </form>
             <div @click="modifPass" class='btn'> Modifier mes codes d'accès<i class="fas fa-key" ></i> </div>
-            <form v-if="modifyPass" @submit.prevent="editPass">       
+            <form v-if="modifyPass" @submit.prevent="editPass" class="form-modify"> 
+                <div><i class="fas fa-caret-up"  @click="closeFormPass" role=button></i></div>
                 <div class="from-group">
                     <label for="mail">E-mail :</label>
                     <input type="email" id="mail" placeholder="*" required v-model="email">
@@ -47,7 +52,9 @@
             </form>
             <div class='btn' @click="deleteUser">Supprimer mon profil <i class="fas fa-trash-alt"></i></div>
         </div>
-        <div class='btn' @click="deleteUser" v-if='$store.isAdmin'>Supprimer ce membre <br> ACCES ADMINISTRATEUR<i class="fas fa-exclamation-triangle"></i></div>
+        <div class='btn btn-admin' @click="deleteUser" v-if='$store.isAdmin'>Supprimer ce membre <br>
+         ACCES ADMINISTRATEUR
+         <i class="fas fa-exclamation-triangle"></i></div>
     </section>
 </main>
 </div></template>
@@ -88,7 +95,14 @@ export default {
         modifPass: function(){
             this.modifyPass= true;
             this.modifyProfil= false;
-        }, 
+        },
+        closeFormEdit :function(){
+            this.modifyProfil= false;
+        } 
+        ,closeFormPass :function(){
+            this.modifyPass= false;
+        } 
+        ,
         editProfil: function(){
             const envoi = {
                 firstname: this.firstname,
@@ -122,7 +136,19 @@ export default {
         deleteUser : function(){
             if(confirm('Etes-vous sûr de vouloir supprimer ce membre ?')){
               axios.delete(`http://localhost:3000/api/auth/users/${this.id}`)
-                .then( resp => console.log(resp))
+                .then( resp => {
+                    console.log(resp);
+                    if(this.$store.isAdmin){
+                        this.$router.push('/dashboard');
+                    }else{
+                        this.$store.userId = '';
+                        this.$store.firstname = '';
+                        this.$store.token = '';
+                        this.$store.isAdmin = false;
+                        this.$router.push('/')
+                    }
+                }
+               )
                 .catch(err => console.log(err))  
             }
             
@@ -149,5 +175,79 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+img{
+    max-width: 80%;
+    border-radius: 50%;
+    //box-shadow:  1px 1px 15px grey;
+    border : ridge 5px grey;
+}
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.user-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    border-radius: 15px;
+    background-color: white;
+    width: 70%;
+}
+
+span{
+    font-weight: bold;
+}
+
+.admin{
+    text-transform: uppercase;
+    font-weight: bold;
+    color: rgb(175, 26, 26);
+}
+
+.editprofil{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.fas{
+    font-size: 1.6em;
+    padding-left: 1em;
+}
+.form-modify{
+    border : rgba(20, 119, 119, 0.8) 2px dotted;
+    border-radius: 10px;
+    margin-top: -3vw;
+    padding: 0.8em;
+}
+.close{
+    width: 25px;
+    height: 25px;
+    background-color: rgb(175, 26, 26);
+    border : 1px rgb(88, 14, 14) solid;
+    color : white;
+    font-size: 1.3em;
+    padding: 0.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 3vw;
+}
+.fa-caret-up{
+    padding: 0.4em;
+    margin-left: 0;
+    margin-top: 1vw;
+    font-size:2.8em;
+    color : rgb(11,11,119)
+}
+.btn{
+    opacity :1;
+    
+}
+
 
 </style>

@@ -4,49 +4,59 @@
        <h1>{{ articleData.title }}</h1>
        <section >
            <div class="article-item">
-                <img :src="articleData.url" alt="" class="img-article">
-                <p> {{ articleData.content }}</p>
+                <span v-if='articleData.url'> <img :src="articleData.url" alt="" class="img-article" ></span>
+                <p class='article-item--para'> {{ articleData.content }}</p>
                 <!--p>Auteur :<img :src="imageUrl" alt="" class='img-avatar'> {{prenom}} {{nom}}</p-->
-                <p>Auteur : <useritem v-bind:user="{id: idAuthor,firstname: prenom, lastname: nom, imageUrl: imageUrl}"> </useritem></p>
-                <p>Ecrit le : {{ articleData.createdAt }}</p>
-                <p>Dernière modification le : {{ articleData.updatedAt }}</p>
-                <p class="showlikes" role="button" @click="showLikes" title="cliquer pour voir">
-               {{ articleData.likes }} personnes aiment cet article</p>
-              
-               <!--likes  v-bind:listLikes="listLikes"></likes-->
-                <div v-if="likeShowed"> 
-                   <p v-for="(like, index) in listLikes" :key=index>
-                       <img :src="like.user.imageUrl" class="img-avatar">
-                       {{like.user.firstname}} {{like.user.lastname}}
-                    </p>
+                <div class='article-infos'>
+                    <p>Ecrit le : {{ articleData.createdAt }}</p>
+                    <p>Auteur : <useritem v-bind:user="{id: idAuthor,firstname: prenom, lastname: nom, imageUrl: imageUrl}"> </useritem></p>
+                    <!--p>Dernière modification le : {{ articleData.updatedAt }}</p-->
                 </div>
-                <div v-if="userConnectedLiked" title="Cliquer pour changer d'avis" @click='voteDislike'>J'aime cet article ! <i class="fas fa-thumbs-up"></i></div>
-                <div v-else title="Cliquer pour liker" @click='voteLike'>Aimer cet article<i class="far fa-thumbs-up"></i> </div>
+
+                <div class='article-likes'>
+                    <div class="showlikes" role="button" @click="showLikes" title="cliquer pour voir"><span>{{ articleData.likes }} personnes aiment cet article</span>
+                        <div v-if="likeShowed" class="like-show"> 
+                        <i  class="fas fa-caret-up"  @click.stop="showLikes"></i>
+                        <p v-for="(like, index) in listLikes" :key=index>    
+                            <useritem v-bind:user="like.user"></useritem>
+                            <!--img :src="like.user.imageUrl" class="img-avatar">
+                            {{like.user.firstname}} {{like.user.lastname}}-->
+                        </p>
+                    </div>
+                    </div>
+                    
+                    
+                    <div v-if="userConnectedLiked" title="Cliquer pour changer d'avis" @click='voteDislike' class='liked' >J'aime cet article ! <i class="fas fa-thumbs-up"></i></div>
+                    <div v-else title="Cliquer pour liker" @click='voteLike' class='votelike'>Aimer cet article<i class="far fa-thumbs-up"></i> </div>
+                    
+                    
+                </div>
+                
                 <!--div v-if="adminConnected"-->
                 <div v-if="$store.isAdmin" class='admin-area'>
-                     <i class="fas fa-exclamation-triangle"></i><p>ACCES ADMIN</p>
-                        <div @click="openFormModify">Modifier <i class="fas fa-user-edit" ></i></div>
-                        <div @click="deleteArticle">Supprimer<i class="fas fa-trash-alt"></i></div>    
+                        <div class='btn btn-admin' @click="openFormModify">Modifier <i class="fas fa-user-edit" ></i><br>- ACCES ADMIN -</div>
+                        <div class='btn btn-admin' @click="deleteArticle">Supprimer<i class="fas fa-trash-alt"></i><br>- ACCES ADMIN -</div>    
                 </div>
                 <div class='author-area' v-if="idAuthor==$store.userId">
-                        <div @click="openFormModify">Modifier <i class="fas fa-user-edit" ></i></div>
-                        <div @click="deleteArticle">Supprimer<i class="fas fa-trash-alt"></i></div>    
+                        <div class='btn' @click="openFormModify">Modifier <i class="fas fa-user-edit" ></i></div>
+                        <div class='btn' @click="deleteArticle">Supprimer<i class="fas fa-trash-alt"></i></div>    
                 </div>
                 <!--modif message form-->
-                <form v-if="modifyOpen" @submit.prevent="modifyArticle">
-                    <div>
+                <form v-if="modifyOpen" @submit.prevent="modifyArticle" class='modif-article'>
+                    <i  class="fas fa-caret-up"  @click.stop="openFormModify"></i>
+                    <div class="from-group">
                         <label for="title">Titre :</label>
                         <input type="text" id="title"  v-model="title" required >
                     </div>
-                    <div>
+                    <div class="from-group">
                         <label for="content">Message :</label>
-                        <textarea id="content" cols="40" rows="6" v-model="content" required ></textarea>
+                        <textarea id="content" cols="40" rows="9" v-model="content" required ></textarea>
                     </div>
-                    <div>
+                    <div class="from-group">
                         <label for="file">Photo : </label>
                         <input type="file" id="file">
                     </div>
-                    <button class="btn" >Poster</button>
+                    <button class="btn" >Modifier l'article</button>
                 </form>
            </div>
            
@@ -61,23 +71,21 @@
                 </div-->
 
                 <div v-for="(comment, index) in allComments" :key=index class='comment-item'>
-                    <!--div class="comment-item"-->
-                        <p>{{comment.commContent}}</p>
-                        <p>Par : <useritem v-bind:user="comment.user"></useritem></p>
-                        
-                        <div @click="goToComment(comment.id)" title="Détails, Modifier ou supprimer">
-                            
-                                <i class="fas fa-plus-circle"></i>
-
+                        <div class='comment-item--content'>
+                            <p class="comment-item--para">{{comment.commContent}}</p>
+                            <p class="comment-item--author">Par : <useritem v-bind:user="comment.user"></useritem></p>
                         </div>
+                        <i class="fas fa-plus-circle" @click="goToComment(comment.id)" title="Détails, Modifier ou supprimer"></i>
+                        
                         
                         
                     <!--/div-->
                 </div>
-                <form @submit.prevent="sendComment">
+
+                <form @submit.prevent="sendComment" class="sendcomment from-group">
                     <label for="comment">Ecrire un commentaire :</label>
                     <input type="text" id="comment" required placeholder="*" v-model="commContent">
-                    <button class='btn'><i class="fas fa-paper-plane"></i></button>
+                    <button class='btn btn-small'><i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>
        </section>
@@ -159,6 +167,7 @@ export default {
         showLikes: function(){
             this.likeShowed= !this.likeShowed;
         },
+
         sendComment: function(){
             const envoi = {
                 userId: this.$store.userId,
@@ -245,51 +254,160 @@ export default {
 
 <style lang="scss" scoped>
 
+.article-item{
+    padding: 1em;
+    
+}
 .article-item, .comment-item{
      border-radius: 15px;
     background-color: white;
     margin: 2vw;
+    &--para{
+        font-weight: bold;
+    }
 }
+
+.comment-item--para{
+    margin-left: 1em;
+}
+
+
 .img-article{
         max-width: 80%;
         border-radius: 10px;
         margin: 1vw;
+        border: 5px ridge grey;
     }
 .comment-item{
     width: 80%;
-    & .img-avatar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   /* & .img-avatar{
          max-width: 50px;
     border-radius: 50%;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+    }*/
+    &--author{
+        text-align: left;
+        margin-left: 1em;
+        padding-top: 0.8em;
+        border-top: dotted 1px grey ;
     }
 }
 
-.showlikes:hover{
+
+.fa-plus-circle{
+    font-size: 2em;
+    color: rgb(139, 137, 137);
+    margin-right:1em ;
+}
+
+.showlikes span:hover{
     font-weight: bold;
     cursor: pointer;
+   
 }
 .commentslist{
     display: flex;
     align-items: center;
     flex-direction: column;
 }
-form{
+
+.modif-article{
+    flex-direction: column;
+    padding: 2em;
+}
+
+    
+
+/////////////////////
+
+
+h2::after{
+    background-color: transparent;
+}
+
+.article-infos{
     display: flex;
-    width: 80%;
+    justify-content: space-around;
     align-items: center;
+    border-top: dashed 1px grey ;
+    //border-bottom: dashed 1px grey ;
 }
-.admin-area{
-    border: 2px red solid;
-    border-radius: 10px;
-    width: 15rem;
-}
-.author-area{
-    border: 2px green solid;
-    border-radius: 10px;
-    width: 15rem;
+.article-likes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 
+.showlikes{
+     margin: 1em;
+}
 
+.like-show{
+    padding: 0.5em;
+    border-radius: 10px ;
+    border: grey 1px solid;
+    box-shadow: 1px 1px 10px grey;
+    
+}
 
+.fa-caret-up{
+    font-size: 2.5em;
+    padding: 0.1em;
+    padding-left: 0.8em;
+    padding-right: 0.8em;
+    cursor: pointer;
+    color: rgb(11,11,119);
+}
+
+.votelike{
+    margin-left: 2em;
+    cursor: pointer;
+    color: rgb(11,11,119);
+    &:hover{
+        text-decoration: underline;
+    }
+    & .far{
+        font-size: 1.7em;
+        margin-left: 0.5em;
+        &:hover{
+            transform: scale(1.2);
+        }
+    }
+}
+
+.liked{
+    margin-left: 2em;
+    cursor: pointer;
+    color: green;
+    &:hover{
+        text-decoration: underline;
+    }
+    & .fas{
+        font-size: 1.7em;
+        margin-left: 0.5em;
+        
+        &:hover{
+            transform: scale(1.2);
+        }
+    }
+}
+
+.btn-small{
+
+    margin-top: 0;
+    
+}
+
+.sendcomment{
+   margin-top: 2vw;
+    display: flex;
+    align-items: center;
+    width: 90%;
+
+}
 </style>
