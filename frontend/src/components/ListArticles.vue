@@ -9,7 +9,8 @@
         </div>
         <!--p>De {{article.User.firstname}} {{article.User.lastname}}</p-->
         <div class="footer-article">
-            <p>Le {{ article.createdAt }}</p>
+            <!--<p>Le {{ article.createdAt }}</p> -->
+            <p>Le : {{ dateArticle( article.createdAt) }}</p>
             <p>Par <useritem v-bind:user="article.User"></useritem> </p>
         </div>
 
@@ -35,15 +36,28 @@ export default {
         return{
             allArticles: ''
         }
-    },created(){
+    },
+    computed: {
+        
+    }
+    ,created(){
         axios.get('http://localhost:3000/api/articles')
-        .then((resp)=> {console.log(resp.data);
+        .then((resp)=> {
+            const essai = new Date(resp.data[0].createdAt);
+            console.log('newDate: ', essai)
+            const month = essai.toLocaleDateString('fr-FR')
+            console.log('locale : ', month)
             this.allArticles = resp.data})
         .catch(err => console.log(err))
     },
     methods:{
         goArticle(identif){
             this.$router.push(`/article/${identif}`);
+        },
+        dateArticle : function(string){
+            const date = new Date(string);
+            return date.toLocaleString('fr-FR', {year: 'numeric', month: 'long', day:'numeric', hour:'numeric', minute: 'numeric'} )
+             
         }
     }
 

@@ -9,7 +9,7 @@
                 <p class='article-item--para'> {{ articleData.content }}</p>
                 <!--p>Auteur :<img :src="imageUrl" alt="" class='img-avatar'> {{prenom}} {{nom}}</p-->
                 <div class='article-infos'>
-                    <p>Ecrit le : {{ articleData.createdAt }}</p>
+                    <p>Ecrit le : {{ dateArticle(articleData.createdAt) }}</p>
                     <p>Auteur : <useritem v-bind:user="{id: idAuthor,firstname: prenom, lastname: nom, imageUrl: imageUrl}"> </useritem></p>
                     <!--p>Dernière modification le : {{ articleData.updatedAt }}</p-->
                 </div>
@@ -162,6 +162,11 @@ export default {
         
     },
     methods: {
+        dateArticle : function(string){
+            const date = new Date(string);
+            return date.toLocaleString('fr-FR', {year: 'numeric', month: 'long', day:'numeric', hour:'numeric', minute: 'numeric'} )
+             
+        },
         showLikes: function(){
             this.likeShowed= !this.likeShowed;
         },

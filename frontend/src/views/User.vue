@@ -5,8 +5,9 @@
     <section class="user-card">
         <span v-if="userData.imageUrl"><img :src="userData.imageUrl" alt="" class="avatar"></span>
         <p>Biographie : <span>{{userData.description}}</span></p>
-        <p>Anniversaire : <span>{{userData.birthdate}}</span></p>
-        <p>Membre inscrit depuis le :<span>{{userData.createdAt}}</span></p>
+        <p>Anniversaire : <span v-if='userData.birthdate'>{{anniversaire(userData.birthdate)}}</span><span v-else>Non communiqué</span></p>
+
+        <p>Membre inscrit depuis le :<span>{{dateInscription(userData.createdAt)}}</span></p>
         <p class='admin' v-if="userData.isAdmin">Administrateur du réseau</p>
     </section>    
     <section class="editprofil">    
@@ -90,6 +91,16 @@ export default {
 
         }
     },methods:{
+        anniversaire : function(string){
+            const date = new Date(string);
+            return date.toLocaleString('fr-FR', {month: 'long', day:'numeric'} )
+             
+        },
+        dateInscription : function(string){
+            const date = new Date(string);
+            return date.toLocaleString('fr-FR', {year: 'numeric', month: 'long', day:'numeric'} )
+             
+        },
         modifProfil: function(){
             this.modifyProfil= true;
             this.modifyPass= false;

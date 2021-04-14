@@ -12,7 +12,7 @@
 
         <section class= 'recap-comment'>
             <p>Commentaire : <br> <span class="recap-article--title">{{commentData.commContent}}</span></p>
-            <p class='border-top'>Ecrit le : {{commentData.createdAt}}</p>
+            <p class='border-top'>Ecrit le : {{dateComment(commentData.createdAt)}}</p>
             <p> Par : <useritem v-bind:user="authorComment"></useritem></p>
 
         </section>
@@ -88,6 +88,11 @@ export default {
         .catch(err => console.log(err));
     },
     methods :{
+        dateComment : function(string){
+            const date = new Date(string);
+            return date.toLocaleString('fr-FR', {year: 'numeric', month: 'long', day:'numeric', hour:'numeric', minute: 'numeric'} )
+             
+        },
         openModif : function(){
             this.openForm = !this.openForm
         },
