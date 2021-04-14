@@ -31,7 +31,7 @@
             </div>
             <div class="from-group">
                 <label for="file">Photo de profil :</label>
-                <input type="file" id="file" accept="image/*">
+                <input type="file" id="file" ref='file' @change='showFileSelected' accept="image/*">
             </div>
             <div class="from-group">
                 <label for="description">Biographie :</label>
@@ -104,6 +104,11 @@ export default {
         goDashboard(){
             this.$router.push('dashboard');
         },
+        showFileSelected: function(){
+            this.file = this.$refs.file.files[0];
+            console.log('fileSelectd : ' , this.file)
+        }
+        ,
         sendUser: function(){
             const envoi = { firstname:this.firstname, 
                 lastname: this.lastname, 
@@ -117,9 +122,9 @@ export default {
                 email: this.email
                 }
             console.log(envoi);
-            axios.post('http://localhost:3000/api/auth/signup', envoi)
+            axios.post('http://localhost:3000/api/auth/signup', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token}})
             .then (resp => {console.log(resp); console.log(envoibis);
-                axios.post('http://localhost:3000/api/auth/login', envoibis)
+                axios.post('http://localhost:3000/api/auth/login', envoibis, {headers: {Authorization: 'Bearer ' + this.$store.token}})
                 .then(resp => {
                     console.log(resp);
                     this.firstname ="",
@@ -144,7 +149,7 @@ export default {
                 password: this.password, 
                 email: this.email, 
                 }
-            axios.post('http://localhost:3000/api/auth/login', envoi)
+            axios.post('http://localhost:3000/api/auth/login', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token}})
                 .then(resp => {
                     this.password="",
                     this.email="",
@@ -157,7 +162,7 @@ export default {
                     this.goDashboard()
                 })
                 .catch (err => {console.log(err);
-                        this.error= err.message})
+                        this.error= err.response.data.error})
         }
     }
     

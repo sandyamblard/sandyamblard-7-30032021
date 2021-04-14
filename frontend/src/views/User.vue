@@ -123,7 +123,7 @@ export default {
                 birthdate: this.birthdate,
                 description: this.description
             }
-            axios.put(`http://localhost:3000/api/auth/users/${this.id}`, envoi)
+            axios.put(`http://localhost:3000/api/auth/users/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {
                 console.log(resp);
                 this.userData.firstname = this.firstname;
@@ -140,7 +140,7 @@ export default {
                 password: this.password,
                 email: this.email
             }
-            axios.put(`http://localhost:3000/api/auth/users/${this.id}/pass`, envoi)
+            axios.put(`http://localhost:3000/api/auth/users/${this.id}/pass`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {console.log(resp);
                         this.modifyPass= false;
             })
@@ -148,7 +148,7 @@ export default {
         }, 
         deleteUser : function(){
             if(confirm('Etes-vous sûr de vouloir supprimer ce membre ?')){
-              axios.delete(`http://localhost:3000/api/auth/users/${this.id}`)
+              axios.delete(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then( resp => {
                     console.log(resp);
                     if(this.$store.isAdmin){
@@ -172,7 +172,7 @@ export default {
             this.userConnected= true;
             
         }
-        axios.get(`http://localhost:3000/api/auth/users/${this.id}`)
+        axios.get(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
         .then((resp)=> {
             console.log(resp.data);
            this.userData = resp.data;

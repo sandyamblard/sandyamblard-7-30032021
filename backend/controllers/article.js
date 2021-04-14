@@ -11,30 +11,29 @@ const models = require('../models/index');
 
 ///création article : voir comment arrive l'userId (via front end ou récup via token ?) 
 exports.createArticle = (req, res, next) => {
-    if(!req.body.file){
-        models.Article.create({
-        UserId:req.body.userId, 
-        title: req.body.title, 
-        content: req.body.content, 
-        url: null, 
-        likes:0 })
-    .then( (article)=>res.status(201).json({message : 'article créé'}))
-    .catch((error) => res.status(500).json({ error, message : "L'article n'a pas pu être créé !" }))
-    } else{
-        console.log('file présent');
-        console.log('req.body.file :', req.body.file);
-        //commenter provisoirement car envoi d'un objet vide en guise de file....
-       /* models.Article.create({
+    if(req.file){   
+           models.Article.create({
             UserId:req.body.userId, 
             title: req.body.title, 
             content: req.body.content, 
-            url: `${req.protocol}://${req.get('host')}/images/${req.body.file.filename}`, 
-            likes:0 })
-            .then( (article)=>res.status(201).json({message : 'article avec photo créé'}))
-            .catch((error) => res.status(500).json({ error, message : "L'article avec photo n'a pas pu être créé !" }))        */
+            likes:0, 
+            url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
+        .then( (article)=>res.status(201).json({message : 'article créé'}))
+        .catch((error) => res.status(500).json({ error, message : "L'article n'a pas pu être créé !" }))    
+    }else{
+        console.log('title', req.body.title)
+            models.Article.create({
+                UserId:req.body.userId, 
+                title: req.body.title, 
+                content: req.body.content, 
+                likes:0,
+                url: null})
+            .then( (article)=>res.status(201).json({message : 'article sans photo créé'}))
+            .catch((error) => res.status(500).json({ error, message : "L'article sans photo n'a pas pu être créé !" }))
     }
        
 };
+
  
 //get all articles :
 exports.getAllArticles = (req, res, next) => {

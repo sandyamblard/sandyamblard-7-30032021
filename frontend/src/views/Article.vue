@@ -4,7 +4,7 @@
         <main>
        <h1>{{ articleData.title }}</h1>
        <section >
-           <div class="article-item">
+           <article class="article-item">
                 <span v-if='articleData.url'> <img :src="articleData.url" alt="" class="img-article" ></span>
                 <p class='article-item--para'> {{ articleData.content }}</p>
                 <!--p>Auteur :<img :src="imageUrl" alt="" class='img-avatar'> {{prenom}} {{nom}}</p-->
@@ -59,7 +59,7 @@
                     </div>
                     <button class="btn" >Modifier l'article</button>
                 </form>
-           </div>
+           </article>
            
            <div class='commentslist'>
                 <h2>Commentaires :</h2>
@@ -123,7 +123,7 @@ export default {
     },
     created(){
            //recup des articles     
-        axios.get(`http://localhost:3000/api/articles/${this.id}`)
+        axios.get(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
         .then((resp)=> {
             console.log(resp.data);
            this.articleData = resp.data;
@@ -136,14 +136,14 @@ export default {
         .catch(err => console.log(err));
 
         // recup des commentaires de l'articles
-        axios.get(`http://localhost:3000/api/articles/${this.id}/comments`)
+        axios.get(`http://localhost:3000/api/articles/${this.id}/comments`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then((resp)=> {
             console.log(resp.data);
            this.allComments = resp.data})
         .catch(err => console.log(err));
         
         //recup des likes de l'articles
-        axios.get(`http://localhost:3000/api/articles/${this.id}/likes`)
+        axios.get(`http://localhost:3000/api/articles/${this.id}/likes`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then ( (resp) => {
                     //console.log(resp.data);
                     this.listLikes= resp.data;
@@ -177,11 +177,11 @@ export default {
                 commContent: this.commContent
             };
             //console.log(envoi);
-            axios.post(`http://localhost:3000/api/articles/${this.id}/comment`, envoi)
+            axios.post(`http://localhost:3000/api/articles/${this.id}/comment`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( () => {
                 //console.log(resp);
                 //nvlle requete pour retrouver tous les comments avec leur id et update la page
-                axios.get(`http://localhost:3000/api/articles/${this.id}/comments`)
+                axios.get(`http://localhost:3000/api/articles/${this.id}/comments`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                     .then((resp)=> {
                         //console.log(resp.data);
                         this.allComments = resp.data})
@@ -194,7 +194,7 @@ export default {
         }, 
         deleteArticle : function(){
             if(confirm('Etes-vous sûr de vouloir supprimer cet article ?')){
-                axios.delete(`http://localhost:3000/api/articles/${this.id}`)
+                axios.delete(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then( resp => {console.log(resp);
                     //// prévoir animation pop up qq secondes pour annonce article supprimé avant redirection
                     this.$router.push('/dashboard');
@@ -212,7 +212,7 @@ export default {
                 content: this.content,
                 url: this.url
             };
-            axios.put(`http://localhost:3000/api/articles/${this.id}`, envoi)
+            axios.put(`http://localhost:3000/api/articles/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {
                 console.log(resp);
                 this.articleData.title = this.title;
@@ -223,20 +223,20 @@ export default {
             .catch(err => console.log(err))  
         },
         voteLike: function(){
-            axios.post(`http://localhost:3000/api/articles/${this.id}/vote/like`, {userId: this.$store.userId})
+            axios.post(`http://localhost:3000/api/articles/${this.id}/vote/like`, {userId: this.$store.userId}, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {
                 console.log(resp);
                 this.listUserIdLikes.push(this.$store.userId);
                 this.userConnectedLiked = true;
                 this.articleData.likes++;
-                axios.get(`http://localhost:3000/api/articles/${this.id}/likes`) //recup de la liste des likes mise à jour (pour affichage des noms des users)
+                axios.get(`http://localhost:3000/api/articles/${this.id}/likes`, {headers: {Authorization: 'Bearer ' + this.$store.token,}}) //recup de la liste des likes mise à jour (pour affichage des noms des users)
                 .then ( (resp) => {this.listLikes= resp.data;})
                 .catch(err => console.log(err));
             })
             .catch(err => console.log(err))
         },
         voteDislike: function(){
-            axios.post(`http://localhost:3000/api/articles/${this.id}/vote/cancellike`, {userId: this.$store.userId})
+            axios.post(`http://localhost:3000/api/articles/${this.id}/vote/cancellike`, {userId: this.$store.userId}, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {
                 console.log(resp);
                 this.userConnectedLiked = false;
@@ -246,7 +246,7 @@ export default {
                 //              
                 this.articleData.likes-- //mise à jour du compteur de likes
                 //recup de la liste des likes mise à jour (pour affichage des noms des users)
-                axios.get(`http://localhost:3000/api/articles/${this.id}/likes`) 
+                axios.get(`http://localhost:3000/api/articles/${this.id}/likes`, {headers: {Authorization: 'Bearer ' + this.$store.token,}}) 
                 .then ( (resp) => {this.listLikes= resp.data;})
                 .catch(err => console.log(err));
             })
@@ -320,6 +320,7 @@ main{
     font-size: 2em;
     margin-right:0.2em;
     color: rgb(139, 137, 137);
+    cursor: pointer;
     @media all and (min-width: 767px){
          margin-right:1em;
     }

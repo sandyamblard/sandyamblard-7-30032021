@@ -61,12 +61,12 @@ exports.cancelLike = (req, res, next) =>{
                             models.Like.destroy({where: {id: likefoundId}})
                             .then(()=> {
                                 console.log('like supprimé'), 
-                                res.status(200).json({message: "like annulé et compteur mis à jour"})})
+                                res.status(200).json({message: "like annulé et compteur mis à jour"})}) //return ;
                             .catch (error => res.status(500).json({error, message: "erreur lors destruction like"}))
                         })   
-                        .catch (error => res.status(500).json({error, message: 'pb pour enregistrer dislike'})) 
+                        //.catch (error => res.status(500).json({error, message: 'pb pour enregistrer dislike'})) 
                     })
-                    .catch ( res.status(500).json({error, message : 'erreur lors de la recuperation article'}) ) 
+                    //.catch ( res.status(500).json({error, message : 'erreur lors de la recuperation article'}) ) 
             }
         })
         .catch (error => res.status(500).json({error, message : "erreur récup like ds bdd"}));

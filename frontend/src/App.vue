@@ -4,7 +4,7 @@
     <router-link to="/about">About</router-link>|
     <router-link to="/dashboard">Dashboard</router-link>
   </div>
-  <router-view/>
+  <router-view :key="$route.path"/>
 </template>
 
 

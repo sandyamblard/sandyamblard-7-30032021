@@ -41,12 +41,8 @@ export default {
         
     }
     ,created(){
-        axios.get('http://localhost:3000/api/articles')
+        axios.get('http://localhost:3000/api/articles', {headers: {Authorization: 'Bearer ' + this.$store.token,}})
         .then((resp)=> {
-            const essai = new Date(resp.data[0].createdAt);
-            console.log('newDate: ', essai)
-            const month = essai.toLocaleDateString('fr-FR')
-            console.log('locale : ', month)
             this.allArticles = resp.data})
         .catch(err => console.log(err))
     },

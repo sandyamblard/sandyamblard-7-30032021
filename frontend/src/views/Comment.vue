@@ -66,7 +66,7 @@ export default {
     },
     created(){
         console.log('store :' , this.$store.userId)
-        axios.get(`http://localhost:3000/api/articles/comment/${this.id}`)
+        axios.get(`http://localhost:3000/api/articles/comment/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then((resp)=> {
                 //console.log(resp.data);
                 this.commentData = resp.data;
@@ -77,7 +77,7 @@ export default {
                 //verif si auteur du commentaire (user) est le mm que celui connecté
                 console.log('auteur de article =', this.article.userId)
             //recherche des infos de l'auteur de l'article :
-            axios.get(`http://localhost:3000/api/auth/users/${this.article.userId}`)
+            axios.get(`http://localhost:3000/api/auth/users/${this.article.userId}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then((resp)=> {
                     console.log('author article',resp.data);
                     this.authorArticle = resp.data;
@@ -99,7 +99,7 @@ export default {
 
         modifyComment : function(){
             const envoi = {userId : this.$store.userId, commContent: this.commContent};
-            axios.put(`http://localhost:3000/api/articles/comment/${this.id}`, envoi)
+            axios.put(`http://localhost:3000/api/articles/comment/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then (resp => {
                 console.log (resp);
                 this.commentData.commContent = this.commContent;
@@ -109,7 +109,7 @@ export default {
         },
         deleteComment : function(){
             if(confirm("Etes-vous sûr de vouloir supprimer ce commentaire ?")){
-                axios.delete(`http://localhost:3000/api/articles/comment/${this.id}`)
+                axios.delete(`http://localhost:3000/api/articles/comment/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then(resp => {console.log(resp);
                 this.$router.push(`/article/${this.article.id}`)
                 })
