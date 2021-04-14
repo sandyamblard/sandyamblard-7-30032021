@@ -11,13 +11,13 @@ const multer = require('../middlewares/multer-config');
 const checkInputArticle = require('../middlewares/checkInputArticle');
 
 
-router.post('', /*auth,*/ checkInputArticle, /*checkInput,*/ multer, articleCtrl.createArticle);
+router.post('', /*auth,*/ /*checkInputArticle,*/ /*checkInput,*/ multer, articleCtrl.createArticle);
 
 router.get('', /*auth,*/articleCtrl.getAllArticles);
 
 router.get('/:id', /*auth,*/ articleCtrl.getOneArticle);
 
-router.put('/:id', /*auth,*/checkInput, checkInputArticle, multer, articleCtrl.modifyArticle);
+router.put('/:id', /*auth,*//*checkInput,*/ checkInputArticle, multer, articleCtrl.modifyArticle);
 
 router.delete('/:id', /*auth,*/ articleCtrl.deleteArticle);
 

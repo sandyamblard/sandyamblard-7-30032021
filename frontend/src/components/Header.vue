@@ -34,6 +34,7 @@ export default{
         goHome(){
             this.$store.userId = "";
             this.$store.token = "";
+            this.$store.firstname = "",
             this.$store.isAdmin = false;
             this.$router.push('/');
 

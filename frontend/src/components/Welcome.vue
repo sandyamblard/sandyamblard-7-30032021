@@ -60,6 +60,7 @@
             <div><i class="fas fa-comments"></i></div>
         </div>
         <img class='logo-big' src="../../public/img/logoabove.png" alt="logo Groupomania" >
+        <p>{{error}}</p>
     </div>
 </template>
 
@@ -79,7 +80,8 @@ export default {
             birthdate: null,
             file: "",
             description:"   ",
-            envoi: ""
+            envoi: "",
+            error: ''
         }
     },
     methods: {
@@ -154,7 +156,8 @@ export default {
                     console.log(this.$store.userId, this.$store.token, this.$store.isAdmin),
                     this.goDashboard()
                 })
-                .catch (err => console.log(err))
+                .catch (err => {console.log(err);
+                        this.error= err.message})
         }
     }
     

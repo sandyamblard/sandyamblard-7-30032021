@@ -23,6 +23,7 @@ exports.createArticle = (req, res, next) => {
     } else{
         console.log('file présent');
         console.log('req.body.file :', req.body.file);
+        //commenter provisoirement car envoi d'un objet vide en guise de file....
        /* models.Article.create({
             UserId:req.body.userId, 
             title: req.body.title, 

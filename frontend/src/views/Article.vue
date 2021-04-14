@@ -77,10 +77,6 @@
                             <p class="comment-item--author">Par : <useritem v-bind:user="comment.user"></useritem></p>
                         </div>
                         <i class="fas fa-plus-circle" @click="goToComment(comment.id)" title="Détails, Modifier ou supprimer"></i>
-                        
-                        
-                        
-                    <!--/div-->
                 </div>
 
                 <form @submit.prevent="sendComment" class="sendcomment from-group">
@@ -99,14 +95,13 @@ import axios from 'axios';
 import Header from '../components/Header.vue'
 import UserItem from '@/components/UserItem.vue'
 
-//import Likes from '../components/Likes.vue'
 
 export default {
     name: 'Article',
     components:{
         'topbar': Header,
         'useritem' : UserItem
-        /*'likes' : Likes*/
+        
     },
      data() {
         return{
@@ -123,12 +118,11 @@ export default {
             title: '',
             content:'',
             url: null,
-            prenom:'', nom: '', imageUrl:''    //recup des infos pour mettre en value ds le formulaire
+            prenom:'', nom: '', imageUrl:''    //recup des infos du User
         }
     },
     created(){
-        //if (this.$store.isAdmin) {this.adminConnected = true;} //on enregistre si c'est l'administrateur qui est connecté
-                
+           //recup des articles     
         axios.get(`http://localhost:3000/api/articles/${this.id}`)
         .then((resp)=> {
             console.log(resp.data);
@@ -141,25 +135,27 @@ export default {
            this.idAuthor = resp.data.User.id })
         .catch(err => console.log(err));
 
+        // recup des commentaires de l'articles
         axios.get(`http://localhost:3000/api/articles/${this.id}/comments`)
             .then((resp)=> {
             console.log(resp.data);
            this.allComments = resp.data})
         .catch(err => console.log(err));
         
+        //recup des likes de l'articles
         axios.get(`http://localhost:3000/api/articles/${this.id}/likes`)
                 .then ( (resp) => {
-                    console.log(resp.data);
+                    //console.log(resp.data);
                     this.listLikes= resp.data;
                     //console.log(this.listLikes)
-                    for(let i in resp.data){                      //on enregistre les userId qui aiment l'article
+                    for(let i in resp.data){  //on enregistre les userId qui aiment l'article
                         this.listUserIdLikes.push(resp.data[i].user.id)
                     }
                     //console.log(this.listUserIdLikes)
-                    if(this.listUserIdLikes.includes(this.$store.userId)){ //on compare les id présent ds le tableau à notre utilisateur connecté
+                    if(this.listUserIdLikes.includes(this.$store.userId)){ 
+                        //on compare les id présent ds le tableau à notre utilisateur connecté
                         this.userConnectedLiked = true
                     }
-                    console.log(this.userConnectedLiked)
                 })
                 .catch(err => console.log(err));
        
@@ -175,14 +171,14 @@ export default {
                 userId: this.$store.userId,
                 commContent: this.commContent
             };
-            console.log(envoi);
+            //console.log(envoi);
             axios.post(`http://localhost:3000/api/articles/${this.id}/comment`, envoi)
-            .then( resp => {
-                console.log(resp);
-                //nvlle requete pour retrouver tous les comments avec leur id
+            .then( () => {
+                //console.log(resp);
+                //nvlle requete pour retrouver tous les comments avec leur id et update la page
                 axios.get(`http://localhost:3000/api/articles/${this.id}/comments`)
                     .then((resp)=> {
-                        console.log(resp.data);
+                        //console.log(resp.data);
                         this.allComments = resp.data})
                         .catch(err => console.log(err));
             })
@@ -204,6 +200,7 @@ export default {
         openFormModify: function(){
             this.modifyOpen= ! this.modifyOpen
         },
+        //AJOUTER GESTION DU FICHIER !! 
         modifyArticle: function(){
             const envoi= {
                 title: this.title,
@@ -238,7 +235,7 @@ export default {
             .then( resp => {
                 console.log(resp);
                 this.userConnectedLiked = false;
-                //ajouter trouver userId et le retirer du array
+                //trouver userId et le retirer du array
                 const index = this.listUserIdLikes.indexOf(this.$store.userId);
                 this.listUserIdLikes.splice(index,1)  
                 //              

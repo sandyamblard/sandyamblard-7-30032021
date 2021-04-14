@@ -28,12 +28,12 @@ export default {
     name: 'NewMessage',
     data(){
         return{
+            writeMessage : false,
             title:'',
             content:'',
             file: '',
             url:null,
-            fichierUrl:'',
-            writeMessage : false,
+           // fichierUrl:''
         }
     },
     methods: {
@@ -46,9 +46,13 @@ export default {
         }
         ,
         showFile: function(event){
-            const fichier = event.target.files[0];
-            console.log('fichiers : ', fichier);
+            /*const fichier = ;
+            console.log('fichiers : ', fichier);*/
+            this.file =event.target.files[0];
+            console.log('this.file :' , this.file)
+            //OK le fichier est présent en premier élt de la fileList
 
+/*Essais avec fileReader mais ne change rien...
             const fileReader = new FileReader();
             fileReader.addEventListener('load', ()=> {
                 this.fichierUrl = fileReader.result
@@ -56,26 +60,29 @@ export default {
             fileReader.readAsDataURL(fichier)
             this.file = fichier;
             console.log('file:', this.file)
-
+*/
             
             
         },
         sendMessage(){
-            //modif constantes
-            const envoi = {
+            //Envoi si pas de fichier (sans file et envoi un objet classique)
+           /* const envoi = {
                 userId: this.$store.userId,
                 title: this.title,
                 content: this.content,
-                url: this.url,
-                //file: this.file
-            };
-            /*const envoi = new FormData();
+                //url: this.url, //si envoi sans file
+                file: this.file //si envoi avec file (mettre une condition ensuite)
+            };*/
+            //ESSAI D'envoi avec fichier en utilisant FormData 
+            //et changeant les headers de la requete 
+            // donne erreur Multer : Unexpected Field et erreur avec middleware de verification : considère les champs title et content vide
+            const envoi = new FormData();
             envoi.append('userId', this.$store.userId);
             envoi.append('title', this.title);
             envoi.append('content', this.content);
-            envoi.append('file', this.file)*/
-            console.log(envoi)
-            axios.post('http://localhost:3000/api/articles', envoi/*, {headers: {'Content-Type': 'multipart/form-data'}}*/)
+            envoi.append('file', this.file)
+            console.log(envoi) //Le file est bien présent : file :(binary)
+            axios.post('http://localhost:3000/api/articles', envoi, {headers: {'Content-Type': 'multipart/form-data'}})
             .then(resp=> {
                 console.log(resp);
                     //rajouter nvelle requête get pour récup tous les articles et mettre a jour la page

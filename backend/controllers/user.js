@@ -44,7 +44,7 @@ exports.login = (req, res, next) => {
                console.log(userfound.password)
                 bcrypt.compare(req.body.password, userfound.password, function(err,result){
                     if(result === false){ //si password pas bon : 
-                        throw res.status(400).json({error, message: "password invalide"})
+                        throw res.status(404).json({message: "password invalide"})
                     }else { //si password ok : création du token
                         res.status(200).json({
                             userId: userfound.id,
@@ -59,7 +59,7 @@ exports.login = (req, res, next) => {
                         });
                     }
                 })  
-                 
+                
            }
        }).catch(err => res.status(500).json({error, message: 'erreur serveur pour verif user'}))
     
@@ -96,7 +96,7 @@ exports.getAllUsers = (req, res, next) => {
     .catch(error => res.status(404).json({error, message: "erreur récup users"}))
 };
 
-    
+ 
 
 //get one profil : 
 exports.getOneUser = (req, res, next) => {

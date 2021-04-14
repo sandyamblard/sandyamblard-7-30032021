@@ -59,7 +59,9 @@ exports.cancelLike = (req, res, next) =>{
                         .then( () => { 
                             console.log('article modifié')
                             models.Like.destroy({where: {id: likefoundId}})
-                            .then(()=> {console.log('like supprimé'); res.status(200).json({message: "like annulé et compteur mis à jour"})})
+                            .then(()=> {
+                                console.log('like supprimé'), 
+                                res.status(200).json({message: "like annulé et compteur mis à jour"})})
                             .catch (error => res.status(500).json({error, message: "erreur lors destruction like"}))
                         })   
                         .catch (error => res.status(500).json({error, message: 'pb pour enregistrer dislike'})) 

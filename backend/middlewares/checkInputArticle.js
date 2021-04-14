@@ -1,5 +1,5 @@
 
-
+//pb avec envoi formData....
 
 module.exports = (req, res, next) =>{
     if (req.body.title == null || req.body.content == null ){
