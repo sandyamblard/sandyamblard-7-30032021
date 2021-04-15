@@ -18,15 +18,31 @@ exports.signup =  (req, res, next) => {
     const cryptedMail = cryptojs.HmacSHA512(req.body.email, process.env.DB_KEY_FOR_MAIL).toString(); //cryptage du mail avant stockage ds BDD
     bcrypt.hash(req.body.password, 10) // hashage du mot de passage avec salage avec stockage ds BDD
         .then(hash => {
-             models.User.create({
+            if(req.file){
+                models.User.create({
+                    email: cryptedMail,
+                    password: hash,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    birthdate: req.body.birthdate,
+                    description: req.body.description,
+                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                }).then( ()=>res.status(201).json({message : 'utilisateur créé avec photo'}))
+                  .catch(error => res.status(400).json({ error, message: 'erreur lors de la creation du compte avec photo' }))
+                
+            }else{
+                models.User.create({
                 email: cryptedMail,
                 password: hash,
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 birthdate: req.body.birthdate,
-                description: req.body.description
-            }).then( ()=>res.status(201).json({message : 'utilisateur créé'}))
-              .catch(error => res.status(400).json({ error, message: 'erreur lors de la creation du compte' }))
+                description: req.body.description, 
+                
+            }).then( ()=>res.status(201).json({message : 'utilisateur créé sans photo'}))
+              .catch(error => res.status(400).json({ error, message: 'erreur lors de la creation du compte sans photo' }))
+            }
+            
         })
        .catch(error => res.status(500).json({ error, message : "erreur lors de la création du compte" }));
 };
@@ -106,26 +122,38 @@ exports.getOneUser = (req, res, next) => {
     .catch(error => res.status(404).json({error, message: "erreur récup user"}))
 };
 
+
+
+
 //update profil (sauf email et password):
 exports.modifyUser = (req, res, next) =>{
-      if(req.file){ //si présence d'un fichier image : 
+      if(req.file){ //si présence d'un fichier image ds la requete: 
         //trouver l'url de l'image ancienne
         models.User.findOne({where: {id: req.params.id}})
             .then (userFound => {
-                const oldImageFilename = userFound.imageUrl.split('/images')[1];
-                //la retirer
-                fs.unlink(`images/${oldImageFilename}`, () =>{console.log('photo retirée')}); //on retire l'ancienne image de la BDD
+                if(userFound.imageUrl){ //si le profil avait déjà une image associée
+                    console.log(' ancienne image retrouvée');
+                    const oldImageFilename = userFound.imageUrl.split('/images')[1];//recupérer l'ancienne image pour la retirer
+                    fs.unlink(`images/${oldImageFilename}`, () =>{console.log('photo retirée')}); 
                 //update le profil avec la nouvelle url calculée
-                models.User.update({...req.body, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
-                    .then (() => res.status(200).json({message: "Profil utilisateur mis à jour"}))
+                    models.User.update({...req.body, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
+                        .then (() => res.status(200).json({message: "Profil utilisateur mis à jour avec update de photo"}))
+                        .catch(error => res.status(404).json({error, message: "erreur update user"}));
+                }else{ //si profil n'avait pas d'image : ajout directement de la nouvelle image sans passer par FS unlink 
+                    console.log(' ancienne image non retrouvée')
+                    models.User.update({...req.body, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
+                    .then (() => res.status(200).json({message: "Profil utilisateur mis à jour avec une photo"}))
                     .catch(error => res.status(404).json({error, message: "erreur update user"}));
-                })
+                }
+            })
             .catch(err => res.status(404).json({err, message: "erreur récup user"}))
     }else { //si absence de fichier image : modification directement
         models.User.update({...req.body}, {where: {id: req.params.id}})
-            .then (user => res.status(200).json("Profil utilisateur mis à jour"))
-            .catch(error => res.status(404).json({error, message: "erreur update user"}))
+            .then (user => res.status(200).json("Profil utilisateur mis à jour sans modification de photo"))
+            .catch(error => res.status(404).json({error, message: "erreur update user sans modification de photo"}))
 }}; 
+
+
 
 //update email et password:
 exports.modifyMailPassword = (req, res, next) =>{

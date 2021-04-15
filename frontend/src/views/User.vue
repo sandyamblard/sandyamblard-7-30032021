@@ -4,17 +4,23 @@
     <h1>{{userData.firstname}} {{userData.lastname}}</h1>
     <section class="user-card">
         <span v-if="userData.imageUrl"><img :src="userData.imageUrl" alt="" class="avatar"></span>
-        <p>Biographie : <span>{{userData.description}}</span></p>
-        <p>Anniversaire : <span v-if='userData.birthdate'>{{anniversaire(userData.birthdate)}}</span><span v-else>Non communiqué</span></p>
+        <p>Biographie :<br><span>{{userData.description}}</span></p>
+        <p><i class="fas fa-birthday-cake"></i> Anniversaire :<i class="fas fa-birthday-cake"></i><br><span v-if='userData.birthdate'>{{anniversaire(userData.birthdate)}}</span><span v-else>Non communiqué</span></p>
 
-        <p>Membre inscrit depuis le :<span>{{dateInscription(userData.createdAt)}}</span></p>
+        <p>Membre inscrit depuis le :<br><span>{{dateInscription(userData.createdAt)}}</span></p>
         <p class='admin' v-if="userData.isAdmin">Administrateur du réseau</p>
     </section>    
     <section class="editprofil">    
         <div v-if="userConnected">
             <div class="author-area">
             <div @click="modifProfil" class='btn'> Editer mon profil<i class="fas fa-user-edit" ></i> </div>
-            <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify">
+            
+            <div @click="modifPass" class='btn'> Modifier mes codes d'accès<i class="fas fa-key" ></i> </div>
+            
+        </div>  
+
+        <!---->
+        <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify">
                 <div><i class="fas fa-caret-up"  @click="closeFormEdit" role=button></i></div>
                 <!--div @click="closeFormEdit" class="close" role=button>X</div-->
                 <div class="from-group">
@@ -30,8 +36,8 @@
                     <input type="date" id="date" v-model="birthdate">
                 </div>
                 <div class="from-group">
-                    <label for="file">Photo de profil :</label>
-                    <input type="file" id="file" accept="image/*">
+                    <label for="file">Nouvelle photo :</label>
+                    <input type="file" id="file" accept="image/*" ref="file" @change='showFileSelected'>
                 </div>
                 <div class="from-group">
                     <label for="description">Biographie :</label>
@@ -39,8 +45,8 @@
                 </div>
                 <button class="btn" >Modifier</button>
             </form>
-            <div @click="modifPass" class='btn'> Modifier mes codes d'accès<i class="fas fa-key" ></i> </div>
-            <form v-if="modifyPass" @submit.prevent="editPass" class="form-modify"> 
+        <!---->    
+        <form v-if="modifyPass" @submit.prevent="editPass" class="form-modify"> 
                 <div><i class="fas fa-caret-up"  @click="closeFormPass" role=button></i></div>
                 <div class="from-group">
                     <label for="mail">E-mail :</label>
@@ -52,7 +58,7 @@
                 </div>
                 <button class="btn" >Modifier</button>
             </form>
-        </div>    
+
             <div class='btn' @click="deleteUser">Supprimer mon profil <i class="fas fa-trash-alt"></i></div>
         </div>
         <div class='btn btn-admin' @click="deleteUser" v-if='$store.isAdmin'>Supprimer ce membre <br>
@@ -86,7 +92,7 @@ export default {
             imageUrl: null,
             password:'',
             email:'',
-
+            file :''
            
 
         }
@@ -116,13 +122,27 @@ export default {
             this.modifyPass= false;
         } 
         ,
+        showFileSelected: function(){
+            this.file = this.$refs.file.files[0];
+            console.log('fileSelectd : ' , this.file)
+        },
+
+
+    //////////MODIFIER UN USER /////////////     
         editProfil: function(){
-            const envoi = {
+            const envoi = new FormData();
+            envoi.append('firstname',  this.firstname);
+            envoi.append('lastname',  this.lastname);
+            envoi.append('birthdate',  this.birthdate);
+            envoi.append('description',  this.description);
+            envoi.append('file', this.file);
+       /*     const envoi = {
                 firstname: this.firstname,
                 lastname: this.lastname,
                 birthdate: this.birthdate,
                 description: this.description
-            }
+            }      */
+            console.log(envoi);
             axios.put(`http://localhost:3000/api/auth/users/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {
                 console.log(resp);
@@ -132,9 +152,15 @@ export default {
                 this.userData.birthdate = this.birthdate ;
                 this.userData.description = this.description;
                 this.modifyProfil= false;
+                //nvlle requete pour récupérer nvlle url de l'image :
+                axios.get(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
+                    .then(resp => this.userData.imageUrl = resp.data.imageUrl)
             })
             .catch(err => console.log(err))
         }, 
+
+
+    ///////////MODIFIER PASSWORD ET MAIL////////////     
         editPass: function(){
             const envoi = {
                 password: this.password,
@@ -146,6 +172,8 @@ export default {
             })
             .catch(err => console.log(err))
         }, 
+
+    //////////SUPPRIMER UN USER /////////////    
         deleteUser : function(){
             if(confirm('Etes-vous sûr de vouloir supprimer ce membre ?')){
               axios.delete(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
@@ -167,6 +195,9 @@ export default {
             
         }
     },
+
+
+
     created(){
         if(this.$store.userId == this.$route.params.id){
             this.userConnected= true;
@@ -269,6 +300,12 @@ span{
 .btn{
     opacity :1;
     
+}
+
+.fa-birthday-cake{
+    padding-left: 0em;
+    margin-right: 1em;
+    margin-left: 1em;
 }
 
 

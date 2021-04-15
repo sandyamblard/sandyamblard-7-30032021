@@ -44,13 +44,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({  storage: storage })
 
-router.post('', /*auth,*/ /*checkInputArticle,*/ /*checkInput,*/ /*multerConfig ,*/  upload.single('file') , articleCtrl.createArticle);
+router.post('', /*auth,*/ /*checkInputArticle,*/ /*checkInput,*/ /*multerConfig ,*/ upload.single('file')  , articleCtrl.createArticle);
 
 router.get('', /*auth,*/articleCtrl.getAllArticles);
 
 router.get('/:id', /*auth,*/ articleCtrl.getOneArticle);
 
-router.put('/:id', /*auth,*//*checkInput,*/ checkInputArticle, multerConfig, articleCtrl.modifyArticle);
+router.put('/:id', /*auth,*//*checkInput,*/ upload.single('file'), checkInputArticle,/*, multerConfig,*/ articleCtrl.modifyArticle);
 
 router.delete('/:id', /*auth,*/ articleCtrl.deleteArticle);
 

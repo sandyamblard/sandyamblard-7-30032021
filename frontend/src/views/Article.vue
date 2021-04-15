@@ -55,7 +55,7 @@
                     </div>
                     <div class="from-group">
                         <label for="file">Photo : </label>
-                        <input type="file" id="file" accept='image/*'>
+                        <input type="file" id="file" ref='file' @change='showFileSelected' accept='image/*'>
                     </div>
                     <button class="btn" >Modifier l'article</button>
                 </form>
@@ -118,6 +118,7 @@ export default {
             title: '',
             content:'',
             url: null,
+            file:'',
             prenom:'', nom: '', imageUrl:''    //recup des infos du User
         }
     },
@@ -170,7 +171,21 @@ export default {
         showLikes: function(){
             this.likeShowed= !this.likeShowed;
         },
+        showFileSelected: function(){
+            this.file = this.$refs.file.files[0];
+            console.log('fileSelectd : ' , this.file)
+        }
+        ,
 
+        goToComment : function(identif){
+            this.$router.push(`/comment/${identif}`)
+        }, 
+
+         openFormModify: function(){
+            this.modifyOpen= ! this.modifyOpen
+        },
+
+        ///////////ENVOYER UN COMMENTAIRE ////////////////
         sendComment: function(){
             const envoi = {
                 userId: this.$store.userId,
@@ -189,9 +204,9 @@ export default {
             })
             .catch(err => console.log(err))  
         },
-        goToComment : function(identif){
-            this.$router.push(`/comment/${identif}`)
-        }, 
+
+
+        ///////////SUPPRIMER UN ARTICLE ////////////////
         deleteArticle : function(){
             if(confirm('Etes-vous sûr de vouloir supprimer cet article ?')){
                 axios.delete(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
@@ -202,30 +217,37 @@ export default {
                 .catch(err => console.log(err))
             }
         }, 
-        openFormModify: function(){
-            this.modifyOpen= ! this.modifyOpen
-        },
-        //AJOUTER GESTION DU FICHIER !! 
+    
+
+        ///////////MODIFIER UN ARTICLE ////////////////
         modifyArticle: function(){
-            const envoi= {
-                title: this.title,
-                content: this.content,
-                url: this.url
-            };
+            const envoi = new FormData();
+            envoi.append('userId', this.$store.userId);
+            envoi.append('title', this.title);
+            envoi.append('content', this.content);
+            envoi.append('file', this.file);
+            //console.log(envoi);
             axios.put(`http://localhost:3000/api/articles/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-            .then( resp => {
-                console.log(resp);
+            .then( () => {
+                //console.log(resp.data);
                 this.articleData.title = this.title;
                 this.articleData.content = this.content;
                 this.modifyOpen= false;
-
+                //pr récup nvlle url: nvlle requete get
+                    axios.get(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
+                    .then(resp =>{
+                        //console.log(resp);
+                        this.articleData.url =resp.data.url;
+                    }).catch(err=>console.log(err))              
                 })
             .catch(err => console.log(err))  
         },
+
+        ///////////GESTION DU LIKE ////////////////
         voteLike: function(){
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/like`, {userId: this.$store.userId}, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-            .then( resp => {
-                console.log(resp);
+            .then( () => {
+                //console.log(resp);
                 this.listUserIdLikes.push(this.$store.userId);
                 this.userConnectedLiked = true;
                 this.articleData.likes++;
@@ -235,6 +257,8 @@ export default {
             })
             .catch(err => console.log(err))
         },
+
+        ///////////GESTION DU CANCEL LIKE ////////////////
         voteDislike: function(){
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/cancellike`, {userId: this.$store.userId}, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {

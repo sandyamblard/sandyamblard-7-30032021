@@ -53,9 +53,33 @@ exports.getOneArticle = (req, res, next) => {
 
 //update one article :
 exports.modifyArticle = (req, res, next) =>{
-    models.Article.update({...req.body}, {where: {id: req.params.id}})
-    .then (user => res.status(200).json("article modifié !"))
-    .catch(error => res.status(404).json({error, message: "L'article n'a pas pu être modifié"}))
+    if(req.file){
+        //si image présente dans la requête, on recherche si il y en avait déjà une présente dans l'article :
+        models.Article.findOne({where: {id: req.params.id}}) 
+        .then(articleFound=>{
+            if(articleFound.url){ //si image déjà dans l'article :
+                const filename = articleFound.url.split('/images')[1];
+                fs.unlink(`images/${filename}`, () =>{ //suppression image déjà présente
+                    //update avec nouvelle image nouvelle image : 
+                    models.Article.update( { title: req.body.title, content: req.body.content , url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
+                    .then (() => res.status(200).json('article avec photo modifié avec nouvelle photo'))
+                    .catch(error => res.status(500).json({error, message: "erreur modif article avec photo et nouvelle photo"})) })//fin callback unlink
+                }else{ //si article n'avait pas d'image : 
+                    models.Article.update( { title: req.body.title, content: req.body.content , url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
+                    .then (() => res.status(200).json('article sans photo modifié, photo ajoutée'))
+                    .catch(error => res.status(500).json({error, message: "erreur update article qui n'avait pas de photo"}))
+                }
+            })      
+        .catch(err => res.status(404).json({error, message: 'erreur lors récup article pour vérifier sa photo'}))
+    }else{ //si pas d'image dans la requete de modif : 
+        models.Article.update({...req.body}, {where: {id: req.params.id}})
+        .then (article => res.status(200).json("article modifié !"))
+        .catch(error => res.status(404).json({error, message: "L'article n'a pas pu être modifié"})) 
+    }
+
+
+
+
 }; //rajouer condition req.file quand possibilité d'envoyer fichier via front (avec multer)
 
 

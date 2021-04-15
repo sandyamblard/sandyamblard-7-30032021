@@ -26,6 +26,10 @@ export default {
 <style lang="scss">
 *{box-sizing: border-box;}
 
+body{
+  margin: 0;
+  
+}
 $color-primary : rgb(11, 11, 119);
 
 #nav{display: none;

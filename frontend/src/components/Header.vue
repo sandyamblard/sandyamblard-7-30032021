@@ -1,6 +1,9 @@
 <template>
     <header class="topbar">
-        <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
+        <router-link to='/'>
+            <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
+        </router-link>
+        
         <p>
             <span v-if='$store.firstname&&$store.isAdmin'>- <span class="desk-only" >Accès</span> ADMINISTRATEUR -</span>
             <span v-else-if='$store.firstname'>Bienvenue {{$store.firstname}} !</span>
@@ -56,11 +59,12 @@ export default{
 $color-primary : rgb(11, 11, 119);
 
  .topbar{
+     z-index: 1000;
     width:100%;
     background-color: $color-primary;
     color: white;
     font-weight: bold;
-    margin-top: -8px;
+    margin-top: 0px;
       & .fas{
          color: white;
          font-size: 35px;
@@ -86,9 +90,9 @@ $color-primary : rgb(11, 11, 119);
      width:60% ;
      margin-top: 0.7em;
      @media all and (min-width: 767px){
-         height: 80%;
+         height: 40px;
          width: auto;
-         margin-top: 0.1em;
+         margin-top: 5px;
         margin-left: 2vw;
      }
      

@@ -110,6 +110,16 @@ export default {
         }
         ,
         sendUser: function(){
+            const envoi = new FormData();
+            envoi.append('firstname', this.firstname);
+            envoi.append('lastname', this.lastname);
+            envoi.append('email', this.email);
+            envoi.append('password', this.password);
+            envoi.append('birthdate', this.birthdate);
+            envoi.append('description', this.description);
+            envoi.append('file', this.file)  
+                console.log(envoi)
+/*
             const envoi = { firstname:this.firstname, 
                 lastname: this.lastname, 
                 password: this.password, 
@@ -117,13 +127,16 @@ export default {
                 birthdate: this.birthdate,
                 description: this.description
                 }
+
+                */
             const envoibis = { 
                 password: this.password, 
                 email: this.email
                 }
-            console.log(envoi);
+                //enregistr l'user
             axios.post('http://localhost:3000/api/auth/signup', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token}})
             .then (resp => {console.log(resp); console.log(envoibis);
+            //et se connecter dans la foulée
                 axios.post('http://localhost:3000/api/auth/login', envoibis, {headers: {Authorization: 'Bearer ' + this.$store.token}})
                 .then(resp => {
                     console.log(resp);
