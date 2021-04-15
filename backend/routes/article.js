@@ -6,10 +6,11 @@ const { body, validationResult } = require('express-validator');
 
 const articleCtrl = require('../controllers/article');
 
+const checkInputArticle = require('../middlewares/checkInputArticle');
 const checkInput = require('../middlewares/checkInput');
 const checkPassword = require('../middlewares/checkPassword');
 const multerConfig = require('../middlewares/multer-config');
-const checkInputArticle = require('../middlewares/checkInputArticle');
+
 
 //essai (en enlevant multerConfig de la route) : enregister l'image sans modif de nom et sans extensiotn, et enregistre le message sans se rendre compte qu'il y un req.file...
 /*
@@ -44,13 +45,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({  storage: storage })
 
-router.post('', /*auth,*/ /*checkInputArticle,*/ /*checkInput,*/ /*multerConfig ,*/ upload.single('file')  , articleCtrl.createArticle);
+router.post('', /*auth,*/ /*checkInputArticle,*/ /**/ /*multerConfig ,*/ upload.single('file')  , checkInputArticle, checkInput, articleCtrl.createArticle);
 
 router.get('', /*auth,*/articleCtrl.getAllArticles);
 
 router.get('/:id', /*auth,*/ articleCtrl.getOneArticle);
 
-router.put('/:id', /*auth,*//*checkInput,*/ upload.single('file'), checkInputArticle,/*, multerConfig,*/ articleCtrl.modifyArticle);
+router.put('/:id', /*auth,*//**/ upload.single('file'), checkInputArticle, checkInput,/*, multerConfig,*/ articleCtrl.modifyArticle);
 
 router.delete('/:id', /*auth,*/ articleCtrl.deleteArticle);
 

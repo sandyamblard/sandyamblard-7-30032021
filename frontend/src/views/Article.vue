@@ -47,16 +47,17 @@
                     <i  class="fas fa-caret-up"  @click.stop="openFormModify"></i>
                     <div class="from-group">
                         <label for="title">Titre :</label>
-                        <input type="text" id="title"  v-model="title" required >
+                        <input type="text" id="title"  v-model="title" required  @focus='cancelError'>
                     </div>
                     <div class="from-group">
                         <label for="content">Message :</label>
-                        <textarea id="content" cols="40" rows="9" v-model="content" required ></textarea>
+                        <textarea id="content" cols="40" rows="9" v-model="content" required  @focus='cancelError'></textarea>
                     </div>
                     <div class="from-group">
                         <label for="file">Photo : </label>
-                        <input type="file" id="file" ref='file' @change='showFileSelected' accept='image/*'>
+                        <input type="file" id="file" ref='file' @change='showFileSelected' accept='image/*' @focus='cancelError'>
                     </div>
+                    <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
                     <button class="btn" >Modifier l'article</button>
                 </form>
            </article>
@@ -81,9 +82,11 @@
 
                 <form @submit.prevent="sendComment" class="sendcomment from-group">
                     <label for="comment">Ecrire un commentaire :</label>
-                    <input type="text" id="comment" required placeholder="*" v-model="commContent">
+                    <input type="text" id="comment" required placeholder="*" v-model="commContent" @focus='cancelError'>
+                    
                     <button class='btn btn-small'><i class="fas fa-paper-plane"></i></button>
                 </form>
+                <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
             </div>
        </section>
     </main></div>
@@ -119,7 +122,8 @@ export default {
             content:'',
             url: null,
             file:'',
-            prenom:'', nom: '', imageUrl:''    //recup des infos du User
+            prenom:'', nom: '', imageUrl:'' ,   //recup des infos du User
+            error: ''
         }
     },
     created(){
@@ -185,6 +189,12 @@ export default {
             this.modifyOpen= ! this.modifyOpen
         },
 
+        
+        cancelError: function(){
+            this.error = ''
+        },
+
+
         ///////////ENVOYER UN COMMENTAIRE ////////////////
         sendComment: function(){
             const envoi = {
@@ -200,9 +210,9 @@ export default {
                     .then((resp)=> {
                         //console.log(resp.data);
                         this.allComments = resp.data})
-                        .catch(err => console.log(err));
+                        .catch(err => {console.log(err); this.error= err.response.data.error});
             })
-            .catch(err => console.log(err))  
+            .catch(err => {console.log(err); this.error= err.response.data.error})  
         },
 
 
@@ -238,9 +248,9 @@ export default {
                     .then(resp =>{
                         //console.log(resp);
                         this.articleData.url =resp.data.url;
-                    }).catch(err=>console.log(err))              
+                    }).catch(err => {console.log(err); this.error= err.response.data.error})              
                 })
-            .catch(err => console.log(err))  
+            .catch(err => {console.log(err); this.error= err.response.data.error})  
         },
 
         ///////////GESTION DU LIKE ////////////////

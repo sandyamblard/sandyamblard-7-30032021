@@ -28,7 +28,7 @@ export default {
 
 body{
   margin: 0;
-  
+
 }
 $color-primary : rgb(11, 11, 119);
 
@@ -159,6 +159,16 @@ button{
     @media all and (min-width: 1024px){
         display: inline;
     }    
+}
+
+
+.warning{
+    color :rgb(194, 33, 33);
+    font-weight: bold;
+    & .fa-exclamation-triangle{
+        font-size: 1.9em;
+        margin-right: 0.5em;
+    }
 }
 </style>
 

@@ -7,16 +7,17 @@
     <form v-if="writeMessage" class="newmessage--form" @submit.prevent="sendMessage" >
         <div class="from-group">
             <label for="title">Titre :</label>
-            <input type="text" id="title"  placeholder="*" required v-model='title'>
+            <input type="text" id="title"  placeholder="*" required v-model='title' @focus='cancelError'>
         </div>
         <div class="from-group">
             <label for="content">Message :</label>
-            <textarea id="content" cols="40" rows="6" placeholder="*" required v-model='content'></textarea>
+            <textarea id="content" cols="40" rows="6" placeholder="*" required v-model='content' @focus='cancelError'></textarea>
         </div>
         <div class="from-group">
             <label for="file">Photo : </label>
-            <input type="file" id="file" ref='file' @change="showFile" accept="image/*">
+            <input type="file" id="file" ref='file' @change="showFile" accept="image/*" @focus='cancelError'>
         </div>
+        <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
         <button class="btn" >Poster</button>
     </form>
 </div>     
@@ -33,6 +34,7 @@ export default {
             content:'',
             file: '',
             url:null,
+            error:''
         }
     },
     methods: {
@@ -64,6 +66,11 @@ export default {
             
             
         },
+
+        cancelError: function(){
+            this.error = ''
+        },
+
         sendMessage(){
             //Envoi si pas de fichier (sans file et envoi un objet classique)
            /* const envoi = {
@@ -90,7 +97,7 @@ export default {
                 console.log(resp);
                     //rajouter nvelle requête get pour récup tous les articles et mettre a jour la page
                 })
-            .catch(err => console.log(err))
+            .catch(err=>{console.log(err); this.error= err.response.data.error})
             
         }
        

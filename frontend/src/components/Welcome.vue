@@ -1,76 +1,88 @@
 <template>
     <div class="welcome">
         <h1>Bienvenue sur le réseau social de Groupomania !</h1>
-        <div class="group-btn">
-            <div class="btn-empty" role="button" @click="toggleSignup">S'inscrire</div>
-            <div class="btn-empty-left" role="button" @click="toggleLogin">Se connecter</div>
-        </div>
-        
-        <!--si s'inscrire choisi : -->
-        <form class="form-welcome" v-if="signup" @submit.prevent="sendUser">
-            <h2>Inscription rapide :</h2>
-            <div class="from-group">
-                <label for="prenom">Prénom :</label>
-                <input type="text" id="prenom" placeholder="*" required v-model="firstname">
-            </div>
-            <div class="from-group">
-                <label for="nom">Nom :</label>
-                <input type="text" id="nom" placeholder="*" required v-model="lastname">
-            </div>
-            <div class="from-group">
-                <label for="mail">E-mail :</label>
-                <input type="email" id="mail" placeholder="*" required v-model="email">
-            </div>
-            <div class="from-group">
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" placeholder="*" required v-model="password">
-            </div>
-            <div class="from-group">
-                <label for="date">Date de naissance :</label>
-                <input type="date" id="date" v-model="birthdate">
-            </div>
-            <div class="from-group">
-                <label for="file">Photo de profil :</label>
-                <input type="file" id="file" ref='file' @change='showFileSelected' accept="image/*">
-            </div>
-            <div class="from-group">
-                <label for="description">Biographie :</label>
-                <input type="text" id="description"  v-model="description">
-            </div>
-            <button class="btn" >Inscription</button>
-        </form>
-       
-        <!--si se connecter choisi : -->
-        <form v-if="login" class="form-welcome"  @submit.prevent="connectUser">
-            <h2>Connection rapide :</h2>
-            <div class="from-group">
-                <label for="mail">E-mail :</label>
-                <input type="email" id="mail" placeholder="*" required v-model="email">
-            </div>
-            <div class="from-group">
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" placeholder="*" required v-model="password">
-            </div>
-            <button class="btn" >Connection</button>
-        </form>
+        <section v-if="userConnected" class='deconnexion'>
+            <div class='btn' @click="goHome"> Se déconnecter  <i class='fas fa-power-off' title="se déconnecter"></i></div>
+        </section>
 
-        <div class="form-welcome" v-if="!login&&!signup">
-            <div><i class="fas fa-comments"></i></div>
-            Inscrivez-vous en quelques secondes et discuter avec vos collègues de l'entreprise, en toute convivialité !
-            <div><i class="fas fa-comments"></i></div>
-        </div>
+        <section v-else class='connection'>
+            <div class="group-btn">
+                <div class="btn-empty" role="button" @click="toggleSignup">S'inscrire</div>
+                <div class="btn-empty-left" role="button" @click="toggleLogin">Se connecter</div>
+            </div>
+            
+            <!--si s'inscrire choisi : -->
+            <form class="form-welcome" v-if="signup" @submit.prevent="sendUser">
+                <h2>Inscription rapide :</h2>
+                <div class="from-group">
+                    <label for="prenom">Prénom :</label>
+                    <input type="text" id="prenom" placeholder="*" required v-model="firstname" @focus="cancelError">
+                </div>
+                <div class="from-group">
+                    <label for="nom">Nom :</label>
+                    <input type="text" id="nom" placeholder="*" required v-model="lastname" @focus="cancelError">
+                </div>
+                <div class="from-group">
+                    <label for="mail">E-mail :</label>
+                    <input type="email" id="mail" placeholder="*" required v-model="email" @focus="cancelError">
+                </div>
+                <div class="from-group">
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" placeholder="*" required v-model="password" @focus="cancelError">
+                </div>
+                <div class="from-group">
+                    <label for="date">Date de naissance :</label>
+                    <input type="date" id="date" v-model="birthdate" @focus="cancelError">
+                </div>
+                <div class="from-group">
+                    <label for="file">Photo de profil :</label>
+                    <input type="file" id="file" ref='file' @change='showFileSelected' accept="image/*" @focus="cancelError">
+                </div>
+                <div class="from-group">
+                    <label for="description">Biographie :</label>
+                    <input type="text" id="description"  v-model="description" @focus="cancelError">
+                </div>
+                <button class="btn" >Inscription</button>
+            </form>
+            
+        
+            <!--si se connecter choisi : -->
+            <form v-if="login" class="form-welcome"  @submit.prevent="connectUser">
+                <h2>Connection rapide :</h2>
+                <div class="from-group">
+                    <label for="mail">E-mail :</label>
+                    <input type="email" id="mail" placeholder="*" required v-model="email" @focus="cancelError">
+                </div>
+                <div class="from-group">
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" placeholder="*" required v-model="password" @focus="cancelError">
+                </div>
+                <button class="btn" >Connection</button>
+            </form>
+
+            <div class="form-welcome" v-if="!login&&!signup">
+                <div><i class="fas fa-comments"></i></div>
+                Inscrivez-vous en quelques secondes et discuter avec vos collègues de l'entreprise, en toute convivialité !
+                <div><i class="fas fa-comments"></i></div>
+            </div>
+            <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
+        </section>
         <img class='logo-big' src="../../public/img/logoabove.png" alt="logo Groupomania" >
-        <p>{{error}}</p>
+        
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+//import { bus } from '../main'
+//import { emitter } from '../main'
 
 export default {
     name: "Welcome",
     data() {
         return {
+            
+            userConnected: false,
             signup: false,
             login:false,
             firstname:"",
@@ -84,6 +96,11 @@ export default {
             error: ''
         }
     },
+    
+    created(){
+        if(this.$store.userId){ this.userConnected = true}
+    }
+    ,
     methods: {
         toggleSignup : function(){
             this.signup = true;
@@ -109,6 +126,24 @@ export default {
             console.log('fileSelectd : ' , this.file)
         }
         ,
+
+        goHome(){
+            console.log('go home')
+            this.$store.userId = "";
+            this.$store.token = "";
+            this.$store.firstname = "",
+            this.$store.isAdmin = false;
+            this.userConnected = false;
+            //bus.$emit('deconnexion') 
+            //emitter.emit('deconnexion', 'deconnecté !')
+            
+        }
+        ,
+
+        cancelError : function(){
+            this.error = ''
+        },
+
         sendUser: function(){
             const envoi = new FormData();
             envoi.append('firstname', this.firstname);
@@ -153,9 +188,9 @@ export default {
                     this.$store.isAdmin= resp.data.isAdmin
                     console.log(this.$store.userId, this.$store.token, this.$store.isAdmin),
                     this.goDashboard()})
-                .catch (err => console.log(err))
+                .catch (err => {console.log(err); this.error= err.response.data.error})
             })
-            .catch (err => console.log(err))
+            .catch (err => {console.log(err); this.error= err.response.data.error})
         },
         connectUser: function(){
             const envoi = { 
@@ -206,6 +241,14 @@ h1{
     padding-top: 50px;
     }
 }
+
+.connection{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .form-welcome{
     border-radius: 10px;
     background-color: rgb(238, 237, 237);
@@ -265,6 +308,19 @@ h1{
   }
 }
 
+.fa-power-off{
+    font-size: 2em;
+    margin-left: 0.5em;
+}
+
+.warning{
+    color :rgb(194, 33, 33);
+    font-weight: bold;
+    & .fa-exclamation-triangle{
+        font-size: 1.9em;
+        margin-right: 0.5em;
+    }
+}
 
 </style>
 

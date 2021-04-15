@@ -4,10 +4,10 @@
             <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
         </router-link>
         
-        <p>
+        <p v-if='!userOnline'>Réseau social d'entreprise</p>
+        <p v-else>
             <span v-if='$store.firstname&&$store.isAdmin'>- <span class="desk-only" >Accès</span> ADMINISTRATEUR -</span>
             <span v-else-if='$store.firstname'>Bienvenue {{$store.firstname}} !</span>
-            <span v-else>Réseau social d'entreprise</span> 
             <i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil" @click='goMyProfil'></i>
             <i v-if="$store.userId" class="fas fa-home" title="Revenir au mur" @click="goDashboard"></i>
             <i v-if="$store.userId" class="fas fa-power-off" title="Se déconnecter" @click="goHome"></i>
@@ -18,17 +18,20 @@
 
 
 <script>
-
+//import { bus } from '../main' // essai evt personnalisé pour force à updater le composant qd moidif store
+//import {emitter} from'../main' //essai avec npm mitt pour créer bus event pour vue 3  mais pas ùieux (cannot read prperty  'on' of undefined ....)
 
 export default{
     data(){
         return {
-            
-            userConnected: ''
-            
+            //headerKey:0,
+            userConnected: '',
+            userOnline: false
         }
     }, created(){
+        if(this.$store.userId){this.userOnline = true}
         this.userConnected = this.$store.userId;
+        //emitter.on('deconnexion', (data) => {console.log(data); this.headerKey++})
         
     }, methods: {
         goDashboard(){

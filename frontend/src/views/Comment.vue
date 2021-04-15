@@ -31,10 +31,10 @@
     <form v-if="openForm" @submit.prevent='modifyComment'>
         <div><i @click='openModif' class="fas fa-caret-up"></i></div>
         <label for="content">Modifier ce commentaire</label>
-        <input type="text" id="content"  placeholder="*" required v-model='commContent'>
+        <input type="text" id="content"  placeholder="*" required v-model='commContent' @focus='cancelError'>
         <button class='btn'>Modifier</button>
     </form>
-
+    <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
 </div>    
 
 </template>
@@ -60,8 +60,8 @@ export default {
             url:'', 
             authorArticle: '', //auteur de l'article
             openForm: false,
-            commContent : ''
-
+            commContent : '',
+            error:''
         }
     },
     created(){
@@ -97,6 +97,11 @@ export default {
             this.openForm = !this.openForm
         },
 
+        
+        cancelError: function(){
+            this.error = ''
+        },
+
         modifyComment : function(){
             const envoi = {userId : this.$store.userId, commContent: this.commContent};
             axios.put(`http://localhost:3000/api/articles/comment/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
@@ -105,7 +110,7 @@ export default {
                 this.commentData.commContent = this.commContent;
                 this.openForm = false
                 })
-            .catch (err => console.log(err))
+            .catch (err => {console.log(err); this.error= err.response.data.error})
         },
         deleteComment : function(){
             if(confirm("Etes-vous sûr de vouloir supprimer ce commentaire ?")){
@@ -113,7 +118,7 @@ export default {
                 .then(resp => {console.log(resp);
                 this.$router.push(`/article/${this.article.id}`)
                 })
-                .catch(err => console.log(err))  
+                .catch(err => {console.log(err); this.error= err.response.data.error})  
             }
 
         },
