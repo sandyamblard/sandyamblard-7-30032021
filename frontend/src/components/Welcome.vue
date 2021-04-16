@@ -12,7 +12,7 @@
             </div>
             
             <!--si s'inscrire choisi : -->
-            <form class="form-welcome" v-if="signup" @submit.prevent="sendUser">
+            <form class="form-welcome appear-anim" v-if="signup" @submit.prevent="sendUser">
                 <h2>Inscription rapide :</h2>
                 <div class="from-group">
                     <label for="prenom">Prénom :</label>
@@ -47,7 +47,7 @@
             
         
             <!--si se connecter choisi : -->
-            <form v-if="login" class="form-welcome"  @submit.prevent="connectUser">
+            <form v-if="login" class="form-welcome  appear-anim"  @submit.prevent="connectUser">
                 <h2>Connection rapide :</h2>
                 <div class="from-group">
                     <label for="mail">E-mail :</label>
@@ -234,6 +234,7 @@ h1{
     align-items: center;
     & img{
         width: 60vw;
+        margin-top: 10vw;
     }
         @media all and (min-width: 767px){
     padding-top: 50px;

@@ -122,7 +122,7 @@ h3{
 }
 
 .fa-plus-circle{
-    font-size: 2em;
+    font-size: 1.5em;
     color: rgb(139, 137, 137);
     cursor: pointer;
     @media all and (min-width: 767px){

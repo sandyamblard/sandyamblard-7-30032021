@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <!--topbar :key='headerKey' @updateHeader='upKey'></topbar-->
     <topbar></topbar>
     <welcome></welcome> 
   </div>
@@ -12,12 +11,10 @@
 import header from '@/components/Header.vue'
 import Welcome from '@/components/Welcome.vue'
 
-//import {emitter} from'../main'
 
 export default {
   name: 'Home',
   components: {
-    /*HelloWorld,*/
     'topbar' : header,
     'welcome' : Welcome
 
@@ -26,13 +23,6 @@ export default {
     return{
       headerKey:0,
     }
-  },/*
-  methods:{
-    upKey(){
-      emitter.on('updateHeader', ()=> console.log('déclenché'))/* 
-      console.log('déclenché');
-      this.headerKey++;*/
- /*   }
-  }*/
+  },
 }
 </script>

@@ -14,9 +14,9 @@
                     <!--p>Dernière modification le : {{ articleData.updatedAt }}</p-->
                 </div>
 
-                <div class='article-likes'>
+                <div class='article-likes '>
                     <div class="showlikes" role="button" @click="showLikes" title="cliquer pour voir"><span>{{ articleData.likes }} personnes aiment cet article</span>
-                        <div v-if="likeShowed" class="like-show"> 
+                        <div v-if="likeShowed" class="like-show appear-anim"> 
                         <i  class="fas fa-caret-up"  @click.stop="showLikes"></i>
                         <p v-for="(like, index) in listLikes" :key=index>    
                             <useritem v-bind:user="like.user"></useritem>
@@ -43,7 +43,7 @@
                         <div class='btn' @click="deleteArticle">Supprimer<i class="fas fa-trash-alt"></i></div>    
                 </div>
                 <!--modif message form-->
-                <form v-if="modifyOpen" @submit.prevent="modifyArticle" class='modif-article'>
+                <form v-if="modifyOpen" @submit.prevent="modifyArticle" class='modif-article appear-anim'>
                     <i  class="fas fa-caret-up"  @click.stop="openFormModify"></i>
                     <div class="from-group">
                         <label for="title">Titre :</label>
@@ -130,6 +130,12 @@ export default {
             success:''
         }
     },
+/// si pas d'utilisateur connecté redirection en page d'accueil
+  beforeCreate(){
+      if(!this.$store.userId){
+          this.$router.push('/')
+      }
+  },
     created(){
            //recup des articles     
         axios.get(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
@@ -208,6 +214,7 @@ export default {
             //console.log(envoi);
             axios.post(`http://localhost:3000/api/articles/${this.id}/comment`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( () => {
+                this.commContent = '';
                 //console.log(resp);
                 //nvlle requete pour retrouver tous les comments avec leur id et update la page
                 axios.get(`http://localhost:3000/api/articles/${this.id}/comments`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})

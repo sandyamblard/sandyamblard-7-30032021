@@ -7,7 +7,7 @@ const path = require('path');
 const session = require('cookie-session');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+//const mysql = require('mysql2');
 
 
 const userRoutes = require('./routes/user');
@@ -27,7 +27,7 @@ const sequelize = new Sequelize('mysql://' + process.env.DB_INFOS_SQL);
     console.error('Unable to connect to the database:', error);
   }})();
 
-  //ne crée pas de table si existe déjà
+  //ne crée pas de table si existe déjà et note les requetes effectuées en console
   sequelize.sync({logging: console.log});
 
 
@@ -56,7 +56,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());  //transforme corps des requetes en objet js utilisable
 
-//app.use(helmet()); // sécurisation de l'application grâce au pulg-in helmet
+app.use(helmet()); // sécurisation de l'application grâce au pulg-in helmet
 
 //on fait en sorte de pouvoir accéder au dossier images en rendant le dossier images statique :
 app.use('/images', express.static(path.join(__dirname, 'images')));

@@ -20,7 +20,7 @@
         </div>  
 
         <!---->
-        <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify">
+        <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify appear-anim">
                 <div><i class="fas fa-caret-up"  @click="closeFormEdit" role=button></i></div>
                 <!--div @click="closeFormEdit" class="close" role=button>X</div-->
                 <div class="from-group">
@@ -46,7 +46,7 @@
                 <button class="btn" >Modifier</button>
             </form>
         <!---->    
-        <form v-if="modifyPass" @submit.prevent="editPass" class="form-modify"> 
+        <form v-if="modifyPass" @submit.prevent="editPass" class="form-modify appear-anim"> 
                 <div><i class="fas fa-caret-up"  @click="closeFormPass" role=button></i></div>
                 <div class="from-group">
                     <label for="mail">E-mail :</label>
@@ -211,8 +211,12 @@ export default {
             
         }
     },
-
-
+    /// si pas d'utilisateur connecté redirection en page d'accueil
+    beforeCreate(){
+      if(!this.$store.userId){
+          this.$router.push('/')
+      }
+  },
 
     created(){
         if(this.$store.userId == this.$route.params.id){
@@ -311,10 +315,12 @@ span{
     margin-left: 0;
     margin-top: 1vw;
     font-size:2.8em;
-    color : rgb(11,11,119)
+    color : rgb(11,11,119);
+    cursor: pointer;
 }
 .btn{
     opacity :1;
+    z-index: 5;
     
 }
 

@@ -27,7 +27,7 @@
             <div class='btn btn-admin' @click="deleteComment">Supprimer <br> - ACCES ADMIN -<i class="fas fa-trash-alt"></i></div>    
         </div>
 
-        <form v-if="openForm" @submit.prevent='modifyComment'>
+        <form v-if="openForm" @submit.prevent='modifyComment' class='appear-anim'>
             <div><i @click='openModif' class="fas fa-caret-up"></i></div>
             <label for="content">Modifier ce commentaire</label>
             <input type="text" id="content"  placeholder="*" required v-model='commContent' @focus='cancelError'>
@@ -70,6 +70,12 @@ export default {
             success:''
         }
     },
+    /// si pas d'utilisateur connecté redirection en page d'accueil
+    beforeCreate(){
+      if(!this.$store.userId){
+          this.$router.push('/')
+      }
+  },
     created(){
         console.log('store :' , this.$store.userId)
         axios.get(`http://localhost:3000/api/articles/comment/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})

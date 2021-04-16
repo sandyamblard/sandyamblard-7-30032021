@@ -59,6 +59,13 @@ export default {
         }
     }
 }
+.img-avatar{
+    width: 60px;
+    height: 60px;
+    object-position: center;
+    object-fit: cover;
+    border: 2px rgb(148, 148, 148) solid;
+}
 .fa-user{
     color: gray;
     font-size: 1.7em;

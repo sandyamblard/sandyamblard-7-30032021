@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 module.exports = (req, res, next) => {
+    console.log('requete.body.userId', req.body.userId);
+    //console.log('requete.params.userId', req.params.userId);
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.DB_KEY_FOR_TOKEN);
@@ -12,8 +14,9 @@ module.exports = (req, res, next) => {
             next();
         }
     } catch (error){
-        res.status(401).json({error: error | 'requete non authentifiée'})
+        res.status(401).json({error: error, message: 'requete non authentifiée'})
     }
+   // next();
 };
 
 //vérifie l'authentification de l'utilisateur en vérifiant son identifiant (présent dans le token)

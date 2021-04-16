@@ -2,16 +2,12 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cryptojs = require("crypto-js");
-const sequelize = require('sequelize');
-const { body, validationResult } = require('express-validator');
+/*const sequelize = require('sequelize');
+const { body, validationResult } = require('express-validator');*/
 const fs = require('fs');
 
-/*const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://' + process.env.DB_INFOS_SQL);
-*/
 const models = require('../models/index');
 
-//const User = require('../models/user');
 
  ///CREATION D'UN UTILISATEUR :
 exports.signup =  (req, res, next) => {

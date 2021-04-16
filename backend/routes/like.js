@@ -3,15 +3,12 @@ const router = express.Router();
 
 const likeCtrl = require('../controllers/like');
 
-const checkInput = require('../middlewares/checkInput');
-const checkPassword = require('../middlewares/checkPassword');
-const multer = require('../middlewares/multer-config');
+const auth = require('../middlewares/auth');
 
-const { body, validationResult } = require('express-validator');
 
-router.post('/articles/:articleId/vote/like', /*auth, */likeCtrl.addLike); 
-router.post('/articles/:articleId/vote/cancellike', /*auth, */likeCtrl.cancelLike); 
-router.get('/articles/:articleId/likes', likeCtrl.getLikes)
+router.post('/articles/:articleId/vote/like', auth, likeCtrl.addLike); 
+router.post('/articles/:articleId/vote/cancellike', auth, likeCtrl.cancelLike); 
+router.get('/articles/:articleId/likes', auth, likeCtrl.getLikes)
 
 
 module.exports = router; 

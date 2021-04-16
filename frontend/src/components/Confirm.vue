@@ -42,8 +42,8 @@ export default {
 }
 
 .success--message{
-    width: 50%;
-    height: 30%;
+    width: 65%;
+    height: 60%;
     background-color: white;
     border: rgb(165, 164, 164) 1px solid;
     box-shadow: 2px 2px 8px;
@@ -53,6 +53,10 @@ export default {
     align-items: center;
     flex-direction: column;
     margin-bottom: 12%;
+    @media all and (min-width: 1024px){
+        width: 50%;
+        height: 30%;
+    }
     & p{
         margin-bottom: 12%;
         margin-top: 2vh;

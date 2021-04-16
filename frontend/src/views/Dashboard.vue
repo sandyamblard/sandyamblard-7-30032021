@@ -29,7 +29,13 @@ export default {
     'listusers' : ListUsers,
     'listarticles' : ListArticles,
     'newmessage': NewMessage
+  },
+  beforeCreate(){
+      if(!this.$store.userId){
+          this.$router.push('/')
+      }
   }
+
 }
 </script>
 

@@ -2,8 +2,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cryptojs = require("crypto-js");*/
-const sequelize = require('sequelize');
-const { validationResult } = require('express-validator');
+/*const sequelize = require('sequelize');
+const { validationResult } = require('express-validator');*/
 const fs = require('fs');
 
 const models = require('../models/index');
@@ -37,7 +37,7 @@ exports.createArticle = (req, res, next) => {
  
 //get all articles :
 exports.getAllArticles = (req, res, next) => {
-    models.Article.findAll({include:[{model: models.User, required: true, attributes: ["firstname", "lastname", "id", "imageUrl"]}]})
+    models.Article.findAll({include:[{model: models.User, required: true, attributes: ["firstname", "lastname", "id", "imageUrl"]}], order:[['id', 'DESC']]})
     .then (articles => res.status(200).json(articles))
     .catch(error => res.status(404).json({error, message: "Erreur lors de la récupération des articles"}))
 };
@@ -63,7 +63,7 @@ exports.modifyArticle = (req, res, next) =>{
                     //update avec nouvelle image nouvelle image : 
                     models.Article.update( { title: req.body.title, content: req.body.content , url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
                     .then (() => res.status(200).json('article avec photo modifié avec nouvelle photo'))
-                    .catch(error => res.status(500).json({error, message: "erreur modif article avec photo et nouvelle photo"})) })//fin callback unlink
+                    .catch(error => res.status(500).json({error, message: "erreur modif article avec photo et nouvelle photo"})) })
                 }else{ //si article n'avait pas d'image : 
                     models.Article.update( { title: req.body.title, content: req.body.content , url: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}, {where: {id: req.params.id}})
                     .then (() => res.status(200).json('article sans photo modifié, photo ajoutée'))
@@ -76,11 +76,7 @@ exports.modifyArticle = (req, res, next) =>{
         .then (article => res.status(200).json("article modifié !"))
         .catch(error => res.status(404).json({error, message: "L'article n'a pas pu être modifié"})) 
     }
-
-
-
-
-}; //rajouer condition req.file quand possibilité d'envoyer fichier via front (avec multer)
+}; 
 
 
 //supprimer un article (réservé a l'admin et au user concerné : ajouter condition)
@@ -104,4 +100,4 @@ exports.deleteArticle = (req, res, next) => {
     })
     .catch(error => res.status(404).json({error, message: "erreur récup article"}))
 };   
-//ajouter gestion du fichier 
+

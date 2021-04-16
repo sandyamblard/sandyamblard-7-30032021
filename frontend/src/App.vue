@@ -1,8 +1,7 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>|
-    <router-link to="/dashboard">Dashboard</router-link>
+    <router-link to="/"></router-link> 
+    <router-link to="/dashboard"></router-link>
   </div>
   <router-view :key="$route.path"/>
 </template>
@@ -51,6 +50,8 @@ h1{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-left: 0.7em;
+    margin-right: 0.7em;
     &::after{
         content:'';
         display: block;
@@ -169,6 +170,40 @@ button{
         font-size: 1.9em;
         margin-right: 0.5em;
     }
+}
+
+.appear-anim{
+    animation-name: entreeforms;
+    animation-duration: 0.4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+}
+
+@keyframes entreeforms {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+    animation-timing-function: ease-in;
+    transform-origin: top;
+  }
+  50% {
+    transform: translateY(0.5);
+    opacity: 0.1;
+    animation-timing-function: linear;
+    transform-origin: top
+  }
+  75% {
+    transform: translateY(0.6);
+    opacity: 0.3;
+    animation-timing-function: linear;
+    transform-origin: top
+  }
+  100% {
+    transform: translateY(1);
+    opacity: 1;
+    animation-timing-function: ease-out;
+    transform-origin: top
+  }
 }
 </style>
 

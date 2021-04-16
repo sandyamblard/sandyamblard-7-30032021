@@ -4,7 +4,7 @@
         <i v-if="!writeMessage" class="fas fa-caret-down" @click='openWrite'></i>
         <i v-else class="fas fa-caret-up"  @click='closeWrite'></i>
     </h2>
-    <form v-if="writeMessage" class="newmessage--form" @submit.prevent="sendMessage" >
+    <form v-if="writeMessage" class="newmessage--form appear-anim" @submit.prevent="sendMessage" >
         <div class="from-group">
             <label for="title">Titre :</label>
             <input type="text" id="title"  placeholder="*" required v-model='title' @focus='cancelError'>

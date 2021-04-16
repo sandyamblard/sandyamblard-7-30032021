@@ -1,15 +1,11 @@
-const jwt = require('jsonwebtoken');
+/*const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize');
-const { body, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');*/
 
 const models = require('../models/index');
-const User = require('../models/User');
-
 
 
 exports.addLike = (req, res, next) =>{
-    //recup userId via le tokken à rajouter plus tard (pour l'instant mettre userId ds la requete)
-
     //vérif si existe déjà un like pour cet article et ce user: 
     models.Like.findOne({where: {userId:req.body.userId, articleId: req.params.articleId}})
         .then( (result)=> {const Likefound = result;
@@ -41,10 +37,8 @@ exports.addLike = (req, res, next) =>{
 
 
 exports.cancelLike = (req, res, next) =>{
-    //annule le like si déjà existant, sinon erreur
-    //1- pour le moment userId donné dans la requete, plus tard récup via le token
-    
-    //2- Vérif si existe déjà un like pour cet article et ce user
+    //annule le like si déjà existant
+    //1- Vérif si existe déjà un like pour cet article et ce user
     models.Like.findOne({where: {userId:req.body.userId, articleId: req.params.articleId}})
         .then (likefound => { 
             if(likefound === null) {
@@ -55,7 +49,7 @@ exports.cancelLike = (req, res, next) =>{
                 models.Article.findOne({where: {id: likefound.articleId }})
                     .then( articlefound => { recupArticleId = articlefound.id;
                         console.log('article retrouvé ds bdd')
-                        models.Article.update({likes: articlefound.likes-1}, {where: {id: articlefound.id}}) //ok fonctionne bien mais renvoie erreur ???
+                        models.Article.update({likes: articlefound.likes-1}, {where: {id: articlefound.id}}) 
                         .then( () => { 
                             console.log('article modifié')
                             models.Like.destroy({where: {id: likefoundId}})
@@ -78,9 +72,9 @@ exports.cancelLike = (req, res, next) =>{
 
 
 
-// recup des likes d'un article (juste les noms des users):
+// recup des likes d'un article (juste les infos des users):
 exports.getLikes = (req, res, next)=>{ 
-   models.Like.findAll({ attributes: [/*'id', 'userId', 'articleId'*/] , 
+   models.Like.findAll({ attributes: [] , 
                          where: {articleId: req.params.articleId}, 
                          include:[{model: models.User, as: "user", 
                          required: true,  
