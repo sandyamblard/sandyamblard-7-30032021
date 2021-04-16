@@ -6,6 +6,7 @@
             <h3>{{ article.title }}</h3>
             <span v-if="article.url"><img :src="article.url" class='img-one-article'></span>
             <p>{{article.content}}</p>  
+            <p><i class="fas fa-plus-circle" title='Voir le message en détail'></i></p>
         </div>
         <!--p>De {{article.User.firstname}} {{article.User.lastname}}</p-->
         <div class="footer-article">
@@ -13,9 +14,6 @@
             <p>Le : {{ dateArticle( article.createdAt) }}</p>
             <p>Par <useritem v-bind:user="article.User"></useritem> </p>
         </div>
-
-
-        <!--p>Likes : {{ article.likes }}</p-->
         
     </article>
 
@@ -25,7 +23,7 @@
 <script>
 import axios from 'axios';
 import UserItem from '@/components/UserItem.vue'
-
+import {emitter} from'../main'
 
 export default {
     name: 'ListArticles',
@@ -34,7 +32,8 @@ export default {
     },
     data(){
         return{
-            allArticles: ''
+            allArticles: '',
+            
         }
     },
     computed: {
@@ -55,6 +54,16 @@ export default {
             return date.toLocaleString('fr-FR', {year: 'numeric', month: 'long', day:'numeric', hour:'numeric', minute: 'numeric'} )
              
         }
+    }, 
+    mounted(){
+        emitter.on('newMessageSent', ()=> 
+                {console.log('evt reçu'); 
+                axios.get('http://localhost:3000/api/articles', {headers: {Authorization: 'Bearer ' + this.$store.token,}})
+                    .then((resp)=> {
+                        this.allArticles = resp.data})
+                    .catch(err => console.log(err))
+                
+                }) 
     }
 
 }
@@ -110,5 +119,15 @@ export default {
 }
 h3{
     text-decoration: underline;
+}
+
+.fa-plus-circle{
+    font-size: 2em;
+    color: rgb(139, 137, 137);
+    cursor: pointer;
+    @media all and (min-width: 767px){
+         margin-right:1em;
+    }
+   
 }
 </style>

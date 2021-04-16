@@ -54,6 +54,9 @@ export default {
     }
     & img{
         box-shadow:  1px 1px 8px grey;
+        &:hover{
+            box-shadow:  1px 1px 12px rgb(70, 69, 69);
+        }
     }
 }
 .fa-user{

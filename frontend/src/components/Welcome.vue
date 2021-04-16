@@ -75,7 +75,7 @@
 <script>
 import axios from 'axios'
 //import { bus } from '../main'
-//import { emitter } from '../main'
+import { emitter } from '../main'
 
 export default {
     name: "Welcome",
@@ -128,15 +128,13 @@ export default {
         ,
 
         goHome(){
-            console.log('go home')
+            //console.log('go home')
             this.$store.userId = "";
             this.$store.token = "";
             this.$store.firstname = "",
             this.$store.isAdmin = false;
-            this.userConnected = false;
-            //bus.$emit('deconnexion') 
-            //emitter.emit('deconnexion', 'deconnecté !')
-            
+            this.userConnected = false;     
+            emitter.emit('updateHeader'); 
         }
         ,
 

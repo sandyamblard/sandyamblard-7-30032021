@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 import mitt from 'mitt'
 
-export const emmitter = mitt();
+export const emitter = mitt();
+
 
 createApp(App).use(store).use(router).mount('#app')
 

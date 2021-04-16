@@ -26,7 +26,7 @@
 <script>
 import axios from 'axios';
 import Confirm from '../components/Confirm.vue'
-
+import { emitter } from '../main'
 
 export default {
     name: 'NewMessage',
@@ -95,16 +95,15 @@ export default {
             envoi.append('title', this.title);
             envoi.append('content', this.content);
             envoi.append('file', this.file)
-            
-            console.log(envoi) //Le file est bien présent : file :(binary) si formData ou ojet classique si pas formdata....
-            //si formData multer et middleware checkinput renvoient erreur
-            //si utilise objet classique : ok multer mais file undefined, enregistre bien l'image mais nom : http:localhost:3000/images/undefined******.jpd
+                console.log(envoi) 
             axios.post('http://localhost:3000/api/articles', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token}/*, {Content-Type: 'multipart/form-data'}*/ })
             .then(resp=> {
                 console.log(resp);
                 this.success = true;
                 setTimeout(()=>{this.success=false}, 1000);
-                    //rajouter nvelle requête get pour récup tous les articles et mettre a jour la page
+                this.writeMessage =false;
+                //envoi evt pour mettre à jour le composant ListArticles:
+                emitter.emit('newMessageSent');console.log('evt émis')
                 })
             .catch(err=>{console.log(err); this.error= err.response.data.error})
             

@@ -73,6 +73,7 @@
 import axios from 'axios';
 import Header from '../components/Header.vue'
 import Confirm from '../components/Confirm.vue'
+import { emitter } from '../main'
 
 export default {
     name: 'User',
@@ -162,6 +163,7 @@ export default {
                         this.userData.imageUrl = resp.data.imageUrl;
                         this.success = true;
                         setTimeout(()=>{this.success=false}, 1000);
+                        emitter.emit('updateHeaderFirstname'); 
                         })
             })
             .catch(err => console.log(err))

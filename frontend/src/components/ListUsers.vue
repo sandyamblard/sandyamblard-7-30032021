@@ -84,7 +84,11 @@ export default {
     & p,
     & img{
         cursor: pointer;
+        
     }
+    & img:hover{
+            box-shadow: 2px 2px 8px gray;
+        }
     & p:hover{
         text-decoration: underline;
     }

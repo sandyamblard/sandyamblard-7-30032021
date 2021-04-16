@@ -1,5 +1,5 @@
 <template>
-    <header class="topbar">
+    <header class="topbar" :key='headerKey'>
         <router-link to='/'>
             <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
         </router-link>
@@ -20,13 +20,14 @@
 <script>
 //import { bus } from '../main' // essai evt personnalisé pour force à updater le composant qd moidif store
 //import {emitter} from'../main' //essai avec npm mitt pour créer bus event pour vue 3  mais pas ùieux (cannot read prperty  'on' of undefined ....)
+import {emitter} from'../main'
 
 export default{
     data(){
         return {
-            //headerKey:0,
             userConnected: '',
-            userOnline: false
+            userOnline: false, 
+            headerKey:0
         }
     }, created(){
         if(this.$store.userId){this.userOnline = true}
@@ -49,7 +50,13 @@ export default{
             this.$router.push(`/user/${this.$store.userId}`);
             
              
-        }
+        },
+        
+  
+    },mounted()
+    {
+      emitter.on('updateHeader', ()=> {this.headerKey++; this.userOnline= false })
+      emitter.on('updateHeaderFirstname', ()=> {this.headerKey++; })  
     }
 }
 
