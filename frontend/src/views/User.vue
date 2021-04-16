@@ -65,17 +65,20 @@
          ACCES ADMINISTRATEUR
          <i class="fas fa-exclamation-triangle"></i></div>
     </section>
+    <success v-if="success"></success>
 </main>
 </div></template>
 
 <script> 
 import axios from 'axios';
 import Header from '../components/Header.vue'
+import Confirm from '../components/Confirm.vue'
 
 export default {
     name: 'User',
     components:{
-        'topbar': Header
+        'topbar': Header,
+        'success': Confirm
     },
     
     data(){
@@ -92,7 +95,8 @@ export default {
             imageUrl: null,
             password:'',
             email:'',
-            file :''
+            file :'',
+            success:''
            
 
         }
@@ -154,7 +158,11 @@ export default {
                 this.modifyProfil= false;
                 //nvlle requete pour récupérer nvlle url de l'image :
                 axios.get(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-                    .then(resp => this.userData.imageUrl = resp.data.imageUrl)
+                    .then(resp => {
+                        this.userData.imageUrl = resp.data.imageUrl;
+                        this.success = true;
+                        setTimeout(()=>{this.success=false}, 1000);
+                        })
             })
             .catch(err => console.log(err))
         }, 
@@ -169,6 +177,8 @@ export default {
             axios.put(`http://localhost:3000/api/auth/users/${this.id}/pass`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( resp => {console.log(resp);
                         this.modifyPass= false;
+                        this.success = true;
+                        setTimeout(()=>{this.success=false}, 1000);
             })
             .catch(err => console.log(err))
         }, 
@@ -179,14 +189,18 @@ export default {
               axios.delete(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then( resp => {
                     console.log(resp);
+                    this.success = true;
+                    setTimeout(()=>{this.success=false}, 1000);
+                    
                     if(this.$store.isAdmin){
-                        this.$router.push('/dashboard');
+                        setTimeout(()=>this.$router.push(`/dashboard`), 1000);
+                        
                     }else{
                         this.$store.userId = '';
                         this.$store.firstname = '';
                         this.$store.token = '';
                         this.$store.isAdmin = false;
-                        this.$router.push('/')
+                        setTimeout(()=> this.$router.push('/'), 1000);
                     }
                 }
                )
@@ -205,7 +219,7 @@ export default {
         }
         axios.get(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
         .then((resp)=> {
-            console.log(resp.data);
+           //console.log(resp.data);
            this.userData = resp.data;
            this.firstname = resp.data.firstname,
            this.lastname= resp.data.lastname,

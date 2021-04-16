@@ -89,6 +89,7 @@
                 <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
             </div>
        </section>
+       <success v-if="success"></success>
     </main></div>
     
 </template>
@@ -97,13 +98,15 @@
 import axios from 'axios';
 import Header from '../components/Header.vue'
 import UserItem from '@/components/UserItem.vue'
+import Confirm from '../components/Confirm.vue'
 
 
 export default {
     name: 'Article',
     components:{
         'topbar': Header,
-        'useritem' : UserItem
+        'useritem' : UserItem,
+        'success': Confirm
         
     },
      data() {
@@ -123,7 +126,8 @@ export default {
             url: null,
             file:'',
             prenom:'', nom: '', imageUrl:'' ,   //recup des infos du User
-            error: ''
+            error: '',
+            success:''
         }
     },
     created(){
@@ -209,7 +213,10 @@ export default {
                 axios.get(`http://localhost:3000/api/articles/${this.id}/comments`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                     .then((resp)=> {
                         //console.log(resp.data);
-                        this.allComments = resp.data})
+                        this.allComments = resp.data;
+                        this.success = true;
+                        setTimeout(()=>{this.success=false}, 1000);
+                        })
                         .catch(err => {console.log(err); this.error= err.response.data.error});
             })
             .catch(err => {console.log(err); this.error= err.response.data.error})  
@@ -221,8 +228,9 @@ export default {
             if(confirm('Etes-vous sûr de vouloir supprimer cet article ?')){
                 axios.delete(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then( resp => {console.log(resp);
-                    //// prévoir animation pop up qq secondes pour annonce article supprimé avant redirection
-                    this.$router.push('/dashboard');
+                    this.success = true;
+                    setTimeout(()=>{this.success=false}, 1000);
+                    setTimeout(()=>this.$router.push(`/dashboard`), 1000);
                 })
                 .catch(err => console.log(err))
             }
@@ -248,6 +256,8 @@ export default {
                     .then(resp =>{
                         //console.log(resp);
                         this.articleData.url =resp.data.url;
+                        this.success = true;
+                        setTimeout(()=>{this.success=false}, 1000);
                     }).catch(err => {console.log(err); this.error= err.response.data.error})              
                 })
             .catch(err => {console.log(err); this.error= err.response.data.error})  

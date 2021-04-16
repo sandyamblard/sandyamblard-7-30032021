@@ -16,25 +16,28 @@
             <p> Par : <useritem v-bind:user="authorComment"></useritem></p>
 
         </section>
-    </main>
-    
-    <div v-if="$store.userId === authorComment.id" class='author-area'>
-        <div class='btn' @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
-        <div class='btn' @click="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
-    </div>
-    
+
+        <div v-if="$store.userId === authorComment.id" class='author-area'>
+            <div class='btn' @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
+            <div class='btn' @click="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
+        </div>
 
         <div v-if="$store.isAdmin" class='admin-area'>
-        <div class='btn btn-admin' @click="openModif">Modifier <br> - ACCES ADMIN -<i class="fas fa-user-edit" ></i></div>
-        <div class='btn btn-admin' @click="deleteComment">Supprimer <br> - ACCES ADMIN -<i class="fas fa-trash-alt"></i></div>    
-    </div>
-    <form v-if="openForm" @submit.prevent='modifyComment'>
-        <div><i @click='openModif' class="fas fa-caret-up"></i></div>
-        <label for="content">Modifier ce commentaire</label>
-        <input type="text" id="content"  placeholder="*" required v-model='commContent' @focus='cancelError'>
-        <button class='btn'>Modifier</button>
-    </form>
-    <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
+            <div class='btn btn-admin' @click="openModif">Modifier <br> - ACCES ADMIN -<i class="fas fa-user-edit" ></i></div>
+            <div class='btn btn-admin' @click="deleteComment">Supprimer <br> - ACCES ADMIN -<i class="fas fa-trash-alt"></i></div>    
+        </div>
+
+        <form v-if="openForm" @submit.prevent='modifyComment'>
+            <div><i @click='openModif' class="fas fa-caret-up"></i></div>
+            <label for="content">Modifier ce commentaire</label>
+            <input type="text" id="content"  placeholder="*" required v-model='commContent' @focus='cancelError'>
+            <button class='btn'>Modifier</button>
+        </form>
+        <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
+        <success v-if="success"></success>
+    
+    
+    </main>   
 </div>    
 
 </template>
@@ -43,12 +46,14 @@
 import axios from 'axios';
 import Header from '../components/Header.vue'
 import UserItem from '@/components/UserItem.vue'
+import Confirm from '../components/Confirm.vue'
 
 export default {
     name: 'Comment',
     components:{
         'topbar': Header,
-        'useritem': UserItem
+        'useritem': UserItem,
+        'success': Confirm
     }, 
     data(){
         return{
@@ -61,7 +66,8 @@ export default {
             authorArticle: '', //auteur de l'article
             openForm: false,
             commContent : '',
-            error:''
+            error:'',
+            success:''
         }
     },
     created(){
@@ -108,7 +114,9 @@ export default {
             .then (resp => {
                 console.log (resp);
                 this.commentData.commContent = this.commContent;
-                this.openForm = false
+                this.openForm = false;
+                this.success = true;
+                setTimeout(()=>{this.success=false}, 1000);
                 })
             .catch (err => {console.log(err); this.error= err.response.data.error})
         },
@@ -116,7 +124,9 @@ export default {
             if(confirm("Etes-vous sûr de vouloir supprimer ce commentaire ?")){
                 axios.delete(`http://localhost:3000/api/articles/comment/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then(resp => {console.log(resp);
-                this.$router.push(`/article/${this.article.id}`)
+                this.success = true;
+                setTimeout(()=>{this.success=false}, 1000);
+                setTimeout(()=>this.$router.push(`/article/${this.article.id}`), 1000);
                 })
                 .catch(err => {console.log(err); this.error= err.response.data.error})  
             }

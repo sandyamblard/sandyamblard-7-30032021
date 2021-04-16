@@ -20,13 +20,19 @@
         <p class="warning" v-if="error"><i class="fas fa-exclamation-triangle"></i>{{error}}</p>
         <button class="btn" >Poster</button>
     </form>
+    <success v-if="success"></success>
 </div>     
 </template>
 <script>
 import axios from 'axios';
+import Confirm from '../components/Confirm.vue'
+
 
 export default {
     name: 'NewMessage',
+    components:{
+        'success': Confirm
+    },
     data(){
         return{
             writeMessage : false,
@@ -34,7 +40,8 @@ export default {
             content:'',
             file: '',
             url:null,
-            error:''
+            error:'',
+            success: ''
         }
     },
     methods: {
@@ -95,6 +102,8 @@ export default {
             axios.post('http://localhost:3000/api/articles', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token}/*, {Content-Type: 'multipart/form-data'}*/ })
             .then(resp=> {
                 console.log(resp);
+                this.success = true;
+                setTimeout(()=>{this.success=false}, 1000);
                     //rajouter nvelle requête get pour récup tous les articles et mettre a jour la page
                 })
             .catch(err=>{console.log(err); this.error= err.response.data.error})
