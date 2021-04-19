@@ -129,7 +129,6 @@ export default {
         ,
         showFileSelected: function(){
             this.file = this.$refs.file.files[0];
-            console.log('fileSelectd : ' , this.file)
         },
 
 
@@ -141,16 +140,8 @@ export default {
             envoi.append('birthdate',  this.birthdate);
             envoi.append('description',  this.description);
             envoi.append('file', this.file);
-       /*     const envoi = {
-                firstname: this.firstname,
-                lastname: this.lastname,
-                birthdate: this.birthdate,
-                description: this.description
-            }      */
-            console.log(envoi);
             axios.put(`http://localhost:3000/api/auth/users/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-            .then( resp => {
-                console.log(resp);
+            .then( () => {
                 this.userData.firstname = this.firstname;
                 this.$store.firstname = this.firstname;
                 this.userData.lastname = this.lastname;
@@ -177,7 +168,7 @@ export default {
                 email: this.email
             }
             axios.put(`http://localhost:3000/api/auth/users/${this.id}/pass`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-            .then( resp => {console.log(resp);
+            .then( () => {
                         this.modifyPass= false;
                         this.success = true;
                         setTimeout(()=>{this.success=false}, 1000);
@@ -189,8 +180,7 @@ export default {
         deleteUser : function(){
             if(confirm('Etes-vous sûr de vouloir supprimer ce membre ?')){
               axios.delete(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-                .then( resp => {
-                    console.log(resp);
+                .then( () => {
                     this.success = true;
                     setTimeout(()=>{this.success=false}, 1000);
                     
@@ -225,7 +215,6 @@ export default {
         }
         axios.get(`http://localhost:3000/api/auth/users/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
         .then((resp)=> {
-           //console.log(resp.data);
            this.userData = resp.data;
            this.firstname = resp.data.firstname,
            this.lastname= resp.data.lastname,

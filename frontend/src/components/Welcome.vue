@@ -74,7 +74,6 @@
 
 <script>
 import axios from 'axios'
-//import { bus } from '../main'
 import { emitter } from '../main'
 
 export default {
@@ -85,6 +84,8 @@ export default {
             userConnected: false,
             signup: false,
             login:false,
+            error: '',
+            //pour préparer envoi :
             firstname:"",
             lastname:"",
             password:"",
@@ -93,7 +94,7 @@ export default {
             file: "",
             description:"   ",
             envoi: "",
-            error: ''
+            
         }
     },
     
@@ -123,12 +124,10 @@ export default {
         },
         showFileSelected: function(){
             this.file = this.$refs.file.files[0];
-            console.log('fileSelectd : ' , this.file)
         }
         ,
 
         goHome(){
-            //console.log('go home')
             this.$store.userId = "";
             this.$store.token = "";
             this.$store.firstname = "",
@@ -151,28 +150,17 @@ export default {
             envoi.append('birthdate', this.birthdate);
             envoi.append('description', this.description);
             envoi.append('file', this.file)  
-                console.log(envoi)
-/*
-            const envoi = { firstname:this.firstname, 
-                lastname: this.lastname, 
-                password: this.password, 
-                email: this.email, 
-                birthdate: this.birthdate,
-                description: this.description
-                }
-
-                */
+                
             const envoibis = { 
                 password: this.password, 
                 email: this.email
                 }
-                //enregistr l'user
+                //enregistre l'user
             axios.post('http://localhost:3000/api/auth/signup', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token}})
-            .then (resp => {console.log(resp); console.log(envoibis);
+            .then (() => {
             //et se connecter dans la foulée
                 axios.post('http://localhost:3000/api/auth/login', envoibis, {headers: {Authorization: 'Bearer ' + this.$store.token}})
                 .then(resp => {
-                    console.log(resp);
                     this.firstname ="",
                     this.lastname="",
                     this.password="",
@@ -183,8 +171,7 @@ export default {
                     this.$store.userId= resp.data.userId,
                     this.$store.token= resp.data.token,
                     this.$store.firstname= resp.data.firstname,
-                    this.$store.isAdmin= resp.data.isAdmin
-                    console.log(this.$store.userId, this.$store.token, this.$store.isAdmin),
+                    this.$store.isAdmin= resp.data.isAdmin,
                     this.goDashboard()})
                 .catch (err => {console.log(err); this.error= err.response.data.error})
             })
@@ -203,8 +190,7 @@ export default {
                     this.$store.userId= resp.data.userId,
                     this.$store.token= resp.data.token,
                     this.$store.firstname= resp.data.firstname,
-                    this.$store.isAdmin= resp.data.isAdmin
-                    console.log(this.$store.userId, this.$store.token, this.$store.isAdmin),
+                    this.$store.isAdmin= resp.data.isAdmin,
                     this.goDashboard()
                 })
                 .catch (err => {console.log(err);

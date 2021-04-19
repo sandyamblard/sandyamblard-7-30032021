@@ -53,25 +53,8 @@ export default {
             this.writeMessage =true;
         }
         ,
-        showFile: function(/*event*/){
-            /*const fichier = ;
-            console.log('fichiers : ', fichier);*/
-            //this.file =event.target.files[0];
-            this.file = this.$refs.file.files[0];
-            console.log('this.file :' , this.file)
-            //OK le fichier est présent en premier élt de la fileList
-
-/*Essais avec fileReader mais ne change rien...
-            const fileReader = new FileReader();
-            fileReader.addEventListener('load', ()=> {
-                this.fichierUrl = fileReader.result
-            })
-            fileReader.readAsDataURL(fichier)
-            this.file = fichier;
-            console.log('file:', this.file)
-*/
-            
-            
+        showFile: function(){
+            this.file = this.$refs.file.files[0];        
         },
 
         cancelError: function(){
@@ -79,26 +62,13 @@ export default {
         },
 
         sendMessage(){
-            //Envoi si pas de fichier (sans file et envoi un objet classique)
-           /* const envoi = {
-                userId: this.$store.userId,
-                title: this.title,
-                content: this.content,
-                //url: this.url, //si envoi sans file
-                file: this.file //si envoi avec file (mettre une condition ensuite)
-            };*/
-            //ESSAI D'envoi avec fichier en utilisant FormData 
-            //et changeant les headers de la requete 
-            // donne erreur Multer : Unexpected Field et erreur avec middleware de verification : considère les champs title et content vide
             const envoi = new FormData();
             envoi.append('userId', this.$store.userId);
             envoi.append('title', this.title);
             envoi.append('content', this.content);
             envoi.append('file', this.file)
-                console.log(envoi) 
-            axios.post('http://localhost:3000/api/articles', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token}/*, {Content-Type: 'multipart/form-data'}*/ })
-            .then(resp=> {
-                console.log(resp);
+            axios.post('http://localhost:3000/api/articles', envoi, {headers: {Authorization: 'Bearer ' + this.$store.token} })
+            .then(()=> {
                 this.success = true;
                 setTimeout(()=>{this.success=false}, 1000);
                 this.writeMessage =false;

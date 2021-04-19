@@ -9,17 +9,6 @@
 
 
 <script>
-/*
-import header from './components/Header.vue'
-import Welcome from './components/Welcome.vue'
-
-export default {
-  name: 'App',
-  components: {
-   'topbar' : header,
-    'welcome' : Welcome
-  }
-}*/
 </script>
 
 <style lang="scss">
@@ -28,9 +17,7 @@ export default {
 body{
   margin: 0;
    background-color: lightgrey;
-  /*display: flex;
-  justify-content: center;
-  align-items: center;*/
+ 
 }
 $color-primary : rgb(11, 11, 119);
 
@@ -46,9 +33,7 @@ $color-primary : rgb(11, 11, 119);
   margin: 0px;
   background-color: lightgrey;
   min-height: 100vh;
-  /* @media all and (min-width: 1200px){
-     max-width: 70%;
-   }*/
+
 }
 
 h1{

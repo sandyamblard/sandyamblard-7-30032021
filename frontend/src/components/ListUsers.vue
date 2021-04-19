@@ -29,8 +29,8 @@ export default {
             allUsers: ''
         }
     },created(){
-        axios.get('http://localhost:3000/api/auth/users'/*, {params: {userId: this.$store.userId}}*/, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-        .then((resp)=> {console.log(resp.data);
+        axios.get('http://localhost:3000/api/auth/users', {headers: {Authorization: 'Bearer ' + this.$store.token,}})
+        .then((resp)=> {//console.log(resp.data);
             this.allUsers = resp.data})
         .catch(err => console.log(err))
     },

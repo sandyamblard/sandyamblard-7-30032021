@@ -81,7 +81,6 @@ export default {
         console.log('store :' , this.$store.userId)
         axios.get(`http://localhost:3000/api/articles/comment/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then((resp)=> {
-                //console.log(resp.data);
                 this.commentData = resp.data;
                 this.commContent = resp.data.commContent;
                 this.article = resp.data.article;
@@ -92,7 +91,6 @@ export default {
             //recherche des infos de l'auteur de l'article :
             axios.get(`http://localhost:3000/api/auth/users/${this.article.userId}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then((resp)=> {
-                    console.log('author article',resp.data);
                     this.authorArticle = resp.data;
                 })
             .catch(err => console.log(err))
@@ -118,8 +116,7 @@ export default {
         modifyComment : function(){
             const envoi = {userId : this.$store.userId, commContent: this.commContent};
             axios.put(`http://localhost:3000/api/articles/comment/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-            .then (resp => {
-                console.log (resp);
+            .then (() => {
                 this.commentData.commContent = this.commContent;
                 this.openForm = false;
                 this.success = true;
@@ -130,7 +127,7 @@ export default {
         deleteComment : function(){
             if(confirm("Etes-vous sûr de vouloir supprimer ce commentaire ?")){
                 axios.delete(`http://localhost:3000/api/articles/comment/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-                .then(resp => {console.log(resp);
+                .then(() => {
                 this.success = true;
                 setTimeout(()=>{this.success=false}, 1000);
                 setTimeout(()=>this.$router.push(`/article/${this.article.id}`), 1000);

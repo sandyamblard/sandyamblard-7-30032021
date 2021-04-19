@@ -134,7 +134,6 @@ export default {
            //recup des articles     
         axios.get(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
         .then((resp)=> {
-            console.log(resp.data);
            this.articleData = resp.data;
            this.title= resp.data.title,
            this.content= resp.data.content,
@@ -147,20 +146,16 @@ export default {
         // recup des commentaires de l'articles
         axios.get(`http://localhost:3000/api/articles/${this.id}/comments`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then((resp)=> {
-            console.log(resp.data);
            this.allComments = resp.data})
         .catch(err => console.log(err));
         
         //recup des likes de l'articles
         axios.get(`http://localhost:3000/api/articles/${this.id}/likes`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then ( (resp) => {
-                    //console.log(resp.data);
                     this.listLikes= resp.data;
-                    //console.log(this.listLikes)
                     for(let i in resp.data){  //on enregistre les userId qui aiment l'article
                         this.listUserIdLikes.push(resp.data[i].user.id)
                     }
-                    //console.log(this.listUserIdLikes)
                     if(this.listUserIdLikes.includes(this.$store.userId)){ 
                         //on compare les id présent ds le tableau à notre utilisateur connecté
                         this.userConnectedLiked = true
@@ -181,7 +176,6 @@ export default {
         },
         showFileSelected: function(){
             this.file = this.$refs.file.files[0];
-            console.log('fileSelectd : ' , this.file)
         }
         ,
 
@@ -205,15 +199,12 @@ export default {
                 userId: this.$store.userId,
                 commContent: this.commContent
             };
-            //console.log(envoi);
             axios.post(`http://localhost:3000/api/articles/${this.id}/comment`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( () => {
                 this.commContent = '';
-                //console.log(resp);
                 //nvlle requete pour retrouver tous les comments avec leur id et update la page
                 axios.get(`http://localhost:3000/api/articles/${this.id}/comments`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                     .then((resp)=> {
-                        //console.log(resp.data);
                         this.allComments = resp.data;
                         this.success = true;
                         setTimeout(()=>{this.success=false}, 1000);
@@ -228,7 +219,7 @@ export default {
         deleteArticle : function(){
             if(confirm('Etes-vous sûr de vouloir supprimer cet article ?')){
                 axios.delete(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-                .then( resp => {console.log(resp);
+                .then( () => {
                     this.success = true;
                     setTimeout(()=>{this.success=false}, 1000);
                     setTimeout(()=>this.$router.push(`/dashboard`), 1000);
@@ -245,17 +236,14 @@ export default {
             envoi.append('title', this.title);
             envoi.append('content', this.content);
             envoi.append('file', this.file);
-            //console.log(envoi);
             axios.put(`http://localhost:3000/api/articles/${this.id}`, envoi, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( () => {
-                //console.log(resp.data);
                 this.articleData.title = this.title;
                 this.articleData.content = this.content;
                 this.modifyOpen= false;
                 //pr récup nvlle url: nvlle requete get
                     axios.get(`http://localhost:3000/api/articles/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                     .then(resp =>{
-                        //console.log(resp);
                         this.articleData.url =resp.data.url;
                         this.success = true;
                         setTimeout(()=>{this.success=false}, 1000);
@@ -268,7 +256,6 @@ export default {
         voteLike: function(){
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/like`, {userId: this.$store.userId}, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then( () => {
-                //console.log(resp);
                 this.listUserIdLikes.push(this.$store.userId);
                 this.userConnectedLiked = true;
                 this.articleData.likes++;
@@ -282,8 +269,7 @@ export default {
         ///////////GESTION DU CANCEL LIKE ////////////////
         voteDislike: function(){
             axios.post(`http://localhost:3000/api/articles/${this.id}/vote/cancellike`, {userId: this.$store.userId}, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
-            .then( resp => {
-                console.log(resp);
+            .then( () => {
                 this.userConnectedLiked = false;
                 //trouver userId et le retirer du array
                 const index = this.listUserIdLikes.indexOf(this.$store.userId);

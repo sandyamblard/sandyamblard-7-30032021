@@ -27,12 +27,12 @@ import NewMessage from '@/components/NewMessage.vue'
 export default {
   name: 'Home',
   components: {
-    /*HelloWorld,*/
     'topbar' : header,
     'listusers' : ListUsers,
     'listarticles' : ListArticles,
     'newmessage': NewMessage
   },
+  //redirection si pas d'user connecté
   beforeCreate(){
       if(!this.$store.userId){
           this.$router.push('/')
