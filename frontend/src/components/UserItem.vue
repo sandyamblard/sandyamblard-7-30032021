@@ -1,18 +1,13 @@
 <template>
-    <!--span class="useritem" >
-        <span @click="goToProfile(user.id)">{{user.firstname}} {{user.lastname}}</span>
-        <img :src="user.imageUrl" class="img-avatar" @click.stop="goToProfile(user.id)">
-    </span-->
-    <span class="useritem" @click="goToProfile(user.id)" >
+    <span class="useritem" @click="goToProfile(user.id)" @keyup.enter="goToProfile(user.id)" role='link' tabindex=0>
         {{user.firstname}} {{user.lastname}}
         <i v-if="!user.imageUrl" class="far fa-user" ></i>
-        <img v-else :src="user.imageUrl" class="img-avatar" >
-        
+        <img v-else :src="user.imageUrl" class="img-avatar" alt="photo du membre">
     </span>
 </template>
 
 <script>
-//import axios from 'axios';
+
 
 export default {
     name: 'UserItem',
@@ -27,14 +22,6 @@ export default {
             this.$router.push(`/user/${identif}`)
         }
     },
-    created(){
-        
-        /*axios.get(`http://localhost:3000/api/auth/users/${this.userId}`)
-        .then(resp => {console.log(resp.data);
-            this.userData = resp.data;})
-        .catch(err => console.log(err))*/
-        //console.log('userId de userItem: ', this.userId)
-    }
 }
 </script>
 
@@ -43,7 +30,6 @@ export default {
     cursor: pointer;
     &:hover{
         text-decoration: underline;
-
         
     }
     

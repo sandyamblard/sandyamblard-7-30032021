@@ -2,8 +2,8 @@
 <topbar></topbar> 
 <main>
     <h1>{{userData.firstname}} {{userData.lastname}}</h1>
-    <section class="user-card">
-        <span v-if="userData.imageUrl"><img :src="userData.imageUrl" alt="" class="avatar"></span>
+    <section class="user-card" aria-label="présentation du membre">
+        <span v-if="userData.imageUrl"><img :src="userData.imageUrl" alt="Photo de profil du membre" class="avatar"></span>
         <p>Biographie :<br><span>{{userData.description}}</span></p>
         <p><i class="fas fa-birthday-cake"></i> Anniversaire :<i class="fas fa-birthday-cake"></i><br><span v-if='userData.birthdate'>{{anniversaire(userData.birthdate)}}</span><span v-else>Non communiqué</span></p>
 
@@ -12,16 +12,16 @@
     </section>    
     <section class="editprofil">    
         <div v-if="userConnected">
-            <div class="author-area">
-            <div @click="modifProfil" class='btn'> Editer mon profil<i class="fas fa-user-edit" ></i> </div>
+            <div class="author-area" aria-label='modifier mon profil'>
+            <div @click="modifProfil" @keyup.enter="modifProfil" class='btn' role='button' tabindex=0> Editer mon profil<i class="fas fa-user-edit" ></i> </div>
             
-            <div @click="modifPass" class='btn'> Modifier mes codes d'accès<i class="fas fa-key" ></i> </div>
+            <div @click="modifPass" @keyup.enter="modifPass" class='btn' role='button' tabindex=0> Modifier mes codes d'accès<i class="fas fa-key" ></i> </div>
             
         </div>  
 
         <!---->
-        <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify appear-anim">
-                <div><i class="fas fa-caret-up"  @click="closeFormEdit" role=button></i></div>
+        <form v-if="modifyProfil" @submit.prevent="editProfil" class="form-modify appear-anim" aria-label='modification de monprofil'>
+                <div><i class="fas fa-caret-up"  @click="closeFormEdit" @keyup.enter="closeFormEdit" role=button tabindex=0></i></div>
                 <!--div @click="closeFormEdit" class="close" role=button>X</div-->
                 <div class="from-group">
                     <label for="prenom">Prénom :</label>
@@ -46,8 +46,8 @@
                 <button class="btn" >Modifier</button>
             </form>
         <!---->    
-        <form v-if="modifyPass" @submit.prevent="editPass" class="form-modify appear-anim"> 
-                <div><i class="fas fa-caret-up"  @click="closeFormPass" role=button></i></div>
+        <form v-if="modifyPass" @submit.prevent="editPass" class="form-modify appear-anim" aria-label="modification de mes codes d'accès"> 
+                <div><i class="fas fa-caret-up"  @click="closeFormPass" @keyup.enter="closeFormPass" role=button tabindex=0></i></div>
                 <div class="from-group">
                     <label for="mail">E-mail :</label>
                     <input type="email" id="mail" placeholder="*" required v-model="email">
@@ -57,11 +57,11 @@
                     <input type="password" id="password" placeholder="*" required v-model="password">
                 </div>
                 <button class="btn" >Modifier</button>
-            </form>
+            </form> 
 
-            <div class='btn' @click="deleteUser">Supprimer mon profil <i class="fas fa-trash-alt"></i></div>
+            <div class='btn' @click="deleteUser" @keyup.enter="deleteUser" role='button' tabindex=0>Supprimer mon profil <i class="fas fa-trash-alt"></i></div>
         </div>
-        <div class='btn btn-admin' @click="deleteUser" v-if='$store.isAdmin'>Supprimer ce membre <br>
+        <div class='btn btn-admin' @click="deleteUser" @keyup.enter="deleteUser" role='button' tabindex=0 v-if='$store.isAdmin'>Supprimer ce membre <br>
          ACCES ADMINISTRATEUR
          <i class="fas fa-exclamation-triangle"></i></div>
     </section>

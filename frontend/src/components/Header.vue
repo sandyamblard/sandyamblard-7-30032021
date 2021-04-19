@@ -1,5 +1,5 @@
 <template>
-    <header class="topbar" :key='headerKey'>
+    <header class="topbar" :key='headerKey' role='navigation'>
         <router-link to='/'>
             <img src="../../public/img/logowhite.png" alt="logo Groupomania" >
         </router-link>
@@ -8,9 +8,9 @@
         <p v-else>
             <span v-if='$store.firstname&&$store.isAdmin'>- <span class="desk-only" >Accès</span> ADMINISTRATEUR -</span>
             <span v-else-if='$store.firstname'>Bienvenue {{$store.firstname}} !</span>
-            <i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil" @click='goMyProfil'></i>
-            <i v-if="$store.userId" class="fas fa-home" title="Revenir au mur" @click="goDashboard"></i>
-            <i v-if="$store.userId" class="fas fa-power-off" title="Se déconnecter" @click="goHome"></i>
+            <i v-if="$store.userId" class="fas fa-user-circle" title="Voir mon profil" @click='goMyProfil' @keyup.enter='goMyProfil' role='link' tabindex=0></i>
+            <i v-if="$store.userId" class="fas fa-home" title="Revenir au mur" @click="goDashboard" @keyup.enter="goDashboard" role='link' tabindex=0></i>
+            <i v-if="$store.userId" class="fas fa-power-off" title="Se déconnecter" @click="goHome" @keyup.enter="goHome" role='link' tabindex=0></i>
         </p>
     </header>
 </template>
@@ -118,6 +118,11 @@ justify-content: space-between;
 padding-bottom: 0.2em;
  }
 
-
+* {
+    outline: none;      
+}
+*:focus{
+    border: white dotted 2px;   
+}
 
 </style>

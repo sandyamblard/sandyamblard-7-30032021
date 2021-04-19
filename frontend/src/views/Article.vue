@@ -1,50 +1,52 @@
 <template>
-    <div>
-        <topbar></topbar> 
-        <main>
+<div>
+    <topbar></topbar> 
+    <main>
        <h1>{{ articleData.title }}</h1>
-       <section >
-           <article class="article-item">
-                <span v-if='articleData.url'> <img :src="articleData.url" alt="" class="img-article" ></span>
+       <section>
+           <article class="article-item" aria-label='Détails du message'>
+               <h2 class=hidden>Détails du message</h2>
+                <span v-if='articleData.url'> <img :src="articleData.url" alt="Photo du message" class="img-article" ></span>
                 <p class='article-item--para'> {{ articleData.content }}</p>
-                <!--p>Auteur :<img :src="imageUrl" alt="" class='img-avatar'> {{prenom}} {{nom}}</p-->
                 <div class='article-infos'>
                     <p>Ecrit le : {{ dateArticle(articleData.createdAt) }}</p>
                     <p>Auteur : <useritem v-bind:user="{id: idAuthor,firstname: prenom, lastname: nom, imageUrl: imageUrl}"> </useritem></p>
-                    <!--p>Dernière modification le : {{ articleData.updatedAt }}</p-->
                 </div>
 
                 <div class='article-likes '>
-                    <div class="showlikes" role="button" @click="showLikes" title="cliquer pour voir"><span>{{ articleData.likes }} personnes aiment cet article</span>
+                    <div class="showlikes" role="button" tabindex=0 @click="showLikes" @keyup.enter="showLikes" title="cliquer pour voir"><span>
+                        {{ articleData.likes }} personnes aiment cet article</span>
                         <div v-if="likeShowed" class="like-show appear-anim"> 
-                        <i  class="fas fa-caret-up"  @click.stop="showLikes"></i>
+                        <i  class="fas fa-caret-up"  @click.stop="showLikes" @keyup.enter.stop="showLikes" role="button" tabindex=0></i>
                         <p v-for="(like, index) in listLikes" :key=index>    
                             <useritem v-bind:user="like.user"></useritem>
-                            <!--img :src="like.user.imageUrl" class="img-avatar">
-                            {{like.user.firstname}} {{like.user.lastname}}-->
                         </p>
                     </div>
                     </div>
                     
                     
-                    <div v-if="userConnectedLiked" title="Cliquer pour changer d'avis" @click='voteDislike' class='liked' >J'aime cet article ! <i class="fas fa-thumbs-up"></i></div>
-                    <div v-else title="Cliquer pour liker" @click='voteLike' class='votelike'>Aimer cet article<i class="far fa-thumbs-up"></i> </div>
+                    <div v-if="userConnectedLiked" title="Cliquer pour changer d'avis" @click='voteDislike' @keyup.enter='voteDislike' role='button' tabindex=0 class='liked' >
+                        J'aime cet article ! <i class="fas fa-thumbs-up"></i>
+                    </div>
+                    <div v-else title="Cliquer pour liker" @click='voteLike' @keyup.enter='voteLike' class='votelike' role='button' tabindex=0>
+                        Aimer cet article<i class="far fa-thumbs-up"></i>
+                    </div>
                     
                     
                 </div>
                 
                 <!--div v-if="adminConnected"-->
-                <div v-if="$store.isAdmin" class='admin-area'>
-                        <div class='btn btn-admin' @click="openFormModify">Modifier <i class="fas fa-user-edit" ></i><br>- ACCES ADMIN -</div>
-                        <div class='btn btn-admin' @click="deleteArticle">Supprimer<i class="fas fa-trash-alt"></i><br>- ACCES ADMIN -</div>    
+                <div v-if="$store.isAdmin" class='admin-area' aria-label='acces administrateur pour modifier ce message'>
+                        <div class='btn btn-admin' @click="openFormModify" @keyup.enter="openFormModify" role='button' tabindex=0>Modifier <i class="fas fa-user-edit" ></i><br>- ACCES ADMIN -</div>
+                        <div class='btn btn-admin' @click="deleteArticle" @keyup.enter="deleteArticle" role='button' tabindex=0>Supprimer<i class="fas fa-trash-alt"></i><br>- ACCES ADMIN -</div>    
                 </div>
-                <div class='author-area' v-if="idAuthor==$store.userId">
-                        <div class='btn' @click="openFormModify">Modifier <i class="fas fa-user-edit" ></i></div>
-                        <div class='btn' @click="deleteArticle">Supprimer<i class="fas fa-trash-alt"></i></div>    
+                <div class='author-area' v-if="idAuthor==$store.userId" aria-label='modifier mon message'>
+                        <div class='btn' @click="openFormModify" @keyup.enter="openFormModify" role='button' tabindex=0>Modifier <i class="fas fa-user-edit" ></i></div>
+                        <div class='btn' @click="deleteArticle" @keyup.enter="deleteArticle" role='button' tabindex=0>Supprimer<i class="fas fa-trash-alt"></i></div>    
                 </div>
                 <!--modif message form-->
                 <form v-if="modifyOpen" @submit.prevent="modifyArticle" class='modif-article appear-anim'>
-                    <i  class="fas fa-caret-up"  @click.stop="openFormModify"></i>
+                    <i  class="fas fa-caret-up" role='button' tabindex=0 @click.stop="openFormModify" @keyup.enter.stop="openFormModify"></i>
                     <div class="from-group">
                         <label for="title">Titre :</label>
                         <input type="text" id="title"  v-model="title" required  @focus='cancelError'>
@@ -62,25 +64,17 @@
                 </form>
            </article>
            
-           <div class='commentslist'>
+           <div class='commentslist' aria-label="Liste de Commentaires du message">
                 <h2>Commentaires :</h2>
-                <!-- Ne donne rien à l'utlisation et fait bugguer.....-->
-                <!--div v-for="(comment, index) in articleData.Comments" :key=index class='comment-item'>
-                   <div class="comment-item">
-                        <p>{{comment.commContent}}</p>
-                        <p>Par : {{comment.user.firstname}} {{comment.user.lastname}}</p>
-                    </div>
-                </div-->
-
                 <div v-for="(comment, index) in allComments" :key=index class='comment-item'>
                         <div class='comment-item--content'>
                             <p class="comment-item--para">{{comment.commContent}}</p>
                             <p class="comment-item--author">Par : <useritem v-bind:user="comment.user"></useritem></p>
                         </div>
-                        <i class="fas fa-plus-circle" @click="goToComment(comment.id)" title="Détails, Modifier ou supprimer"></i>
+                        <i class="fas fa-plus-circle" role='button' tabindex=0 @click="goToComment(comment.id)" @keyup.enter="goToComment(comment.id)" title="Détails, Modifier ou supprimer"></i>
                 </div>
 
-                <form @submit.prevent="sendComment" class="sendcomment from-group">
+                <form @submit.prevent="sendComment" class="sendcomment from-group" aria-label='ecrire un commentaire'>
                     <label for="comment">Ecrire un commentaire :</label>
                     <input type="text" id="comment" required placeholder="*" v-model="commContent" @focus='cancelError'>
                     
@@ -90,8 +84,8 @@
             </div>
        </section>
        <success v-if="success"></success>
-    </main></div>
-    
+    </main>
+</div>   
 </template>
 
 <script>
@@ -377,6 +371,9 @@ main{
     }
    
 }
+.showlikes:focus{
+    border: 2px dotted grey;
+}
 
 .showlikes span:hover{
     font-weight: bold;
@@ -441,6 +438,9 @@ h2::after{
     padding-right: 0.8em;
     cursor: pointer;
     color: rgb(11,11,119);
+    &:focus{
+        border: 2px dotted rgb(11,11,119);
+    }
 }
 
 .votelike{
@@ -449,6 +449,9 @@ h2::after{
     color: rgb(11,11,119);
     &:hover{
         text-decoration: underline;
+    }
+    &:focus{
+        border: 2px dotted rgb(11,11,119);
     }
     & .far{
         font-size: 1.7em;
@@ -465,6 +468,9 @@ h2::after{
     color: green;
     &:hover{
         text-decoration: underline;
+    }
+    &:focus{
+        border: 2px dotted green;
     }
     & .fas{
         font-size: 1.7em;

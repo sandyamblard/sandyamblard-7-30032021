@@ -1,18 +1,18 @@
 <template>
-    <div class="welcome">
+    <main class="welcome">
         <h1>Bienvenue sur le réseau social de Groupomania !</h1>
-        <section v-if="userConnected" class='deconnexion'>
-            <div class='btn' @click="goHome"> Se déconnecter  <i class='fas fa-power-off' title="se déconnecter"></i></div>
+        <section v-if="userConnected" class='deconnexion' aria-label='se déconnecter'>
+            <div class='btn' @click="goHome" @keyup.enter="goHome" role="button" tabindex=0> Se déconnecter  <i class='fas fa-power-off' title="se déconnecter"></i></div>
         </section>
 
-        <section v-else class='connection'>
+        <section v-else class='connection' aria-label="s'inscrire ou se connecter">
             <div class="group-btn">
-                <div class="btn-empty" role="button" @click="toggleSignup">S'inscrire</div>
-                <div class="btn-empty-left" role="button" @click="toggleLogin">Se connecter</div>
+                <div class="btn-empty" role="button" tabindex=0 @click="toggleSignup" @keyup.enter="toggleSignup">S'inscrire</div>
+                <div class="btn-empty-left" role="button" tabindex=0 @click="toggleLogin" @keyup.enter="toggleLogin">Se connecter</div>
             </div>
             
             <!--si s'inscrire choisi : -->
-            <form class="form-welcome appear-anim" v-if="signup" @submit.prevent="sendUser">
+            <form class="form-welcome appear-anim" v-if="signup" @submit.prevent="sendUser" aria-label="inscription">
                 <h2>Inscription rapide :</h2>
                 <div class="from-group">
                     <label for="prenom">Prénom :</label>
@@ -47,7 +47,7 @@
             
         
             <!--si se connecter choisi : -->
-            <form v-if="login" class="form-welcome  appear-anim"  @submit.prevent="connectUser">
+            <form v-if="login" class="form-welcome  appear-anim"  @submit.prevent="connectUser" aria-label="connection">
                 <h2>Connection rapide :</h2>
                 <div class="from-group">
                     <label for="mail">E-mail :</label>
@@ -69,7 +69,7 @@
         </section>
         <img class='logo-big' src="../../public/img/logoabove.png" alt="logo Groupomania" >
         
-    </div>
+    </main>
 </template>
 
 <script>
@@ -235,8 +235,11 @@ h1{
     & img{
         width: 60vw;
         margin-top: 10vw;
+         @media all and (min-width: 1200px){
+        width: 30vw;
     }
-        @media all and (min-width: 767px){
+    }
+    @media all and (min-width: 767px){
     padding-top: 50px;
     }
 }
@@ -286,6 +289,9 @@ h1{
     color : white;
     text-decoration: underline;
   }
+    &:focus{
+    box-shadow: 0 0 15px rgb(20,119,119)      ;
+  }
 }
 
 .btn-empty-left{
@@ -304,6 +310,9 @@ h1{
     transition : 0.3s;
     color : white;
     text-decoration: underline;
+  }
+    &:focus{
+    box-shadow: 0 0 15px rgb(20,119,119)          ;
   }
 }
 

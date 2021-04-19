@@ -1,16 +1,15 @@
 <template>
-<section class="list-articles">
+<section class="list-articles" aria-label='listes des messages'>
     <h2 >Fil d'actualité</h2>
     <article class='article-one dash--item' v-for="(article,index) in allArticles" :key=index >
-        <div class="article-content" @click='goArticle(article.id)' title="Voir l'article">
-            <h3>{{ article.title }}</h3>
-            <span v-if="article.url"><img :src="article.url" class='img-one-article'></span>
+        <div class="article-content" @click='goArticle(article.id)' @keyup.enter='goArticle(article.id)' title="Voir l'article" >
+            <h3  @keyup.enter='goArticle(article.id)' role="button" tabindex=0>{{ article.title }}</h3>
+            <span v-if="article.url"><img :src="article.url" class='img-one-article' alt='Photo du message'></span>
             <p>{{article.content}}</p>  
-            <p><i class="fas fa-plus-circle" title='Voir le message en détail'></i></p>
+            <p><i class="fas fa-plus-circle" title='Voir le message en détail'  @keyup.enter='goArticle(article.id)' role="button" tabindex=0></i></p>
         </div>
-        <!--p>De {{article.User.firstname}} {{article.User.lastname}}</p-->
+        
         <div class="footer-article">
-            <!--<p>Le {{ article.createdAt }}</p> -->
             <p>Le : {{ dateArticle( article.createdAt) }}</p>
             <p>Par <useritem v-bind:user="article.User"></useritem> </p>
         </div>
@@ -71,6 +70,13 @@ export default {
 
 <style lang="scss">
 
+.useritem:focus{
+    border: 2px dotted grey ; 
+}
+.fa-plus-circle:focus{
+    border: 2px dotted rgb(20,119,119); 
+}
+
 .list-articles{
     flex : 70%;
 }
@@ -84,10 +90,8 @@ export default {
         font-weight: bold;
         max-height: 2.3em;
         overflow: hidden;
-        /*text-overflow: ellipsis; 
+        text-overflow: clip; 
         
-        white-space: nowrap
-        */
 
     }
 }
@@ -107,10 +111,13 @@ export default {
     transform: scale(1.01);
     
 }
+
+
 .article-one a{
     text-decoration: none;
     color: inherit;
 }
+
 
 .footer-article{
     display: flex;
@@ -119,6 +126,9 @@ export default {
 }
 h3{
     text-decoration: underline;
+    &:focus{
+        border: 2px dotted rgb(20,119,119);
+    }
 }
 
 .fa-plus-circle{

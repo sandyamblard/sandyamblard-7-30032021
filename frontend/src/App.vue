@@ -27,7 +27,10 @@ export default {
 
 body{
   margin: 0;
-
+   background-color: lightgrey;
+  /*display: flex;
+  justify-content: center;
+  align-items: center;*/
 }
 $color-primary : rgb(11, 11, 119);
 
@@ -43,6 +46,9 @@ $color-primary : rgb(11, 11, 119);
   margin: 0px;
   background-color: lightgrey;
   min-height: 100vh;
+  /* @media all and (min-width: 1200px){
+     max-width: 70%;
+   }*/
 }
 
 h1{
@@ -82,6 +88,9 @@ h1{
     transform: scale(1.05);
     opacity : 1;
     transition :all 0.3s
+  }
+  &:focus{
+    box-shadow: 0 0 15px green  ;
   }
 }
 .btn-admin{
@@ -188,13 +197,13 @@ button{
   }
   50% {
     transform: translateY(0.5);
-    opacity: 0.1;
+    opacity: 0.3;
     animation-timing-function: linear;
     transform-origin: top
   }
   75% {
     transform: translateY(0.6);
-    opacity: 0.3;
+    opacity: 0.4;
     animation-timing-function: linear;
     transform-origin: top
   }

@@ -1,20 +1,20 @@
 <template>
-<aside class='users-list dash--item'>   
+<aside class='users-list dash--item' aria-label='Présentation des membres'>   
     <h2>Membres inscrits 
-        <i class="fas fa-caret-down mob-only" @click='openUsersMob'></i>
+        <i class="fas fa-caret-down mob-only" @click='openUsersMob'  @keyup.enter='openUsersMob' role='button' tabindex=0></i>
     </h2>
     <div>
     <div v-for="(user,index) in allUsers" :key=index class="user-item" >
         <div class="img-user">
             <i v-if="!user.imageUrl" class="far fa-user" @click='goUser(user.id)'></i>
-            <img v-else :src="user.imageUrl" alt="" class="img-avatar" @click='goUser(user.id)'>
+            <img v-else :src="user.imageUrl" class="img-avatar" @click='goUser(user.id)' alt='photo du membre'>
             
         </div>
-        <p @click='goUser(user.id)'>{{ user.firstname }} {{ user.lastname }} </p>
+        <p @click='goUser(user.id)'  @keyup.enter='goUser(user.id)' role='link' tabindex=0 >{{ user.firstname }} {{ user.lastname }} </p>
         
     </div>
     </div>
-    <i class="fas fa-caret-up mob-only" @click='closeUsersMob'></i>
+    <i class="fas fa-caret-up mob-only" @click='closeUsersMob' @keyup.enter='closeUsersMob' role='button' tabindex=0></i>
     
 </aside>     
 </template>
@@ -52,7 +52,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.fas:focus{
+    border:2px dotted rgb(11,11,119);   
+}
 
 .fa-user{
     color: gray;
@@ -122,6 +124,9 @@ font-size: 2em;
         }
     & p:hover{
         text-decoration: underline;
+    }
+    p:focus{
+        border:2px dotted rgb(20,119,119); 
     }
 }
 

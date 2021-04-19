@@ -3,32 +3,33 @@
     <topbar></topbar>
     <main>
         <h1>COMMENTAIRE n°{{id}}</h1>
-        <p>Pour le message :</p>
-        <section class='recap-article' >
-            <img :src="article.url" class="img-mini" @click='goToArticle(article.id)'>
-            <p @click='goToArticle(article.id)'> <span class="recap-article--title">{{article.title}}</span></p>
+        <h2>Pour le message :</h2>
+        <section class='recap-article' aria-label='rappel du message' >
+            <img v-if='article.url' :src="article.url" class="img-mini" @click='goToArticle(article.id)' @keyup.enter='goToArticle(article.id)' role='link' tabindex=0 alt='photo du message'>
+            <p class='para' @click='goToArticle(article.id)' @keyup.enter='goToArticle(article.id)' role='link' tabindex=0> <span class="recap-article--title">{{article.title}}</span></p>
             <p>écrit par : <useritem v-bind:user="authorArticle"></useritem></p>
         </section>
 
-        <section class= 'recap-comment'>
-            <p>Commentaire : <br> <span class="recap-article--title">{{commentData.commContent}}</span></p>
+        <h2>Commentaire :</h2>
+        <section class= 'recap-comment' aria-label='détails du commentaire'>
+            <p><span class="recap-article--title">{{commentData.commContent}}</span></p>
             <p class='border-top'>Ecrit le : {{dateComment(commentData.createdAt)}}</p>
             <p> Par : <useritem v-bind:user="authorComment"></useritem></p>
 
         </section>
 
-        <div v-if="$store.userId === authorComment.id" class='author-area'>
-            <div class='btn' @click="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
-            <div class='btn' @click="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
+        <div v-if="$store.userId === authorComment.id" class='author-area' aria-label='Modification de mon commentaire'>
+            <div class='btn' role='button' tabindex=0 @click="openModif" @keyup.enter="openModif">Modifier <i class="fas fa-user-edit" ></i></div>
+            <div class='btn' role='button' tabindex=0 @click="deleteComment" @keyup.enter="deleteComment">Supprimer<i class="fas fa-trash-alt"></i></div>    
         </div>
 
-        <div v-if="$store.isAdmin" class='admin-area'>
-            <div class='btn btn-admin' @click="openModif">Modifier <br> - ACCES ADMIN -<i class="fas fa-user-edit" ></i></div>
-            <div class='btn btn-admin' @click="deleteComment">Supprimer <br> - ACCES ADMIN -<i class="fas fa-trash-alt"></i></div>    
+        <div v-if="$store.isAdmin" class='admin-area' aria-label='Accès administrateur sur ce commentaire'>
+            <div class='btn btn-admin' role='button' tabindex=0 @click="openModif" @keyup.enter="openModif">Modifier <br> - ACCES ADMIN -<i class="fas fa-user-edit" ></i></div>
+            <div class='btn btn-admin' role='button' tabindex=0 @click="deleteComment" @keyup.enter="deleteComment">Supprimer <br> - ACCES ADMIN -<i class="fas fa-trash-alt"></i></div>    
         </div>
 
-        <form v-if="openForm" @submit.prevent='modifyComment' class='appear-anim'>
-            <div><i @click='openModif' class="fas fa-caret-up"></i></div>
+        <form v-if="openForm" @submit.prevent='modifyComment' class='appear-anim' aria-label='Formulaire pour modifier ce commentaire'>
+            <div><i @click='openModif' @keyup.enter='openModif' class="fas fa-caret-up" role='button' tabindex=0></i></div>
             <label for="content">Modifier ce commentaire</label>
             <input type="text" id="content"  placeholder="*" required v-model='commContent' @focus='cancelError'>
             <button class='btn'>Modifier</button>
@@ -147,6 +148,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h2{
+    font-size: 1.1em;
+    margin-bottom: 0.2em;
+    margin-top: 2em;
+    &::after{
+        background-color: transparent;
+        
+    }
+}
 main{
     @media all and (min-width: 767px){
     padding-top: 50px;
@@ -156,6 +166,9 @@ main{
     border-radius: 10px;
     margin-left: 0.8em;
     border: ridge grey 3px;
+    &:focus{
+        box-shadow: 0 0 15px rgb(11,119,119 );
+    }
 }
 main{
     display: flex;
@@ -182,8 +195,11 @@ main{
         box-shadow: 1px 1px 10px grey;
     }
     & img, 
-    & :nth-child(2){
+    & .para{
         cursor: pointer;
+    }
+    & p:focus{ 
+        border: dotted 2px grey;
     }
 }
 .recap-comment{

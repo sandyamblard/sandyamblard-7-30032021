@@ -1,12 +1,15 @@
 <template>
     <div>
         <topbar></topbar> 
-        <h1 class="hidden">Tableau de bord</h1>  
-        <newmessage></newmessage>
-        <div class="dashboard">
-            <listusers></listusers>
-            <listarticles></listarticles>
+        <main class='main-dashboard'>
+            <h1 class="hidden">Tableau de bord</h1>  
+            <newmessage></newmessage>
+            <div class="dashboard">
+                <listusers></listusers>
+                <listarticles></listarticles>
         </div>
+        </main>
+        
     </div>
 </template>
 
@@ -79,5 +82,12 @@ h3{
     background-color: white;
     margin: 1rem;
     margin-bottom: 4vw;
+}
+
+main{
+     @media all and (min-width: 1200px){
+     width: 75%;
+     margin-left: 12.5%;
+   }
 }
 </style>

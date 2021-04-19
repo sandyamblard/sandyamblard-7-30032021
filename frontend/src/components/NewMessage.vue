@@ -1,8 +1,8 @@
 <template>
-<div class='newmessage dash--item'>
+<section class='newmessage dash--item' aria-label="Ecrire un nouveau message">
     <h2 >Ecrire un message : 
-        <i v-if="!writeMessage" class="fas fa-caret-down" @click='openWrite'></i>
-        <i v-else class="fas fa-caret-up"  @click='closeWrite'></i>
+        <i v-if="!writeMessage" class="fas fa-caret-down" @click='openWrite' @keyup.enter='openWrite' role='button' tabindex=0></i>
+        <i v-else class="fas fa-caret-up"  @click='closeWrite' @keyup.enter='closeWrite' role='button' tabindex=0></i>
     </h2>
     <form v-if="writeMessage" class="newmessage--form appear-anim" @submit.prevent="sendMessage" >
         <div class="from-group">
@@ -21,7 +21,7 @@
         <button class="btn" >Poster</button>
     </form>
     <success v-if="success"></success>
-</div>     
+</section>     
 </template>
 <script>
 import axios from 'axios';
@@ -115,6 +115,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .newmessage{
      @media all and (min-width: 767px){
     margin-top: 55px;
@@ -140,7 +141,9 @@ margin-left: 1vw;
     color : rgb(11,11,119);
     padding: 0.2em 0.3em 0em 0.5em;
     cursor: pointer;
-    //vertical-align : middle;
+    &:focus{
+    border:2px dotted rgb(11,11,119);   
+    }
 }
 
 .btn{
