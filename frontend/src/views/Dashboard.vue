@@ -59,6 +59,10 @@ h2 {
     margin-left: 1rem;
      margin-top: 1rem;
     color: rgb(11, 11, 119);
+    font-size: 1.3em;
+    @media all and (min-width: 400px){
+        font-size: 1.5em; 
+    }
     &::after{
         content:'';
         display: block;
@@ -74,6 +78,7 @@ h3{
 .dashboard{
     @media all and (min-width: 1024px){
     display: flex;
+    margin-top: -2.5vw;
     }
 }
 

@@ -8,7 +8,7 @@ const auth = require('../middlewares/auth');
 const checkInputArticle = require('../middlewares/checkInputArticle');
 const checkInput = require('../middlewares/checkInput');
 const upload = require('../middlewares/multer-config');
-
+const authorOrAdmin = require('../middlewares/authorArticleOrAdmin');
 
 
 /// Définition des routes liées aux articles associées à leurs middlewares : 
@@ -19,9 +19,9 @@ router.get('', auth,articleCtrl.getAllArticles);
 
 router.get('/:id', auth, articleCtrl.getOneArticle);
 
-router.put('/:id', auth, upload.single('file'), checkInputArticle, checkInput, articleCtrl.modifyArticle);
+router.put('/:id', auth, authorOrAdmin, upload.single('file'), checkInputArticle, checkInput, articleCtrl.modifyArticle);
 
-router.delete('/:id', auth, articleCtrl.deleteArticle);
+router.delete('/:id', auth, authorOrAdmin,articleCtrl.deleteArticle);
 
 
 module.exports = router; 

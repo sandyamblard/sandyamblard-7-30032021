@@ -78,16 +78,13 @@ export default {
       }
   },
     created(){
-        console.log('store :' , this.$store.userId)
         axios.get(`http://localhost:3000/api/articles/comment/${this.id}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
             .then((resp)=> {
                 this.commentData = resp.data;
                 this.commContent = resp.data.commContent;
                 this.article = resp.data.article;
                 this.authorComment = resp.data.user;
-                console.log(resp.data);
                 //verif si auteur du commentaire (user) est le mm que celui connecté
-                console.log('auteur de article =', this.article.userId)
             //recherche des infos de l'auteur de l'article :
             axios.get(`http://localhost:3000/api/auth/users/${this.article.userId}`, {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                 .then((resp)=> {

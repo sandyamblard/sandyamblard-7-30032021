@@ -310,6 +310,8 @@ main{
 
 .comment-item--para{
     margin-left: 1em;
+    margin-top: 2em;
+    text-align: left;
 }
 
 
