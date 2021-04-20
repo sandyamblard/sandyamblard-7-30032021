@@ -73,7 +73,7 @@ export default {
                 setTimeout(()=>{this.success=false}, 1000);
                 this.writeMessage =false;
                 //envoi evt pour mettre à jour le composant ListArticles:
-                emitter.emit('newMessageSent');console.log('evt émis')
+                emitter.emit('newMessageSent');
                 })
             .catch(err=>{console.log(err); this.error= err.response.data.error})
             

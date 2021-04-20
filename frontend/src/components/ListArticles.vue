@@ -56,7 +56,7 @@ export default {
     }, 
     mounted(){
         emitter.on('newMessageSent', ()=> 
-                {console.log('evt reçu'); 
+                {
                 axios.get('http://localhost:3000/api/articles', {headers: {Authorization: 'Bearer ' + this.$store.token,}})
                     .then((resp)=> {
                         this.allArticles = resp.data})

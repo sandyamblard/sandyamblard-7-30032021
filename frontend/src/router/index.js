@@ -4,7 +4,6 @@ import Dashboard from '../views/Dashboard.vue'
 import Article from '../views/Article.vue'
 import User from '../views/User.vue'
 import Comment from '../views/Comment.vue'
-import Confirm from '../components/Confirm.vue'
 
 
 const routes = [
@@ -34,11 +33,6 @@ const routes = [
     component: Comment
   },
 
-  {
-    path: '/success',
-    name: 'success',
-    component: Confirm
-  }
 ]
 
 const router = createRouter({
