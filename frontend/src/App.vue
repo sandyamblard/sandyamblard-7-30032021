@@ -1,8 +1,5 @@
 <template>
-  <div id="nav">
-    <router-link to="/"></router-link> 
-    <router-link to="/dashboard"></router-link>
-  </div>
+
   <router-view :key="$route.path"/>
 </template>
 
