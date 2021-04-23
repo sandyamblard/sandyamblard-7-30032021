@@ -3,8 +3,8 @@
     <h2 >Fil d'actualité</h2>
     <article class='article-one dash--item' v-for="(article,index) in allArticles" :key=index >
         <div class="article-content" @click='goArticle(article.id)' @keyup.enter='goArticle(article.id)' title="Voir l'article" >
-            <h3  @keyup.enter='goArticle(article.id)' role="button" tabindex=0>{{ article.title }}</h3>
-            <span v-if="article.url"><img :src="article.url" class='img-one-article' alt='Photo du message'></span>
+            <h3>{{ article.title }}</h3>
+            <span v-if="article.url"><img :src="article.url" class='img-one-article' alt='Photo du message' @keyup.enter='goArticle(article.id)' role="link" tabindex=0></span>
             <p>{{article.content}}</p>  
             <p><i class="fas fa-plus-circle" title='Voir le message en détail'  @keyup.enter='goArticle(article.id)' role="button" tabindex=0></i></p>
         </div>
@@ -103,7 +103,12 @@ export default {
     @media all and (min-width: 767px){    
         max-width: 70%;
     }  
-        
+    &:focus{
+       box-shadow: 0px 0 25px black;
+       transform: scale(1.01);
+       transition: 0.3s;
+       
+    }    
     }
 
 .article-one:hover{
